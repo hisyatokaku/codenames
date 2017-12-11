@@ -4,9 +4,10 @@ import time
 import sys
 
 class Card(object):
-    def __init__(self, name):
+    def __init__(self, name, id):
         self.name = name
         self.color = None
+        self.id = id
 
 class Field(object):
     
@@ -18,7 +19,7 @@ class Field(object):
         self.init_field(lines)
         
     def init_field(self, lines):
-        self.field = [Card(word) for word in lines]
+        self.field = [Card(word, i) for (i, word) in enumerate(lines)]
         self.init_color()
         # print("field set.")
         self.logger.info("field set.")
@@ -82,16 +83,19 @@ class Field(object):
 class Guesser(object):
     def __init__(self, w2v_dir, field, logger, test=False):
         self.test = test
-        print("model loading...")
-        # logger.info("model loading...")
-        if self.test:
-            self.model = None
-        else:
-            self.model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
-
-        print("model loaded.")
+        self.w2v_dir = w2v_dir
         self.field = field
         self.logger = logger
+        self.model = self.load_model(self.w2v_dir)
+
+    def load_model(self, w2v_dir):
+        print("model loading...")
+        if self.test:
+            model = None
+        else:
+            model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
+        print("model loaded.")
+        return model
 
     def guess_from_clue(self, clue):
         if self.test:
