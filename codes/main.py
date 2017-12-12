@@ -1,4 +1,5 @@
 from guess_from_clue import Field, Guesser
+from give_clue import Wordrank, Spymaster
 import logging
 import sys
 
@@ -53,6 +54,27 @@ def main():
         finally:
             turn = not turn
 
+def test_spymaster():
+    lined_file_path = '../cards/youtubetest1.txt'
+    w2v_path = '../models/GoogleNews.bin.gz'
+
+    is_test = False
+
+    field = Field(lined_file_path, logger=logger)
+    field.print_field()
+
+    is_continue = True
+    spymaster = Spymaster(w2v_path, field=field.field, logger=logger, team="RED", test=is_test)
+
+    # print("To quit, enter Q")
+    logger.info("To quit, enter Q.")
+    turn = True
+
+    spymaster.give_clue(top_n = 10)
+
+
 
 if __name__ == "__main__":
-    main()
+    test_spymaster()
+    # main()
+
