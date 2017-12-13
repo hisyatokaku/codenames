@@ -5,7 +5,7 @@ import sys
 
 logger = logging.getLogger("logger")
 logger.setLevel(logging.DEBUG)
-filewriter = logging.FileHandler(filename = '../logs/youtubetest.log')
+filewriter = logging.FileHandler(filename = '../logs/spymastertest.log')
 # filewriter.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
 filewriter.setFormatter(logging.Formatter("%(message)s"))
 logger.addHandler(filewriter)
@@ -67,12 +67,11 @@ def test_spymaster():
     spymaster = Spymaster(w2v_path, field=field.field, logger=logger, team="RED", test=is_test)
 
     # print("To quit, enter Q")
-    logger.info("To quit, enter Q.")
-    turn = True
+    print("Spymaster set.")
+    logger.info("Spymaster set.")
+    # turn = True
 
     spymaster.give_clue(top_n = 10)
-
-
 
 if __name__ == "__main__":
     test_spymaster()
