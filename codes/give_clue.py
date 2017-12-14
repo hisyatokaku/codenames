@@ -99,6 +99,8 @@ class Spymaster(object):
                 else:
                     self.word_table[w_ix][c_ix] = 0
         print("fill_table end.")
+        with open('../models/word_table.pkl', 'wb') as w:
+            pickle.dump(self.word_table, w)
 
     def give_clue(self, top_n=10):
 
