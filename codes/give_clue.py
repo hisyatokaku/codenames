@@ -1,6 +1,7 @@
 import gensim
 import itertools
 import numpy as np
+import pickle
 from functools import reduce
 import random
 import time
@@ -42,11 +43,10 @@ class Wordrank(object):
 
         return score
 
-
     @staticmethod
     def print_word(Wr_class):
-        print("word: {0}, score: {3}, pos_list:{1}, neg_list:{2}".format(Wr_class.word, Wr_class.pos, \
-                                                                        Wr_class.neg, Wr_class.score))
+        print("word: {0}, score: {1}, pos_list:{2}".format(Wr_class.word, Wr_class.pos, \
+                                                                        Wr_class.score))
 
 class Spymaster(object):
     def __init__(self, w2v_dir, field, logger, team, test=False):
@@ -98,7 +98,7 @@ class Spymaster(object):
                     self.model.similarity(word, card.name)
                 else:
                     self.word_table[w_ix][c_ix] = 0
-            print("card: ", card.name, "ended.")
+        print("fill_table end.")
 
     def give_clue(self, top_n=10):
 
@@ -142,8 +142,8 @@ class Spymaster(object):
                 # modified
                 word_ix = self.vocab[word].index
 
-                score = self.table[word_ix][comb].sum() - \
-                        self.table[word_ix][np.array(neg_ix)].sum()
+                score = self.word_table[word_ix][comb].sum() - \
+                        self.word_table[word_ix][np.array(neg_ix)].sum()
 
                 a_wordrank = Wordrank(word, comb, score)
                 sub_word_rank_list.append(a_wordrank)
@@ -152,8 +152,12 @@ class Spymaster(object):
 
             # discard less than top_n
             top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
-            word_rank_list.append(top_n_sub_word_rank_list)
+            word_rank_list.extend(top_n_sub_word_rank_list)
             print("combination: ", comb, " ended.")
+
+        with open('../models/wrl.pkl', 'wb') as w:
+            pickle.dump(word_rank_list, w)
+
         # sort again
         word_rank_list = sorted(word_rank_list, key=lambda x: x.score, reverse=True)
 
