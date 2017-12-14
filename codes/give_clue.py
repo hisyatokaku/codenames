@@ -2,6 +2,7 @@ import gensim
 import itertools
 import numpy as np
 import pickle
+import os
 from functools import reduce
 import random
 import time
@@ -88,19 +89,23 @@ class Spymaster(object):
 
     def fill_table(self):
         print("fill_table start.")
+        word_table_path = '../models/word_table.pkl'
 
-        for word in self.vocab:
-            for card in self.field:
-                w_ix = self.vocab[word].index
-                c_ix = card.id
-                if w_ix != c_ix:
-                    self.word_table[w_ix][c_ix] = \
-                    self.model.similarity(word, card.name)
-                else:
-                    self.word_table[w_ix][c_ix] = 0
+        if os.exists(word_table_path):
+            self.word_table = pickle.load(word_table_path, "rb")
+        else:
+            for word in self.vocab:
+                for card in self.field:
+                    w_ix = self.vocab[word].index
+                    c_ix = card.id
+                    if w_ix != c_ix:
+                        self.word_table[w_ix][c_ix] = \
+                        self.model.similarity(word, card.name)
+                    else:
+                        self.word_table[w_ix][c_ix] = 0
+            with open('../models/word_table.pkl', 'wb') as w:
+                pickle.dump(self.word_table, w)
         print("fill_table end.")
-        with open('../models/word_table.pkl', 'wb') as w:
-            pickle.dump(self.word_table, w)
 
     def give_clue(self, top_n=10):
 
@@ -128,37 +133,41 @@ class Spymaster(object):
 
         word_rank_list = []
         # brute force
-        for comb in combinations:
-            print("combination: ", comb)
+        word_rank_list_path = "../models/wrl.pkl"
+        if os.path.exists(word_rank_list_path):
+            word_rank_list = pickle.load(word_rank_list_path)
+        else:
+            for comb in combinations:
+                print("combination: ", comb)
 
-            # pos_card_list = [self.field[i] for i in comb]
-            # neg_card_list = [self.field[i] for i in neg_ix]
-            sub_word_rank_list = []
+                # pos_card_list = [self.field[i] for i in comb]
+                # neg_card_list = [self.field[i] for i in neg_ix]
+                sub_word_rank_list = []
 
-            for word in self.vocab:
-                # too dirty
-                # pos_similarities = [(card.name, self.word_similarity(word, card)) for card in pos_card_list]
-                # neg_similarities = [(card.name, self.word_similarity(word, card)) for card in neg_card_list]
+                for word in self.vocab:
+                    # too dirty
+                    # pos_similarities = [(card.name, self.word_similarity(word, card)) for card in pos_card_list]
+                    # neg_similarities = [(card.name, self.word_similarity(word, card)) for card in neg_card_list]
 
-                # a_wordrank = Wordrank(word, pos_similarities, neg_similarities)
-                # modified
-                word_ix = self.vocab[word].index
+                    # a_wordrank = Wordrank(word, pos_similarities, neg_similarities)
+                    # modified
+                    word_ix = self.vocab[word].index
 
-                score = self.word_table[word_ix][comb].sum() - \
-                        self.word_table[word_ix][np.array(neg_ix)].sum()
+                    score = self.word_table[word_ix][comb].sum() - \
+                            self.word_table[word_ix][np.array(neg_ix)].sum()
 
-                a_wordrank = Wordrank(word, comb, score)
-                sub_word_rank_list.append(a_wordrank)
+                    a_wordrank = Wordrank(word, comb, score)
+                    sub_word_rank_list.append(a_wordrank)
 
-            sub_word_rank_list = sorted(sub_word_rank_list, key=lambda x: x.score, reverse=True)
+                sub_word_rank_list = sorted(sub_word_rank_list, key=lambda x: x.score, reverse=True)
 
-            # discard less than top_n
-            top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
-            word_rank_list.extend(top_n_sub_word_rank_list)
-            print("combination: ", comb, " ended.")
+                # discard less than top_n
+                top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
+                word_rank_list.extend(top_n_sub_word_rank_list)
+                print("combination: ", comb, " ended.")
 
-        with open('../models/wrl.pkl', 'wb') as w:
-            pickle.dump(word_rank_list, w)
+            with open('../models/wrl.pkl', 'wb') as w:
+                pickle.dump(word_rank_list, w)
 
         # sort again
         word_rank_list = sorted(word_rank_list, key=lambda x: x.score, reverse=True)
