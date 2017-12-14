@@ -2,4 +2,3 @@ models/*
 .idea/
 thoughts.pdf
 codes/__pycache__/
-logs/
