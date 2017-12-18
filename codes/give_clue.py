@@ -46,7 +46,7 @@ class Wordrank(object):
 
     @staticmethod
     def print_word(Wr_class):
-        print("word: {0}, score: {1}, pos_list:{2}".format(Wr_class.word, Wr_class.pos, \
+        print("word: {0}, pos_list:{1}, score:{2}".format(Wr_class.word, Wr_class.pos_ix, \
                                                                         Wr_class.score))
 
 class Spymaster(object):
@@ -91,8 +91,9 @@ class Spymaster(object):
         print("fill_table start.")
         word_table_path = '../models/word_table.pkl'
 
-        if os.exists(word_table_path):
-            self.word_table = pickle.load(word_table_path, "rb")
+        if os.path.exists(word_table_path):
+            with open(word_table_path, 'rb') as r:
+                self.word_table = pickle.load(r)
         else:
             for word in self.vocab:
                 for card in self.field:
@@ -135,7 +136,8 @@ class Spymaster(object):
         # brute force
         word_rank_list_path = "../models/wrl.pkl"
         if os.path.exists(word_rank_list_path):
-            word_rank_list = pickle.load(word_rank_list_path)
+            with open(word_rank_list_path, 'rb') as r:
+                word_rank_list = pickle.load(r)
         else:
             for comb in combinations:
                 print("combination: ", comb)
