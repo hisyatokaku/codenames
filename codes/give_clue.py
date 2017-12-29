@@ -135,6 +135,54 @@ class Spymaster(object):
         word_rank_list = []
         # brute force
         word_rank_list_path = "../models/wrl.pkl"
+
+
+        # quick test
+        comb = combinations[15]
+        pos_card_list = [self.field[i] for i in comb]
+        neg_card_list = [self.field[i] for i in neg_ix]
+
+        sub_word_rank_list = []
+        
+        for word in self.vocab:
+
+            
+            # too dirty
+            # pos_similarities = [(card.name, self.word_similarity(word, card)) for card in pos_card_list]
+            # neg_similarities = [(card.name, self.word_similarity(word, card)) for card in neg_card_list]
+            
+            # a_wordrank = Wordrank(word, pos_similarities, neg_similarities)
+            # modified
+            word_ix = self.vocab[word].index
+            
+            score = self.word_table[word_ix][comb].sum() - \
+                    self.word_table[word_ix][np.array(neg_ix)].sum()
+            
+            a_wordrank = Wordrank(word, comb, score)
+            sub_word_rank_list.append(a_wordrank)
+
+        
+        sub_word_rank_list = sorted(sub_word_rank_list, key=lambda x: x.score, reverse=True)
+
+        word_rank_list = sub_word_rank_list
+        
+        with open('../models/wrl_2word.pkl', 'wb') as w:
+            pickle.dump(word_rank_list, w)
+
+        # sort again
+        word_rank_list = sorted(word_rank_list, key=lambda x: x.score, reverse=True)
+
+        for Wr_class in word_rank_list:
+            Wordrank.print_word(Wr_class)
+
+        '''
+        # discard less than top_n
+        top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
+        word_rank_list.extend(top_n_sub_word_rank_list)
+        print("combination: ", comb, " ended.")
+        '''
+            
+        """
         if os.path.exists(word_rank_list_path):
             with open(word_rank_list_path, 'rb') as r:
                 word_rank_list = pickle.load(r)
@@ -167,9 +215,11 @@ class Spymaster(object):
                 top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
                 word_rank_list.extend(top_n_sub_word_rank_list)
                 print("combination: ", comb, " ended.")
-
-            with open('../models/wrl.pkl', 'wb') as w:
-                pickle.dump(word_rank_list, w)
+        """
+        '''
+        
+        with open('../models/wrl_2word.pkl', 'wb') as w:
+            pickle.dump(word_rank_list, w)
 
         # sort again
         word_rank_list = sorted(word_rank_list, key=lambda x: x.score, reverse=True)
@@ -178,6 +228,6 @@ class Spymaster(object):
             Wordrank.print_word(Wr_class)
 
         print("clue:", word_rank_list[0].word)
-
+'''
         # max(cossim(w, word in (subsets + negative))
 
