@@ -99,7 +99,8 @@ class Spymaster(object):
                 for card in self.field:
                     w_ix = self.vocab[word].index
                     c_ix = card.id
-                    if w_ix != c_ix:
+                    # if w_ix != c_ix:
+                    if word != card.name:
                         self.word_table[w_ix][c_ix] = \
                         self.model.similarity(word, card.name)
                     else:
@@ -146,7 +147,6 @@ class Spymaster(object):
         
         for word in self.vocab:
 
-            
             # too dirty
             # pos_similarities = [(card.name, self.word_similarity(word, card)) for card in pos_card_list]
             # neg_similarities = [(card.name, self.word_similarity(word, card)) for card in neg_card_list]
@@ -155,8 +155,8 @@ class Spymaster(object):
             # modified
             word_ix = self.vocab[word].index
             
-            score = self.word_table[word_ix][comb].sum() - \
-                    self.word_table[word_ix][np.array(neg_ix)].sum()
+            score = self.word_table[word_ix][comb].sum()/len(comb) - \
+                    self.word_table[word_ix][np.array(neg_ix)].sum()/len(comb)
             
             a_wordrank = Wordrank(word, comb, score)
             sub_word_rank_list.append(a_wordrank)
