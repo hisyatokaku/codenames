@@ -3,3 +3,4 @@ models/*
 thoughts.pdf
 codes/__pycache__/
 logs/
+notebooks/
