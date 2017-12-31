@@ -74,9 +74,11 @@ class Wordrank(object):
         # print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
 
 class Spymaster(object):
-    def __init__(self, w2v_dir, field, logger, team, test=False):
+    def __init__(self, w2v_path, field, logger, team, test=False):
         self.test = test
-        self.w2v_dir = w2v_dir
+        self.w2v_path = w2v_path
+        self.word_table_path = '../models/word_table.pkl'
+        self.word_rank_list_path = '../models/wrl_top100.pkl'
         self.field = field
         self.logger = logger
 
@@ -84,7 +86,7 @@ class Spymaster(object):
             raise ValueError("team string must be RED or BLUE.")
         self.team = team
 
-        self.model = self.load_model(self.w2v_dir)
+        self.model = self.load_model(self.w2v_path)
         self.vocab = self.model.vocab
         self.vocab_size = len(self.vocab)
 
@@ -94,12 +96,12 @@ class Spymaster(object):
         self.fill_table()
         print("table set.")
 
-    def load_model(self, w2v_dir):
+    def load_model(self, w2v_path):
         print("model loading...")
         if self.test:
             model = None
         else:
-            model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
+            model = gensim.models.KeyedVectors.load_word2vec_format(w2v_path, binary=True)
         print("model loaded.")
         return model
 
@@ -136,16 +138,9 @@ class Spymaster(object):
                 pickle.dump(self.word_table, w)
         print("fill_table end.")
 
-    def give_clue(self, top_n=10):
+    def give_clue(self, top_n=100):
 
         # for subsets in 2^8:
-        # max(cossim(w, word in (subsets + negative))
-
-        # suppose [c_0, c_1, ..., c_24]
-        # positive_list [2, 4, 5, ..., 23]
-        # others
-        # give all permutation
-        # for perm in permutation
         # sim(clue, perm) - sim(clue, others) for clue in models.word
 
         pos_ix = [card.id for card in self.field if card.color == self.team]
@@ -163,13 +158,20 @@ class Spymaster(object):
         self.logger.info("combinations set.")
 
         word_rank_list = []
-        word_rank_list_path = "../models/wrl_100_ave.pkl"
 
-        if os.path.exists(word_rank_list_path):
-            with open(word_rank_list_path, 'rb') as r:
+        # save model
+        if os.path.exists(self.word_rank_list_path):
+            print(self.word_rank_list_path, "exists.")
+            with open(self.word_rank_list_path, 'rb') as r:
                 word_rank_list = pickle.load(r)
         else:
+            print("creating word_rank_list...")
+
             # brute force
+            if self.test:
+                # try small combination set
+                combinations = combinations[20:22]
+
             for comb in combinations:
                 comb_cards = [self.field[i] for i in comb]
 
@@ -202,12 +204,13 @@ class Spymaster(object):
 
         # sort again
         word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
-        word_rank_list_path = '../models/wrl_top100.pkl'
-        if not os.path.exists(word_rank_list_path):
-            with open(word_rank_list_path, 'wb') as w:
+
+        # save model
+        if not os.path.exists(self.word_rank_list_path):
+            with open(self.word_rank_list_path, 'wb') as w:
                 pickle.dump(word_rank_list, w)
         else:
-            print(word_rank_list_path, " exists.")
+            print(self.word_rank_list_path, " exists.")
 
         for Wr_class in word_rank_list:
             Wordrank.print_word(Wr_class)
