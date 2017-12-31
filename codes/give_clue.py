@@ -26,27 +26,52 @@ class Wordrank(object):
         self.score = self.calculate_score()
     '''
 
-    def __init__(self, word, pos_ix, score):
+    # def __init__(self, word, field_card, score):
+    def __init__(self, word, card_score_pair, team):
+        '''
+
+        :param word:
+        :param card_score_pair: [
+        [Card_0, score with 'word'],
+        [Card_1, score with 'word'],
+        ...
+        ]
+        '''
         self.word = word
-        self.pos_ix = pos_ix
-        self.score = score
+        self.card_score_pair = card_score_pair
+        self.team = team
+        if team not in ["RED", "BLUE"]:
+            raise ValueError("team name must be either RED or BLUE.")
+        self.total_score = self.calculate_score(card_score_pair)
 
-    def calculate_score(self):
+        # self.field_card = field_card
+        # self.score = score
+
+    def calculate_score(self, card_score_pair):
         # need to consider variance...?
-        # score = reduce(lambda a, b: a[1]+b[1], self.pos_list)/len(self.pos_list)\
-        #         - reduce(lambda a, b: a[1]+b[1], self.neg_list)/len(self.neg_list)
-        score = 0
+        total_score = 0
+        pos_score, neg_score = 0, 0
+        pos_num, neg_num = 0, 0
 
-        for pos in self.pos_list:
-            score += pos[1]/float(len(self.pos_list))
-        for neg in self.neg_list:
-            score -= neg[1]/float(len(self.neg_list))
-
-        return score
+        for card, score in card_score_pair:
+            if card.color == self.team:
+                pos_score += score
+                pos_num += 1
+            else:
+                neg_score += score
+                neg_num += 1
+        total_score = pos_score/float(pos_num) - neg_score/float(neg_num)
+        return total_score
 
     @staticmethod
     def print_word(Wr_class):
-        print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
+        print_text = "word: {}, total_score: {} \n".format(Wr_class.word, Wr_class.total_score)
+        for card, score in Wr_class.card_score_pair:
+            card_score_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
+            print_text += card_score_text
+        print(print_text)
+        # pass
+        # print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
 
 class Spymaster(object):
     def __init__(self, w2v_dir, field, logger, team, test=False):
@@ -54,9 +79,11 @@ class Spymaster(object):
         self.w2v_dir = w2v_dir
         self.field = field
         self.logger = logger
+
         if team not in ["RED", "BLUE"]:
             raise ValueError("team string must be RED or BLUE.")
         self.team = team
+
         self.model = self.load_model(self.w2v_dir)
         self.vocab = self.model.vocab
         self.vocab_size = len(self.vocab)
@@ -123,9 +150,11 @@ class Spymaster(object):
 
         pos_ix = [card.id for card in self.field if card.color == self.team]
         neg_ix = [card.id for card in self.field if card.color != self.team]
+        neg_cards = [self.field[i] for i in neg_ix]
 
         print("pos/neg set.")
         self.logger.info("pos/neg set.")
+
         # make all combination
         combinations = \
             [list(comb) for n_comb in range(1, len(pos_ix)+1)\
@@ -142,24 +171,29 @@ class Spymaster(object):
         else:
             # brute force
             for comb in combinations:
+                comb_cards = [self.field[i] for i in comb]
+
                 print("combination: ", comb)
 
                 sub_word_rank_list = []
 
                 for word in self.vocab:
                     # too dirty
-                    # a_wordrank = Wordrank(word, pos_similarities, neg_similarities)
                     # modified
-
+                    card_score_pair = []
                     word_ix = self.vocab[word].index
+                    for card in comb_cards + neg_cards:
+                        score = self.word_table[word_ix][card.id]
+                        card_score_pair.append([card, score])
 
-                    score = self.word_table[word_ix][comb].sum()/len(comb) - \
-                            self.word_table[word_ix][np.array(neg_ix)].sum()/len(neg_ix)
+                    # score = self.word_table[word_ix][comb].sum()/len(comb) - \
+                    #         self.word_table[word_ix][np.array(neg_ix)].sum()/len(neg_ix)
 
-                    a_wordrank = Wordrank(word, comb, score)
+                    # a_wordrank = Wordrank(word, comb, score)
+                    a_wordrank = Wordrank(word, card_score_pair, team='RED')
                     sub_word_rank_list.append(a_wordrank)
 
-                sub_word_rank_list = sorted(sub_word_rank_list, key=lambda x: x.score, reverse=True)
+                sub_word_rank_list = sorted(sub_word_rank_list, key=lambda x: x.total_score, reverse=True)
 
                 # discard less than top_n
                 top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
@@ -167,15 +201,17 @@ class Spymaster(object):
                 print("combination: ", comb, " ended.")
 
         # sort again
-        word_rank_list = sorted(word_rank_list, key=lambda x: x.score, reverse=True)
-
-        with open('../models/wrl_top100.pkl', 'wb') as w:
-            pickle.dump(word_rank_list, w)
+        word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
+        word_rank_list_path = '../models/wrl_top100.pkl'
+        if not os.path.exists(word_rank_list_path):
+            with open(word_rank_list_path, 'wb') as w:
+                pickle.dump(word_rank_list, w)
+        else:
+            print(word_rank_list_path, " exists.")
 
         for Wr_class in word_rank_list:
             Wordrank.print_word(Wr_class)
 
         print("clue:", word_rank_list[0].word)
-
         # max(cossim(w, word in (subsets + negative))
 
