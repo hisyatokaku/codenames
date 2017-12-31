@@ -58,7 +58,7 @@ def test_spymaster():
     lined_file_path = '../cards/youtubetest1.txt'
     w2v_path = '../models/GoogleNews.bin.gz'
 
-    is_test = False
+    is_test = True
 
     field = Field(lined_file_path, logger=logger)
     field.print_field()
@@ -71,7 +71,7 @@ def test_spymaster():
     logger.info("Spymaster set.")
     # turn = True
 
-    spymaster.give_clue(top_n = 10)
+    spymaster.give_clue(top_n = 100)
 
 if __name__ == "__main__":
     test_spymaster()
