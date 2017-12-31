@@ -46,8 +46,7 @@ class Wordrank(object):
 
     @staticmethod
     def print_word(Wr_class):
-        print("word: {0}, pos_list:{1}, score:{2}".format(Wr_class.word, Wr_class.pos_ix, \
-                                                                        Wr_class.score))
+        print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
 
 class Spymaster(object):
     def __init__(self, w2v_dir, field, logger, team, test=False):
@@ -86,20 +85,21 @@ class Spymaster(object):
 
         return float(self.word_table[index_1][index_2])
     """
-
     def fill_table(self):
         print("fill_table start.")
         word_table_path = '../models/word_table.pkl'
 
         if os.path.exists(word_table_path):
+            print(word_table_path, " exists.")
             with open(word_table_path, 'rb') as r:
                 self.word_table = pickle.load(r)
+
         else:
+            print("creating word_table...")
             for word in self.vocab:
                 for card in self.field:
                     w_ix = self.vocab[word].index
                     c_ix = card.id
-                    # if w_ix != c_ix:
                     if word != card.name:
                         self.word_table[w_ix][c_ix] = \
                         self.model.similarity(word, card.name)
@@ -114,7 +114,7 @@ class Spymaster(object):
         # for subsets in 2^8:
         # max(cossim(w, word in (subsets + negative))
 
-        # suppose [c_1, c_2, ..., c_25]
+        # suppose [c_0, c_1, ..., c_24]
         # positive_list [2, 4, 5, ..., 23]
         # others
         # give all permutation
@@ -134,77 +134,27 @@ class Spymaster(object):
         self.logger.info("combinations set.")
 
         word_rank_list = []
-        # brute force
-        word_rank_list_path = "../models/wrl.pkl"
+        word_rank_list_path = "../models/wrl_100_ave.pkl"
 
-
-        # quick test
-        comb = combinations[15]
-        pos_card_list = [self.field[i] for i in comb]
-        neg_card_list = [self.field[i] for i in neg_ix]
-
-        sub_word_rank_list = []
-        
-        for word in self.vocab:
-
-            # too dirty
-            # pos_similarities = [(card.name, self.word_similarity(word, card)) for card in pos_card_list]
-            # neg_similarities = [(card.name, self.word_similarity(word, card)) for card in neg_card_list]
-            
-            # a_wordrank = Wordrank(word, pos_similarities, neg_similarities)
-            # modified
-            word_ix = self.vocab[word].index
-            
-            score = self.word_table[word_ix][comb].sum()/len(comb) - \
-                    self.word_table[word_ix][np.array(neg_ix)].sum()/len(comb)
-            
-            a_wordrank = Wordrank(word, comb, score)
-            sub_word_rank_list.append(a_wordrank)
-
-        
-        sub_word_rank_list = sorted(sub_word_rank_list, key=lambda x: x.score, reverse=True)
-
-        word_rank_list = sub_word_rank_list
-        
-        with open('../models/wrl_2word.pkl', 'wb') as w:
-            pickle.dump(word_rank_list, w)
-
-        # sort again
-        word_rank_list = sorted(word_rank_list, key=lambda x: x.score, reverse=True)
-
-        for Wr_class in word_rank_list:
-            Wordrank.print_word(Wr_class)
-
-        '''
-        # discard less than top_n
-        top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
-        word_rank_list.extend(top_n_sub_word_rank_list)
-        print("combination: ", comb, " ended.")
-        '''
-            
-        """
         if os.path.exists(word_rank_list_path):
             with open(word_rank_list_path, 'rb') as r:
                 word_rank_list = pickle.load(r)
         else:
+            # brute force
             for comb in combinations:
                 print("combination: ", comb)
 
-                # pos_card_list = [self.field[i] for i in comb]
-                # neg_card_list = [self.field[i] for i in neg_ix]
                 sub_word_rank_list = []
 
                 for word in self.vocab:
                     # too dirty
-                    # pos_similarities = [(card.name, self.word_similarity(word, card)) for card in pos_card_list]
-                    # neg_similarities = [(card.name, self.word_similarity(word, card)) for card in neg_card_list]
-
                     # a_wordrank = Wordrank(word, pos_similarities, neg_similarities)
                     # modified
+
                     word_ix = self.vocab[word].index
 
-                    score = self.word_table[word_ix][comb].sum() - \
-                            self.word_table[word_ix][np.array(neg_ix)].sum()
+                    score = self.word_table[word_ix][comb].sum()/len(comb) - \
+                            self.word_table[word_ix][np.array(neg_ix)].sum()/len(neg_ix)
 
                     a_wordrank = Wordrank(word, comb, score)
                     sub_word_rank_list.append(a_wordrank)
@@ -215,19 +165,17 @@ class Spymaster(object):
                 top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
                 word_rank_list.extend(top_n_sub_word_rank_list)
                 print("combination: ", comb, " ended.")
-        """
-        '''
-        
-        with open('../models/wrl_2word.pkl', 'wb') as w:
-            pickle.dump(word_rank_list, w)
 
         # sort again
         word_rank_list = sorted(word_rank_list, key=lambda x: x.score, reverse=True)
+
+        with open('../models/wrl_top100.pkl', 'wb') as w:
+            pickle.dump(word_rank_list, w)
 
         for Wr_class in word_rank_list:
             Wordrank.print_word(Wr_class)
 
         print("clue:", word_rank_list[0].word)
-'''
+
         # max(cossim(w, word in (subsets + negative))
 
