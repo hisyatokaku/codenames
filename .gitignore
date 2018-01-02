@@ -1,6 +1,8 @@
 models/*
 .idea/
 thoughts.pdf
+freq_wordlist.csv
+freq_wordlist.xlsx
 codes/__pycache__/
 logs/
 notebooks/
