@@ -17,7 +17,7 @@ logger.addHandler(filewriter)
 
 # argparse
 parser = argparse.ArgumentParser(description='input argument')
-parser.add_argument('--setting', type=str, default=None, help='section name in ../config/settings.exp')
+parser.add_argument('--setting', '-s',type=str, default=None, help='section name in ../config/settings.exp')
 parser.add_argument('--exname', default=None, help='experiment name.')
 
 args = parser.parse_args()
@@ -97,10 +97,8 @@ def test_spymaster():
     print("Spymaster set.")
     logger.info("Spymaster set.")
     # turn = True
-
     spymaster.give_clue(top_n = 100)
 
 if __name__ == "__main__":
     test_spymaster()
     # main()
-

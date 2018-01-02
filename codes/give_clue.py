@@ -73,6 +73,10 @@ class Wordrank(object):
         print(print_text)
         # print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
 
+class Vocab(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
 class Spymaster(object):
     def __init__(self, w2v_path, field, logger, team,
                  word_table_path, word_rank_list_path, restrict_words_path,
@@ -84,19 +88,19 @@ class Spymaster(object):
         self.restrict_words_path = restrict_words_path
         self.field = field
         self.logger = logger
-        self.restricted_vocab = self.load_restrict_words_from_csv()
 
         if team not in ["RED", "BLUE"]:
             raise ValueError("team string must be RED or BLUE.")
         self.team = team
 
         self.model = self.load_model(self.w2v_path)
-        self.vocab = self.model.vocab
+        self.vocab = self.load_vocab()
         self.vocab_size = len(self.vocab)
 
         # initialize by 2
         # 25 * 3000000 due to memory limitation
         self.word_table = np.full([self.vocab_size, len(self.field)], 2, dtype=np.float32)
+        # print("self.word_table.shape: ", self.word_table.shape)
         self.fill_table()
         print("table set.")
 
@@ -106,13 +110,22 @@ class Spymaster(object):
         print("model loaded.")
         return model
 
-    def load_restrict_words_from_csv(self):
-        vocab = []
-        with open(self.restrict_words_path, 'r') as c:
-            reader = csv.reader(c)
-            reader = next(reader)
-            for row in reader:
-                vocab.append(row[1].lower())
+    def load_vocab(self):
+        if len(self.restrict_words_path) == 0:
+            print("load vocabulary from gensim.models.KeyedVectors.")
+            vocab = self.model.vocab
+        else:
+            vocab = dict()
+            print("load restrict words from csv: ", self.restrict_words_path)
+            with open(self.restrict_words_path, 'r') as c:
+                reader = csv.reader(c)
+                header = next(reader)
+                cur_id = 0
+                for row in reader:
+                    word = row[1].lower()
+                    if word not in vocab:
+                        vocab[word] = Vocab(index=cur_id)
+                        cur_id += 1
         return vocab
 
     def fill_table(self):
@@ -130,11 +143,14 @@ class Spymaster(object):
                 for card in self.field:
                     w_ix = self.vocab[word].index
                     c_ix = card.id
-                    if word != card.name:
-                        self.word_table[w_ix][c_ix] = \
-                        self.model.similarity(word, card.name)
+
+                    if word not in self.model.vocab:
+                        self.word_table[w_ix][c_ix] = 0.0
                     else:
-                        self.word_table[w_ix][c_ix] = 0
+                        if word != card.name:
+                            self.word_table[w_ix][c_ix] = self.model.similarity(word, card.name)
+                        else:
+                            self.word_table[w_ix][c_ix] = 0
             with open('../models/word_table.pkl', 'wb') as w:
                 pickle.dump(self.word_table, w)
         print("fill_table end.")
