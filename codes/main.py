@@ -6,6 +6,7 @@ import sys
 sys.path.append('../')
 
 import argparse
+import configparser
 
 # logging
 logger = logging.getLogger("logger")
@@ -16,23 +17,29 @@ logger.addHandler(filewriter)
 
 # argparse
 parser = argparse.ArgumentParser(description='input argument')
-parser.add_argument('--test', '-t', type=int, default=None, help='specify test(1) or not(0)')
-parser.add_argument('--cards', '-c', default='../cards/youtubetest1.txt', help='select from cards directory')
-parser.add_argument('--embed', default='../models/GoogleNews.bin.gz', help='pretrained embedding')
+parser.add_argument('--setting', type=str, default=None, help='section name in ../config/settings.exp')
 parser.add_argument('--exname', default=None, help='experiment name.')
 
 args = parser.parse_args()
-if args.test is None:
-    raise IOError('specify test or not.')
-if args.test:
-    print("test mode")
+
+config = configparser.ConfigParser()
+config.read('../Config/settings.exp')
+setting_exp = config[args.setting]
+
+for key in setting_exp:
+    print(key, ": ", setting_exp[key])
+
+# if args.test is None:
+#     raise IOError('specify test or not.')
+# if args.test:
+#     print("test mode")
 if not args.exname:
     print("experiment name: none")
 
 def main():
-    lined_file_path = args.cards
-    w2v_path = args.embed
-    is_test = args.test
+    lined_file_path = setting_exp.get('cards')
+    w2v_path = setting_exp.get('embed')
+    is_test = setting_exp.getint('test')
 
     field = Field(lined_file_path, logger=logger)
     field.print_field()
@@ -69,15 +76,22 @@ def main():
             turn = not turn
 
 def test_spymaster():
-    lined_file_path = args.cards
-    w2v_path = args.embed
-    is_test = args.test
+    lined_file_path = setting_exp.get('cards')
+    w2v_path = setting_exp.get('embed')
+    is_test = setting_exp.getint('test')
+    word_table_path = setting_exp.get('spywtable')
+    word_rank_list_path = setting_exp.get('spywrlist')
+    restrict_words_path = setting_exp.get('spyrwords')
 
     field = Field(lined_file_path, logger=logger)
     field.print_field()
 
-    is_continue = True
-    spymaster = Spymaster(w2v_path, field=field.field, logger=logger, team="RED", test=is_test)
+    spymaster = Spymaster(w2v_path, field=field.field,
+                          logger=logger, team="RED",
+                          word_table_path= word_table_path,
+                          word_rank_list_path= word_rank_list_path,
+                          restrict_words_path= restrict_words_path,
+                          test=is_test)
 
     # print("To quit, enter Q")
     print("Spymaster set.")

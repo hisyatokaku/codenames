@@ -3,6 +3,8 @@ import itertools
 import numpy as np
 import pickle
 import os
+import csv
+
 from functools import reduce
 import random
 import time
@@ -72,13 +74,17 @@ class Wordrank(object):
         # print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
 
 class Spymaster(object):
-    def __init__(self, w2v_path, field, logger, team, test=False):
+    def __init__(self, w2v_path, field, logger, team,
+                 word_table_path, word_rank_list_path, restrict_words_path,
+                 test=False):
         self.test = test
         self.w2v_path = w2v_path
-        self.word_table_path = '../models/word_table_5cardsset.pkl'
-        self.word_rank_list_path = '../models/wrl_top100_5cardsset.pkl'
+        self.word_table_path = word_table_path
+        self.word_rank_list_path = word_rank_list_path
+        self.restrict_words_path = restrict_words_path
         self.field = field
         self.logger = logger
+        self.restricted_vocab = self.load_restrict_words_from_csv()
 
         if team not in ["RED", "BLUE"]:
             raise ValueError("team string must be RED or BLUE.")
@@ -100,15 +106,14 @@ class Spymaster(object):
         print("model loaded.")
         return model
 
-    """
-    def word_similarity(self, vocab_word, card):
-        index_1 = self.vocab[vocab_word].index
-        index_2 = card.id
-        if self.word_table[index_1][index_2] == 2.0:
-            self.word_table[index_1][index_2] = self.model.similarity(vocab_word, card.name)
-
-        return float(self.word_table[index_1][index_2])
-    """
+    def load_restrict_words_from_csv(self):
+        vocab = []
+        with open(self.restrict_words_path, 'r') as c:
+            reader = csv.reader(c)
+            reader = next(reader)
+            for row in reader:
+                vocab.append(row[1].lower())
+        return vocab
 
     def fill_table(self):
         print("fill_table start.")
@@ -133,6 +138,9 @@ class Spymaster(object):
             with open('../models/word_table.pkl', 'wb') as w:
                 pickle.dump(self.word_table, w)
         print("fill_table end.")
+
+    def restrict_word(self):
+        pass
 
     def give_clue(self, top_n=100):
 

@@ -1,0 +1,9 @@
+[youtube]
+
+[5cardstest]
+test: 0
+cards: ../cards/debugset.txt
+embed: ../models/GoogleNews.bin.gz
+spywtable: ../models/word_table_5cardsset.pkl
+spywrlist: ../models/wrl_top100_5cardsset.pkl
+spyrwords: ../models/freq_wordlist.csv
