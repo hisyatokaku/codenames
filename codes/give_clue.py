@@ -10,8 +10,7 @@ import sys
 
 class Wordrank(object):
     """
-    member
-
+    params
     self.word: target word
     self.pos: list( (positive_card_name, cossim_score) )
     self.neg: list( (negative_card_name, cossim_score) )
@@ -29,7 +28,6 @@ class Wordrank(object):
     # def __init__(self, word, field_card, score):
     def __init__(self, word, card_score_pair, team):
         '''
-
         :param word:
         :param card_score_pair: [
         [Card_0, score with 'word'],
@@ -37,6 +35,7 @@ class Wordrank(object):
         ...
         ]
         '''
+
         self.word = word
         self.card_score_pair = card_score_pair
         self.team = team
@@ -70,15 +69,14 @@ class Wordrank(object):
             card_score_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
             print_text += card_score_text
         print(print_text)
-        # pass
         # print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
 
 class Spymaster(object):
     def __init__(self, w2v_path, field, logger, team, test=False):
         self.test = test
         self.w2v_path = w2v_path
-        self.word_table_path = '../models/word_table.pkl'
-        self.word_rank_list_path = '../models/wrl_top100.pkl'
+        self.word_table_path = '../models/word_table_5cardsset.pkl'
+        self.word_rank_list_path = '../models/wrl_top100_5cardsset.pkl'
         self.field = field
         self.logger = logger
 
@@ -98,10 +96,7 @@ class Spymaster(object):
 
     def load_model(self, w2v_path):
         print("model loading...")
-        if self.test:
-            model = None
-        else:
-            model = gensim.models.KeyedVectors.load_word2vec_format(w2v_path, binary=True)
+        model = gensim.models.KeyedVectors.load_word2vec_format(w2v_path, binary=True)
         print("model loaded.")
         return model
 
@@ -114,9 +109,10 @@ class Spymaster(object):
 
         return float(self.word_table[index_1][index_2])
     """
+
     def fill_table(self):
         print("fill_table start.")
-        word_table_path = '../models/word_table.pkl'
+        word_table_path = self.word_table_path
 
         if os.path.exists(word_table_path):
             print(word_table_path, " exists.")
@@ -170,7 +166,8 @@ class Spymaster(object):
             # brute force
             if self.test:
                 # try small combination set
-                combinations = combinations[20:22]
+                print("trying small combination set...")
+                combinations = combinations[50:55]
 
             for comb in combinations:
                 comb_cards = [self.field[i] for i in comb]
@@ -188,10 +185,6 @@ class Spymaster(object):
                         score = self.word_table[word_ix][card.id]
                         card_score_pair.append([card, score])
 
-                    # score = self.word_table[word_ix][comb].sum()/len(comb) - \
-                    #         self.word_table[word_ix][np.array(neg_ix)].sum()/len(neg_ix)
-
-                    # a_wordrank = Wordrank(word, comb, score)
                     a_wordrank = Wordrank(word, card_score_pair, team='RED')
                     sub_word_rank_list.append(a_wordrank)
 
