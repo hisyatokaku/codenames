@@ -1,0 +1,15 @@
+[youtube_restrict_vocab]
+test: 0
+cards: ../cards/youtubetest1.txt
+embed: ../models/GoogleNews.bin.gz
+spywtable: ../models/word_table_restrict_vocab.pkl
+spywrlist: ../models/wrl_top100_restrict_vocab.pkl
+spyrwords: ../models/freq_wordlist.csv
+
+[5cardstest]
+test: 0
+cards: ../cards/debugset.txt
+embed: ../models/GoogleNews.bin.gz
+spywtable: ../models/word_table_5cardsset.pkl
+spywrlist: ../models/wrl_top100_5cardsset.pkl
+spyrwords:
