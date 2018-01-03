@@ -51,23 +51,24 @@ class Wordrank(object):
         pos_num, neg_num = 0, 0
 
         for card, score in card_score_pair:
-            if card.color == self.team:
-                pos_score += score
-                pos_num += 1
+            if card.taken_by is not None:
+                if card.color == self.team:
+                    pos_score += score
+                    pos_num += 1
 
-            elif card.color == "DOUBLE":
-                neg_score += score
-                neg_num += 1
+                elif card.color == "DOUBLE":
+                    neg_score += score
+                    neg_num += 1
 
-            elif card.color == "NORMAL":
-                neg_score += score
-                neg_num += 1
-            elif card.color == "ASSASSIN":
-                neg_score += score
-                neg_num += 1
-            elif card.score == self.enemy:
-                neg_score += score
-                neg_num += 1
+                elif card.color == "NORMAL":
+                    neg_score += score
+                    neg_num += 1
+                elif card.color == "ASSASSIN":
+                    neg_score += score
+                    neg_num += 1
+                elif card.color == self.enemy:
+                    neg_score += score
+                    neg_num += 1
 
         total_score = pos_score/float(pos_num) - neg_score/float(neg_num)
         return total_score
@@ -166,13 +167,15 @@ class Spymaster(object):
     def restrict_word(self):
         pass
 
-    def give_clue(self, top_n=100):
+    def give_clue(self, turn, top_n=100):
 
         # for subsets in 2^8:
         # sim(clue, perm) - sim(clue, others) for clue in models.word
 
-        pos_ix = [card.id for card in self.field if card.color == self.team]
-        neg_ix = [card.id for card in self.field if card.color != self.team]
+        word_rank_list_path = self.word_rank_list_path + str(turn)
+
+        pos_ix = [card.id for card in self.field if card.color == self.team and card.taken_by == "None"]
+        neg_ix = [card.id for card in self.field if card.color != self.team and card.taken_by == "None"]
         neg_cards = [self.field[i] for i in neg_ix]
 
         print("pos/neg set.")
@@ -188,9 +191,9 @@ class Spymaster(object):
         word_rank_list = []
 
         # save model
-        if os.path.exists(self.word_rank_list_path):
-            print(self.word_rank_list_path, "exists.")
-            with open(self.word_rank_list_path, 'rb') as r:
+        if os.path.exists(word_rank_list_path):
+            print(word_rank_list_path, "exists.")
+            with open(word_rank_list_path, 'rb') as r:
                 word_rank_list = pickle.load(r)
         else:
             print("creating word_rank_list...")
@@ -204,7 +207,7 @@ class Spymaster(object):
             for comb in combinations:
                 comb_cards = [self.field[i] for i in comb]
 
-                print("combination: ", comb)
+                # print("combination: ", comb)
 
                 sub_word_rank_list = []
 
@@ -217,7 +220,9 @@ class Spymaster(object):
                         score = self.word_table[word_ix][card.id]
                         card_score_pair.append([card, score])
 
-                    a_wordrank = Wordrank(word, card_score_pair, team='RED')
+                    card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
+
+                    a_wordrank = Wordrank(word, card_score_pair, team=self.team)
                     sub_word_rank_list.append(a_wordrank)
 
                 sub_word_rank_list = sorted(sub_word_rank_list, key=lambda x: x.total_score, reverse=True)
@@ -225,33 +230,39 @@ class Spymaster(object):
                 # discard less than top_n
                 top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
                 word_rank_list.extend(top_n_sub_word_rank_list)
-                print("combination: ", comb, " ended.")
+                # print("combination: ", comb, " ended.")
 
         # sort again
         word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
 
         # save model
-        if not os.path.exists(self.word_rank_list_path):
-            with open(self.word_rank_list_path, 'wb') as w:
+        if not os.path.exists(word_rank_list_path):
+            with open(word_rank_list_path, 'wb') as w:
                 pickle.dump(word_rank_list, w)
         else:
-            print(self.word_rank_list_path, " exists.")
+            print(word_rank_list_path, " exists.")
+
+        # limit the top
+        word_rank_list = word_rank_list[:20]
 
         for Wr_class in word_rank_list:
             Wordrank.print_word(Wr_class)
 
-        print("clue: ", word_rank_list[0].word, "num: ", word_rank_list[0].card_score_pair)
+        clue = word_rank_list[0].word
+        print("clue: ", clue)
+
         num_count = 0
         count_ix = 0
         count_continue = True
-        while(count_continue):
+        while count_continue:
             cur_card = word_rank_list[0].card_score_pair[count_ix][0]
             if cur_card.color == self.team:
                 num_count += 1
                 count_ix += 1
             else:
                 count_continue = False
-        print("num: ", num_count)
 
-        # max(cossim(w, word in (subsets + negative))
+        print("num: ", num_count)
+        return clue, num_count
+
 

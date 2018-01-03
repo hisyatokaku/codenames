@@ -5,6 +5,7 @@ class Card(object):
         self.name = name
         self.color = None
         self.id = id
+        self.taken_by = "None"
 
 class Field(object):
     def __init__(self, lined_file, logger):
@@ -13,6 +14,11 @@ class Field(object):
         lines = open(lined_file, 'r').readlines()
         lines = [line.rstrip().lower() for line in lines]
         self.init_field(lines)
+
+        self.red_score = 0
+        self.blue_score = 0
+        self.game_continue = True
+        self.loser = None
 
     def init_field(self, lines):
         self.field = [Card(word, i) for (i, word) in enumerate(lines)]
@@ -71,7 +77,44 @@ class Field(object):
         for (i, color_ix) in enumerate(color_ix_list):
             self.field[i].color = ix_to_str[color_ix]
 
-    def print_field(self, display_colors=True):
+    def check_answer(self, team, answer_cards):
+        for card in answer_cards:
+            self.field[card.id].taken_by = team
+
+            # correct answer
+            if self.field[card.id].color == team:
+                exec("self.{}_score += 1".format(team.lower()))
+                print("Correct! team: {} got 1 points.".format(team))
+
+            elif self.field[card.id].color == "DOUBLE":
+                exec("self.{}_score += 1".format(team.lower()))
+                print("Correct! team: {} got 1 points.".format(team))
+
+            # wrong answer, give score to enemy, turn ends
+            elif self.field[card.id].color == "RED" and team == "BLUE":
+                exec("self.{}_score += 1".format("RED".lower()))
+                print("Wrong! team: RED got 1 points. BLUE turn ends.")
+                break
+            elif self.field[card.id].color == "BLUE" and team == "RED":
+                exec("self.{}_score += 1".format("BLUE".lower()))
+                print("Wrong! team: BLUE got 1 points. RED turn ends.")
+                break
+
+            # wrong answer, turn ends
+            elif self.field[card.id].color == "NORMAL":
+                print("Wrong! Normal card. {} turn ends.".format(team))
+                break
+            elif self.field[card.id].color == "ASSASSIN":
+                self.loser = team
+                self.game_continue = False
+                print("ASSASSIN! team: {} loses.".format(team))
+                break
+
+    def print_score(self):
+        print("RED: {} vs BLUE: {}".format(self.red_score,self.blue_score))
+        self.print_field(display_colors=True,display_taken_by=True)
+
+    def print_field(self, display_colors=True, display_taken_by=False):
         maxwordlen = max([len(card.name) for card in self.field])
         print_string = ""
         for (i, card) in enumerate(self.field):
@@ -93,5 +136,17 @@ class Field(object):
                 if (i + 1) % 5 == 0:
                     print(print_string)
                     # print("\n", end='', flush=True),
+                    self.logger.info(print_string)
+                    print_string = ""
+
+        print("\n")
+        self.logger.info("\n")
+
+
+        if display_taken_by:
+            for (i, card) in enumerate(self.field):
+                print_string += card.taken_by.rjust(maxwordlen + 2)
+                if (i + 1) % 5 == 0:
+                    print(print_string)
                     self.logger.info(print_string)
                     print_string = ""

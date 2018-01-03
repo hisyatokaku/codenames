@@ -29,14 +29,20 @@ class Guesser(object):
             sorted_card = sorted(dammy_card, key=lambda x: x[1], reverse = True)
 
         else:
-            sorted_card = [(card.name, self.model.similarity(clue, card.name), card.color)\
+            sorted_card = [(card, self.model.similarity(clue, card.name), card.color)\
                         for card in self.field]
             sorted_card = sorted(sorted_card, key=lambda x: x[1], reverse=True)
 
+        # limit the top
+        sorted_card = sorted_card[:20]
+
         for card in sorted_card:
-            print(card)
+            print(card[0].name, card[1], card[2])
             self.logger.info(card)
 
         ans_cards = sorted_card[:num]
-        ans_cards_name = [card.name for card in ans_cards]
-        print("answer: ", ans_cards_name)
+        print("answer: ")
+        for card in sorted_card[:num]:
+            print(card[0].name, card[1], card[2])
+
+        return [card[0] for card in ans_cards]
