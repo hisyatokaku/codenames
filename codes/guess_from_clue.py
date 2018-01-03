@@ -22,7 +22,7 @@ class Guesser(object):
         print("model loaded.")
         return model
 
-    def guess_from_clue(self, clue):
+    def guess_from_clue(self, clue, num):
         if self.test:
             dammy_card = [(card.name, random.randint(0, 10), card.color)\
                                 for card in self.field]
@@ -37,3 +37,6 @@ class Guesser(object):
             print(card)
             self.logger.info(card)
 
+        ans_cards = sorted_card[:num]
+        ans_cards_name = [card.name for card in ans_cards]
+        print("answer: ", ans_cards_name)

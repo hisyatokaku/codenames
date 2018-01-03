@@ -11,6 +11,7 @@ import time
 import sys
 
 class Wordrank(object):
+
     """
     params
     self.word: target word
@@ -19,34 +20,29 @@ class Wordrank(object):
     self.score: score of target word
     """
 
-    '''
-    def __init__(self, word, pos_list, neg_list):
-        self.word = word
-        self.pos_list = pos_list
-        self.neg_list = neg_list
-        self.score = self.calculate_score()
-    '''
-
-    # def __init__(self, word, field_card, score):
     def __init__(self, word, card_score_pair, team):
-        '''
+        """
         :param word:
         :param card_score_pair: [
         [Card_0, score with 'word'],
         [Card_1, score with 'word'],
         ...
         ]
-        '''
+        """
 
         self.word = word
         self.card_score_pair = card_score_pair
         self.team = team
+
         if team not in ["RED", "BLUE"]:
             raise ValueError("team name must be either RED or BLUE.")
-        self.total_score = self.calculate_score(card_score_pair)
 
-        # self.field_card = field_card
-        # self.score = score
+        if team == "RED":
+            self.enemy = "BLUE"
+        else:
+            self.enemy = "RED"
+
+        self.total_score = self.calculate_score(card_score_pair)
 
     def calculate_score(self, card_score_pair):
         # need to consider variance...?
@@ -58,9 +54,21 @@ class Wordrank(object):
             if card.color == self.team:
                 pos_score += score
                 pos_num += 1
-            else:
+
+            elif card.color == "DOUBLE":
                 neg_score += score
                 neg_num += 1
+
+            elif card.color == "NORMAL":
+                neg_score += score
+                neg_num += 1
+            elif card.color == "ASSASSIN":
+                neg_score += score
+                neg_num += 1
+            elif card.score == self.enemy:
+                neg_score += score
+                neg_num += 1
+
         total_score = pos_score/float(pos_num) - neg_score/float(neg_num)
         return total_score
 
@@ -232,6 +240,18 @@ class Spymaster(object):
         for Wr_class in word_rank_list:
             Wordrank.print_word(Wr_class)
 
-        print("clue:", word_rank_list[0].word)
+        print("clue: ", word_rank_list[0].word, "num: ", word_rank_list[0].card_score_pair)
+        num_count = 0
+        count_ix = 0
+        count_continue = True
+        while(count_continue):
+            cur_card = word_rank_list[0].card_score_pair[count_ix][0]
+            if cur_card.color == self.team:
+                num_count += 1
+                count_ix += 1
+            else:
+                count_continue = False
+        print("num: ", num_count)
+
         # max(cossim(w, word in (subsets + negative))
 
