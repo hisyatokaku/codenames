@@ -92,8 +92,8 @@ class Wordrank(object):
         for card, score in Wr_class.card_score_pair:
             card_score_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
             print_text += card_score_text
-        print(print_text)
-        # print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
+        # print(print_text)
+        return print_text
 
 class Vocab(object):
     """
@@ -139,9 +139,8 @@ class Spymaster(object):
         # initialize by 2
         # 25 * 3000000 due to memory limitation
         self.word_table = np.full([self.vocab_size, len(self.field)], 2, dtype=np.float32)
-        # print("self.word_table.shape: ", self.word_table.shape)
         self.fill_table()
-        print("table set.")
+        # print("table set.")
 
     def load_model(self, w2v_path):
         """
@@ -150,9 +149,9 @@ class Spymaster(object):
         :return:
         """
 
-        print("model loading...")
+        self.logger.info("spymaster model loading...")
         model = gensim.models.KeyedVectors.load_word2vec_format(w2v_path, binary=True)
-        print("model loaded.")
+        self.logger.info("spymaster model loaded.")
         return model
 
     def load_vocab(self):
@@ -168,11 +167,11 @@ class Spymaster(object):
         """
 
         if len(self.restrict_words_path) == 0:
-            print("load vocabulary from gensim.models.KeyedVectors.")
+            self.logger.info("load vocabulary from gensim.models.KeyedVectors.")
             vocab = self.model.vocab
         else:
             vocab = dict()
-            print("load restrict words from csv: ", self.restrict_words_path)
+            self.logger.info("load restrict words from csv: " + self.restrict_words_path)
             with open(self.restrict_words_path, 'r') as c:
                 reader = csv.reader(c)
                 header = next(reader)
@@ -191,16 +190,16 @@ class Spymaster(object):
         so the computation time is |vocabulary| * |field_size|(25).
         :return: None
         """
-        print("fill_table start.")
+        self.logger.info("fill_table start.")
         word_table_path = self.word_table_path
 
         if os.path.exists(word_table_path):
-            print(word_table_path, " exists.")
+            self.logger.info(word_table_path + " exists.")
             with open(word_table_path, 'rb') as r:
                 self.word_table = pickle.load(r)
 
         else:
-            print("creating word_table...")
+            self.logger.info("creating word_table...")
             for word in self.vocab:
                 for card in self.field:
                     w_ix = self.vocab[word].index
@@ -215,7 +214,7 @@ class Spymaster(object):
                             self.word_table[w_ix][c_ix] = 0
             with open('../models/word_table.pkl', 'wb') as w:
                 pickle.dump(self.word_table, w)
-        print("fill_table end.")
+        self.logger.info("fill_table end.")
 
     def restrict_word(self):
         pass
@@ -237,42 +236,33 @@ class Spymaster(object):
         neg_ix = [card.id for card in self.field if card.color != self.team and card.taken_by == "None"]
         neg_cards = [self.field[i] for i in neg_ix]
 
-        print("pos/neg set.")
-        self.logger.info("pos/neg set.")
-
         # make all combination
         combinations = \
             [list(comb) for n_comb in range(1, len(pos_ix)+1)\
              for comb in itertools.combinations(pos_ix, n_comb)]
-        print("combinations set.")
-        self.logger.info("combinations set.")
 
         word_rank_list = []
 
         # save model
         if os.path.exists(word_rank_list_path):
-            print(word_rank_list_path, "exists.")
+            self.logger.info(word_rank_list_path, "exists.")
             with open(word_rank_list_path, 'rb') as r:
                 word_rank_list = pickle.load(r)
         else:
-            print("creating word_rank_list...")
+            self.logger.info("creating word_rank_list...")
 
             # brute force
             if self.test:
                 # try small combination set
-                print("trying small combination set...")
+                self.logger.info("trying small combination set...")
                 combinations = combinations[50:55]
 
             for comb in combinations:
                 comb_cards = [self.field[i] for i in comb]
-
-                # print("combination: ", comb)
-
                 sub_word_rank_list = []
 
                 for word in self.vocab:
                     # too dirty
-                    # modified
                     card_score_pair = []
                     word_ix = self.vocab[word].index
                     for card in comb_cards + neg_cards:
@@ -289,7 +279,7 @@ class Spymaster(object):
                 # discard less than top_n
                 top_n_sub_word_rank_list = sub_word_rank_list[:top_n]
                 word_rank_list.extend(top_n_sub_word_rank_list)
-                # print("combination: ", comb, " ended.")
+                # self.logger.info("combination: ", comb, " ended.")
 
         # sort again
         word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
@@ -299,16 +289,16 @@ class Spymaster(object):
             with open(word_rank_list_path, 'wb') as w:
                 pickle.dump(word_rank_list, w)
         else:
-            print(word_rank_list_path, " exists.")
+            self.logger.info(word_rank_list_path + " exists.")
 
         # limit the top
         word_rank_list = word_rank_list[:top_n]
 
         for Wr_class in word_rank_list:
-            Wordrank.print_word(Wr_class)
+            self.logger.info(Wordrank.print_word(Wr_class))
 
         clue = word_rank_list[0].word
-        print("clue: ", clue)
+        self.logger.info("clue: " + clue)
 
         num_count = 0
         count_ix = 0
@@ -321,7 +311,7 @@ class Spymaster(object):
             else:
                 count_continue = False
 
-        print("num: ", num_count)
+        self.logger.info("num: " + num_count)
         return clue, num_count
 
 
