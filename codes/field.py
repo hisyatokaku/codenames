@@ -84,34 +84,34 @@ class Field(object):
             # correct answer
             if self.field[card.id].color == team:
                 exec("self.{}_score += 1".format(team.lower()))
-                print("Correct! team: {} got 1 points.".format(team))
+                self.logger.info("Correct! team: {} got 1 points.".format(team))
 
             elif self.field[card.id].color == "DOUBLE":
                 exec("self.{}_score += 1".format(team.lower()))
-                print("Correct! team: {} got 1 points.".format(team))
+                self.logger.info("Correct! team: {} got 1 points.".format(team))
 
             # wrong answer, give score to enemy, turn ends
             elif self.field[card.id].color == "RED" and team == "BLUE":
                 exec("self.{}_score += 1".format("RED".lower()))
-                print("Wrong! team: RED got 1 points. BLUE turn ends.")
+                self.logger.info("Wrong! team: RED got 1 points. BLUE turn ends.")
                 break
             elif self.field[card.id].color == "BLUE" and team == "RED":
                 exec("self.{}_score += 1".format("BLUE".lower()))
-                print("Wrong! team: BLUE got 1 points. RED turn ends.")
+                self.logger.info("Wrong! team: BLUE got 1 points. RED turn ends.")
                 break
 
             # wrong answer, turn ends
             elif self.field[card.id].color == "NORMAL":
-                print("Wrong! Normal card. {} turn ends.".format(team))
+                self.logger.info("Wrong! Normal card. {} turn ends.".format(team))
                 break
             elif self.field[card.id].color == "ASSASSIN":
                 self.loser = team
                 self.game_continue = False
-                print("ASSASSIN! team: {} loses.".format(team))
+                self.logger.info("ASSASSIN! team: {} loses.".format(team))
                 break
 
     def print_score(self):
-        print("RED: {} vs BLUE: {}".format(self.red_score,self.blue_score))
+        self.logger.info("RED: {} vs BLUE: {}".format(self.red_score,self.blue_score))
         self.print_field(display_colors=True,display_taken_by=True)
 
     def print_field(self, display_colors=True, display_taken_by=False):
@@ -119,34 +119,24 @@ class Field(object):
         print_string = ""
         for (i, card) in enumerate(self.field):
             print_string += card.name.rjust(maxwordlen + 2)
-            # print(card.name.rjust(maxwordlen+2),  end='', flush=True),
-            # logger.info(card.name.rjust(maxwordlen+2))
             if (i + 1) % 5 == 0:
-                print(print_string)
                 self.logger.info(print_string)
                 print_string = ""
-
-        print("\n")
         self.logger.info("\n")
 
         if display_colors:
+            print_string = ""
             for (i, card) in enumerate(self.field):
                 print_string += card.color.rjust(maxwordlen + 2)
-                # logger.info(card.color.rjust(maxwordlen+2))
                 if (i + 1) % 5 == 0:
-                    print(print_string)
-                    # print("\n", end='', flush=True),
                     self.logger.info(print_string)
                     print_string = ""
-
-        print("\n")
         self.logger.info("\n")
 
-
         if display_taken_by:
+            print_string = ""
             for (i, card) in enumerate(self.field):
                 print_string += card.taken_by.rjust(maxwordlen + 2)
                 if (i + 1) % 5 == 0:
-                    print(print_string)
                     self.logger.info(print_string)
                     print_string = ""

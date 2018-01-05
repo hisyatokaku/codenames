@@ -1,9 +1,5 @@
 import random
 import gensim
-import time
-import sys
-from field import Card, Field
-
 
 class Guesser(object):
     """
@@ -22,12 +18,12 @@ class Guesser(object):
         self.model = self.load_model(self.w2v_dir)
 
     def load_model(self, w2v_dir):
-        print("model loading...")
+        self.logger.info("player model loading...")
         if self.test:
             model = None
         else:
             model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
-        print("model loaded.")
+        self.logger.info("player model loaded.")
         return model
 
     def guess_from_clue(self, clue, num):
@@ -51,12 +47,13 @@ gkt         """
         sorted_card = sorted_card[:20]
 
         for card in sorted_card:
-            print(card[0].name, card[1], card[2])
-            self.logger.info(card)
+            print_text = "{} {} {}".format(card[0].name, card[1], card[2])
+            self.logger.info(print_text)
 
         ans_cards = sorted_card[:num]
-        print("answer: ")
+        self.logger.info("answer: ")
         for card in sorted_card[:num]:
-            print(card[0].name, card[1], card[2])
+            print_text = "{} {} {}".format(card[0].name, card[1], card[2])
+            self.logger.info(print_text)
 
         return [card[0] for card in ans_cards]
