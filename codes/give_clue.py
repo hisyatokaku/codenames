@@ -13,22 +13,16 @@ import sys
 class Wordrank(object):
 
     """
-    params
-    self.word: target word
-    self.pos: list( (positive_card_name, cossim_score) )
-    self.neg: list( (negative_card_name, cossim_score) )
-    self.score: score of target word
+    the class for retaining the card_score_pair: [vocab word, field word, similarity]
+    :param word:
+    :param card_score_pair: [
+    [Card_0, score with 'word'],
+    [Card_1, score with 'word'],
+    ...
+    ]
     """
 
     def __init__(self, word, card_score_pair, team):
-        """
-        :param word:
-        :param card_score_pair: [
-        [Card_0, score with 'word'],
-        [Card_1, score with 'word'],
-        ...
-        ]
-        """
 
         self.word = word
         self.card_score_pair = card_score_pair
@@ -42,9 +36,20 @@ class Wordrank(object):
         else:
             self.enemy = "RED"
 
-        self.total_score = self.calculate_score(card_score_pair)
+        self.total_score = self._calculate_score(card_score_pair)
 
-    def calculate_score(self, card_score_pair):
+    def _calculate_score(self, card_score_pair):
+        """
+        internal function to calculate the total score.
+
+        total_score = pos_score - neg_score(negative)
+        pos_score is the similarity for the field card which belongs to same team as
+        the spymaster.
+        neg_score is the similarity for the others.
+
+        :param card_score_pair:
+        :return: total_score
+        """
         # need to consider variance...?
         total_score = 0
         pos_score, neg_score = 0, 0
@@ -75,6 +80,14 @@ class Wordrank(object):
 
     @staticmethod
     def print_word(Wr_class):
+        """
+        printing function for this class.
+
+        :param Wr_class
+        (must be the instance of this class)
+        :return: None
+
+        """
         print_text = "word: {}, total_score: {} \n".format(Wr_class.word, Wr_class.total_score)
         for card, score in Wr_class.card_score_pair:
             card_score_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
@@ -83,10 +96,27 @@ class Wordrank(object):
         # print("word: {0}, score: {2}, pos_list:{1}".format(Wr_class.word, Wr_class.pos_ix, Wr_class.score))
 
 class Vocab(object):
+    """
+    my own vocabulary class.
+    same structure is also implemented in gensim.models.vocab.
+    """
+
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
 class Spymaster(object):
+    """
+    Spymaster class.
+    :param w2v_path: the path for pretrained embeddings
+    :param field: the instance from Field class (defined in field.py)
+    :param logger:
+    :param team: team color (must be 'RED' or 'BLUE')
+    :param word_table_path: path to save pkl file
+    :param word_rank_list_path: path to save pkl file
+    :param restrict_words_path: path to save pkl file
+    :param test: bool value
+    """
+
     def __init__(self, w2v_path, field, logger, team,
                  word_table_path, word_rank_list_path, restrict_words_path,
                  test=False):
@@ -114,12 +144,29 @@ class Spymaster(object):
         print("table set.")
 
     def load_model(self, w2v_path):
+        """
+        load pretrained embeddings.
+        :param w2v_path:
+        :return:
+        """
+
         print("model loading...")
         model = gensim.models.KeyedVectors.load_word2vec_format(w2v_path, binary=True)
         print("model loaded.")
         return model
 
     def load_vocab(self):
+        """
+        load the vocabulary.
+        by default, it loads all the vocabulary used for pretrained w2v (GoogleNews.bin.gz)
+        the number should be 3000000.
+
+        if you want to restrict the vocabulary, you can specify the path for the vocabulary
+        as the self.restrict_word_path. (Recommended)
+
+        :return: vocab (dict)
+        """
+
         if len(self.restrict_words_path) == 0:
             print("load vocabulary from gensim.models.KeyedVectors.")
             vocab = self.model.vocab
@@ -138,6 +185,12 @@ class Spymaster(object):
         return vocab
 
     def fill_table(self):
+        """
+        fill the value for self.word_table.
+        compute the similarity for each word from vocabulary and each word from field card.
+        so the computation time is |vocabulary| * |field_size|(25).
+        :return: None
+        """
         print("fill_table start.")
         word_table_path = self.word_table_path
 
@@ -168,6 +221,12 @@ class Spymaster(object):
         pass
 
     def give_clue(self, turn, top_n=100):
+        """
+        calculate the clue-likelihood for each word in vocabulary
+        :param turn: "RED" or "BLUE"
+        :param top_n: the number you want to keep the word_rank_list for each combination
+        :return:
+        """
 
         # for subsets in 2^8:
         # sim(clue, perm) - sim(clue, others) for clue in models.word
@@ -243,7 +302,7 @@ class Spymaster(object):
             print(word_rank_list_path, " exists.")
 
         # limit the top
-        word_rank_list = word_rank_list[:20]
+        word_rank_list = word_rank_list[:top_n]
 
         for Wr_class in word_rank_list:
             Wordrank.print_word(Wr_class)

@@ -6,6 +6,14 @@ from field import Card, Field
 
 
 class Guesser(object):
+    """
+    player (not spymaster) class.
+    :param w2v_dir: path for pretrained embeddings
+    :param field: instances of Field
+    :param logger:
+    :param test: bool
+    """
+
     def __init__(self, w2v_dir, field, logger, test=False):
         self.test = test
         self.w2v_dir = w2v_dir
@@ -23,6 +31,12 @@ class Guesser(object):
         return model
 
     def guess_from_clue(self, clue, num):
+        """
+        given a clue and number from spymaster, calculates all the similarity for each cards in the field.
+        :param clue: word (string)
+        :param num: number of cards which have to be guessed by that clue
+        :return: list for the word which was guessed
+gkt         """
         if self.test:
             dammy_card = [(card.name, random.randint(0, 10), card.color)\
                                 for card in self.field]
