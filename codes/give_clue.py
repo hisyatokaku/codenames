@@ -311,7 +311,7 @@ class Spymaster(object):
             else:
                 count_continue = False
 
-        self.logger.info("num: " + num_count)
+        self.logger.info("num: " + str(num_count))
         return clue, num_count
 
 

@@ -78,7 +78,14 @@ class Field(object):
             self.field[i].color = ix_to_str[color_ix]
 
     def check_answer(self, team, answer_cards):
+        """
+        checking teams to which team the guessed cards belong.
+        :param team: the guessing team who is in current turn
+        :param answer_cards: list of instances of Card
+        :return:
+        """
         for card in answer_cards:
+            self.logger.info("guessed card: ", card.name)
             self.field[card.id].taken_by = team
 
             # correct answer
