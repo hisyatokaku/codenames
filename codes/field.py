@@ -84,6 +84,10 @@ class Field(object):
         :param answer_cards: list of instances of Card
         :return:
         """
+        if self.red_score > 9 or self.blue_score > 9:
+            self.logger.info("game terminated.")
+            self.game_continue = False
+
         for card in answer_cards:
             self.logger.info("guessed card: ", card.name)
             self.field[card.id].taken_by = team
