@@ -55,13 +55,14 @@ class Wordrank(object):
         sorted_card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
         max_negative_score = -1
         for card, score in sorted_card_score_pair:
-            if card.taken_by is not None:
+            # if card.taken_by is not None:
+            if card.taken_by == "None":
                 if card.color in negative_list:
                     if max_negative_score < score:
                         max_negative_score = score
 
         for card, score in sorted_card_score_pair:
-            if card.taken_by is not None:
+            if card.taken_by == "None":
                 if card.color in negative_list:
                     break
                 else:
@@ -89,6 +90,7 @@ class Wordrank(object):
 
         for card, score in card_score_pair:
             if card.taken_by is not None:
+            # if card.taken_by == "None":
                 if card.color == self.team:
                     pos_score += score
                     pos_num += 1
@@ -122,9 +124,10 @@ class Wordrank(object):
         """
         print_text = "word: {}, total_score: {} \n".format(Wr_class.word, Wr_class.total_score)
         for card, score in Wr_class.card_score_pair:
-            card_score_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
-            print_text += card_score_text
-        # print(print_text)
+            if card.taken_by == "None":
+                card_score_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
+                print_text += card_score_text
+            # print(print_text)
         return print_text
 
 class Vocab(object):

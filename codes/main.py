@@ -13,12 +13,10 @@ from datetime import datetime
 
 sys.path.append('../')
 
-
 # argparse
 parser = argparse.ArgumentParser(description='input argument')
 parser.add_argument('--setting', '-s', type=str, default=None, help='section name in ../config/settings.exp')
 parser.add_argument('--exname', default=None, help='experiment name.')
-
 args = parser.parse_args()
 print(args.exname)
 
@@ -30,7 +28,6 @@ if args.exname:
 
 if not os.path.exists(log_dir_path):
     os.mkdir(log_dir_path)
-
 
 # logging config, setup
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
@@ -99,9 +96,9 @@ def main():
         if turn:
             cur_team = "RED"
             field_logger.info("turn: {}, turn count: {}".format(cur_team, turn_count))
-
             clue, num = red_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
-            field_logger.info("clue: ", clue, " num: ", str(num))
+            log_text = "clue: {}, num: {}".format(str(clue), str(num))
+            field_logger.info(log_text)
             answers = red_guesser.guess_from_clue(clue, num)  # [Card0, Card1, ...]
             field.check_answer(team=cur_team, answer_cards=answers)
 
@@ -109,14 +106,14 @@ def main():
             cur_team = "BLUE"
             field_logger.info("turn: {}, turn count: {}".format(cur_team, turn_count))
             clue, num = blue_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
-            field_logger.info("clue: ", clue, " num: ", str(num))
+            log_text = "clue: {}, num: {}".format(str(clue), str(num))
+            field_logger.info(log_text)
             answers = blue_guesser.guess_from_clue(clue, num)  # [Card0, Card1, ...]
             field.check_answer(team=cur_team, answer_cards=answers)
 
         field.print_score()
         turn = not turn
         turn_count += 1
-
 
 '''
 def _main():
