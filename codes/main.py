@@ -98,23 +98,26 @@ def main():
     while field.game_continue:
         if turn:
             cur_team = "RED"
-            field_logger.info("turn: RED")
+            field_logger.info("turn: {}, turn count: {}".format(cur_team, turn_count))
 
-            clue, num = red_spymaster.give_clue(turn=cur_team+str(turn_count), top_n=100)
+            clue, num = red_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
+            field_logger.info("clue: ", clue, " num: ", str(num))
             answers = red_guesser.guess_from_clue(clue, num)  # [Card0, Card1, ...]
             field.check_answer(team=cur_team, answer_cards=answers)
 
         else:
             cur_team = "BLUE"
-            field.logger.info("turn: ", turn_count, ' BLUE')
-
-            clue, num = blue_spymaster.give_clue(turn=cur_team+str(turn_count), top_n=100)
+            field_logger.info("turn: {}, turn count: {}".format(cur_team, turn_count))
+            clue, num = blue_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
+            field_logger.info("clue: ", clue, " num: ", str(num))
             answers = blue_guesser.guess_from_clue(clue, num)  # [Card0, Card1, ...]
             field.check_answer(team=cur_team, answer_cards=answers)
 
         field.print_score()
         turn = not turn
         turn_count += 1
+
+
 '''
 def _main():
     lined_file_path = setting_exp.get('cards')

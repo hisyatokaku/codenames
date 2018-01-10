@@ -36,13 +36,45 @@ class Wordrank(object):
         else:
             self.enemy = "RED"
 
-        self.total_score = self._calculate_score(card_score_pair)
+        self.total_score = self._calculate_score_with_threshold(card_score_pair)
+
+    def _calculate_score_with_threshold(self, card_score_pair):
+        """
+        internal function.
+
+        total_score = sigma(pos_score)
+        pos_score is calculated from the cards whose similarity is greater than the one with negative cards.
+        :param card_score_pair:
+        :return: total_score
+        """
+        total_score = 0
+        pos_score, neg_score = 0, 0
+        pos_num, neg_num = 0, 0
+        negative_list = [self.enemy, "NORMAL", "ASSASSIN"]
+
+        sorted_card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
+        max_negative_score = -1
+        for card, score in sorted_card_score_pair:
+            if card.taken_by is not None:
+                if card.color in negative_list:
+                    if max_negative_score < score:
+                        max_negative_score = score
+
+        for card, score in sorted_card_score_pair:
+            if card.taken_by is not None:
+                if card.color in negative_list:
+                    break
+                else:
+                    if score > max_negative_score:
+                        total_score += score
+
+        return total_score
 
     def _calculate_score(self, card_score_pair):
         """
         internal function to calculate the total score.
 
-        total_score = pos_score - neg_score(negative)
+        total_score = sigma(pos_score)/len(positive_cards) - sigma(neg_score)/len(negative_cards)
         pos_score is the similarity for the field card which belongs to same team as
         the spymaster.
         neg_score is the similarity for the others.
@@ -219,6 +251,64 @@ class Spymaster(object):
     def restrict_word(self):
         pass
 
+    def give_clue_with_threshold(self, turn, top_n=100):
+        """
+        calculate the clue-likelihood for each word in vocabulary.
+        with different scoring method.
+
+        :param turn:
+        :param top_n:
+        :return:
+        """
+        word_rank_list_path = self.word_rank_list_path + str(turn)
+        word_rank_list = []
+        if os.path.exists(word_rank_list_path):
+            self.logger.info(word_rank_list_path + " exists.")
+            with open(word_rank_list_path, 'rb') as r:
+                word_rank_list = pickle.load(r)
+        else:
+            self.logger.info("creating word_rank_list...")
+
+            for word in self.vocab:
+                card_score_pair = []
+                word_ix = self.vocab[word].index
+                for card in self.field:
+                    score = self.word_table[word_ix][card.id]
+                    card_score_pair.append([card, score])
+                card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
+
+                a_wordrank = Wordrank(word, card_score_pair, team=self.team)
+                word_rank_list.append(a_wordrank)
+
+            word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
+            if not os.path.exists(word_rank_list_path):
+                with open(word_rank_list_path, 'wb') as w:
+                    pickle.dump(word_rank_list, w)
+            else:
+                self.logger.info(word_rank_list_path + " exists.")
+
+            word_rank_list = word_rank_list[:top_n]
+
+            for Wr_class in word_rank_list:
+                self.logger.info(Wordrank.print_word(Wr_class))
+
+            clue = word_rank_list[0].word
+            self.logger.info("clue: " + clue)
+
+            num_count = 0
+            count_ix = 0
+            count_continue = True
+            while count_continue:
+                cur_card = word_rank_list[0].card_score_pair[count_ix][0]
+                if cur_card.color in [self.team, "DOUBLE"]:
+                    num_count += 1
+                    count_ix += 1
+                else:
+                    count_continue = False
+
+            self.logger.info("num: " + str(num_count))
+            return clue, num_count
+
     def give_clue(self, turn, top_n=100):
         """
         calculate the clue-likelihood for each word in vocabulary
@@ -245,7 +335,7 @@ class Spymaster(object):
 
         # save model
         if os.path.exists(word_rank_list_path):
-            self.logger.info(word_rank_list_path, "exists.")
+            self.logger.info(word_rank_list_path + " exists.")
             with open(word_rank_list_path, 'rb') as r:
                 word_rank_list = pickle.load(r)
         else:
@@ -259,6 +349,7 @@ class Spymaster(object):
 
             for comb in combinations:
                 comb_cards = [self.field[i] for i in comb]
+
                 sub_word_rank_list = []
 
                 for word in self.vocab:
@@ -311,7 +402,7 @@ class Spymaster(object):
             else:
                 count_continue = False
 
-        self.logger.info("num: " + num_count)
+        self.logger.info("num: " + str(num_count))
         return clue, num_count
 
 
