@@ -1,0 +1,828 @@
+player model loading...
+player model loaded.
+spymaster model loading...
+spymaster model loaded.
+load restrict words from csv: ../models/freq_wordlist.csv
+fill_table start.
+creating word_table...
+fill_table end.
+creating word_rank_list...
+word: garage, total_score: 1.296799659729004 
+	 card.name:garden (team:RED), similarity: 0.3655722737312317 
+	 card.name:fire (team:RED), similarity: 0.2940669655799866 
+	 card.name:pool (team:RED), similarity: 0.24825195968151093 
+	 card.name:block (team:RED), similarity: 0.22761055827140808 
+	 card.name:horn (team:RED), similarity: 0.16129790246486664 
+	 card.name:bridge (team:NORMAL), similarity: 0.15339641273021698 
+	 card.name:tube (team:BLUE), similarity: 0.152727872133255 
+	 card.name:table (team:BLUE), similarity: 0.12492498755455017 
+	 card.name:needle (team:BLUE), similarity: 0.11022515594959259 
+	 card.name:ring (team:NORMAL), similarity: 0.09597424417734146 
+	 card.name:spring (team:NORMAL), similarity: 0.09194335341453552 
+	 card.name:doctor (team:BLUE), similarity: 0.09018154442310333 
+	 card.name:wake (team:NORMAL), similarity: 0.09011668711900711 
+	 card.name:heart (team:NORMAL), similarity: 0.08961685001850128 
+	 card.name:moon (team:RED), similarity: 0.0804876908659935 
+	 card.name:iron (team:BLUE), similarity: 0.07275892049074173 
+	 card.name:pie (team:BLUE), similarity: 0.06989672034978867 
+	 card.name:seal (team:NORMAL), similarity: 0.06893499940633774 
+	 card.name:fish (team:NORMAL), similarity: 0.06512820720672607 
+	 card.name:drill (team:RED), similarity: 0.059587568044662476 
+	 card.name:tablet (team:RED), similarity: 0.04846053943037987 
+	 card.name:whale (team:BLUE), similarity: 0.03389883041381836 
+	 card.name:degree (team:RED), similarity: 0.014210346154868603 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.005756448954343796 
+	 card.name:grace (team:BLUE), similarity: -0.018893111497163773 
+
+word: house, total_score: 1.2099811285734177 
+	 card.name:garden (team:RED), similarity: 0.3785941004753113 
+	 card.name:fire (team:RED), similarity: 0.31517454981803894 
+	 card.name:block (team:RED), similarity: 0.28683361411094666 
+	 card.name:pool (team:RED), similarity: 0.2293788641691208 
+	 card.name:bridge (team:NORMAL), similarity: 0.20705507695674896 
+	 card.name:table (team:BLUE), similarity: 0.19165635108947754 
+	 card.name:ring (team:NORMAL), similarity: 0.16159439086914062 
+	 card.name:moon (team:RED), similarity: 0.15283797681331635 
+	 card.name:pie (team:BLUE), similarity: 0.14853034913539886 
+	 card.name:wake (team:NORMAL), similarity: 0.14664505422115326 
+	 card.name:doctor (team:BLUE), similarity: 0.1142818033695221 
+	 card.name:heart (team:NORMAL), similarity: 0.11130870133638382 
+	 card.name:spring (team:NORMAL), similarity: 0.1021764799952507 
+	 card.name:fish (team:NORMAL), similarity: 0.0837775245308876 
+	 card.name:tube (team:BLUE), similarity: 0.0837019830942154 
+	 card.name:degree (team:RED), similarity: 0.08185301721096039 
+	 card.name:grace (team:BLUE), similarity: 0.06809940934181213 
+	 card.name:tablet (team:RED), similarity: 0.0629747286438942 
+	 card.name:iron (team:BLUE), similarity: 0.04091835021972656 
+	 card.name:whale (team:BLUE), similarity: 0.033773742616176605 
+	 card.name:needle (team:BLUE), similarity: 0.013317856937646866 
+	 card.name:horn (team:RED), similarity: 0.003677600296214223 
+	 card.name:roulette (team:ASSASSIN), similarity: -0.01047532819211483 
+	 card.name:seal (team:NORMAL), similarity: -0.01674313098192215 
+	 card.name:drill (team:RED), similarity: -0.023458009585738182 
+
+word: bedroom, total_score: 1.1350324153900146 
+	 card.name:garden (team:RED), similarity: 0.35881200432777405 
+	 card.name:block (team:RED), similarity: 0.2793225347995758 
+	 card.name:pool (team:RED), similarity: 0.2607019543647766 
+	 card.name:fire (team:RED), similarity: 0.23619592189788818 
+	 card.name:table (team:BLUE), similarity: 0.186235249042511 
+	 card.name:tablet (team:RED), similarity: 0.17298950254917145 
+	 card.name:tube (team:BLUE), similarity: 0.1250927746295929 
+	 card.name:doctor (team:BLUE), similarity: 0.12154150754213333 
+	 card.name:wake (team:NORMAL), similarity: 0.1088431254029274 
+	 card.name:heart (team:NORMAL), similarity: 0.10760403424501419 
+	 card.name:ring (team:NORMAL), similarity: 0.10664661973714828 
+	 card.name:moon (team:RED), similarity: 0.07803114503622055 
+	 card.name:fish (team:NORMAL), similarity: 0.0714440792798996 
+	 card.name:degree (team:RED), similarity: 0.07135740667581558 
+	 card.name:bridge (team:NORMAL), similarity: 0.06956034898757935 
+	 card.name:pie (team:BLUE), similarity: 0.06927734613418579 
+	 card.name:needle (team:BLUE), similarity: 0.06578465551137924 
+	 card.name:grace (team:BLUE), similarity: 0.06137276068329811 
+	 card.name:iron (team:BLUE), similarity: 0.05857295170426369 
+	 card.name:horn (team:RED), similarity: 0.05686970427632332 
+	 card.name:drill (team:RED), similarity: 0.05475490912795067 
+	 card.name:whale (team:BLUE), similarity: 0.026592308655381203 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.02565234713256359 
+	 card.name:spring (team:NORMAL), similarity: 0.025233343243598938 
+	 card.name:seal (team:NORMAL), similarity: -0.008920186199247837 
+
+word: backyard, total_score: 1.1189711689949036 
+	 card.name:garden (team:RED), similarity: 0.5425633192062378 
+	 card.name:pool (team:RED), similarity: 0.3663095533847809 
+	 card.name:block (team:RED), similarity: 0.2100982964038849 
+	 card.name:spring (team:NORMAL), similarity: 0.20186181366443634 
+	 card.name:fire (team:RED), similarity: 0.18606753647327423 
+	 card.name:wake (team:NORMAL), similarity: 0.183963343501091 
+	 card.name:moon (team:RED), similarity: 0.14063572883605957 
+	 card.name:fish (team:NORMAL), similarity: 0.13997390866279602 
+	 card.name:horn (team:RED), similarity: 0.1397499144077301 
+	 card.name:pie (team:BLUE), similarity: 0.13038355112075806 
+	 card.name:table (team:BLUE), similarity: 0.1263633370399475 
+	 card.name:ring (team:NORMAL), similarity: 0.12571731209754944 
+	 card.name:heart (team:NORMAL), similarity: 0.11985809355974197 
+	 card.name:iron (team:BLUE), similarity: 0.11830320209264755 
+	 card.name:drill (team:RED), similarity: 0.08331065624952316 
+	 card.name:needle (team:BLUE), similarity: 0.08111217617988586 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.058038074523210526 
+	 card.name:degree (team:RED), similarity: 0.05381712317466736 
+	 card.name:tube (team:BLUE), similarity: 0.053505368530750275 
+	 card.name:doctor (team:BLUE), similarity: 0.053109489381313324 
+	 card.name:whale (team:BLUE), similarity: 0.04076133668422699 
+	 card.name:bridge (team:NORMAL), similarity: 0.03596265986561775 
+	 card.name:seal (team:NORMAL), similarity: -0.01077362522482872 
+	 card.name:tablet (team:RED), similarity: -0.031533461064100266 
+	 card.name:grace (team:BLUE), similarity: -0.05576532706618309 
+
+word: porch, total_score: 1.0581454932689667 
+	 card.name:garden (team:RED), similarity: 0.4764019548892975 
+	 card.name:block (team:RED), similarity: 0.31559401750564575 
+	 card.name:fire (team:RED), similarity: 0.26614952087402344 
+	 card.name:table (team:BLUE), similarity: 0.25892922282218933 
+	 card.name:pool (team:RED), similarity: 0.24486896395683289 
+	 card.name:bridge (team:NORMAL), similarity: 0.23276524245738983 
+	 card.name:moon (team:RED), similarity: 0.2312033623456955 
+	 card.name:horn (team:RED), similarity: 0.21994329988956451 
+	 card.name:spring (team:NORMAL), similarity: 0.20368272066116333 
+	 card.name:tube (team:BLUE), similarity: 0.183033287525177 
+	 card.name:iron (team:BLUE), similarity: 0.12638024985790253 
+	 card.name:heart (team:NORMAL), similarity: 0.1042405366897583 
+	 card.name:fish (team:NORMAL), similarity: 0.09163840860128403 
+	 card.name:whale (team:BLUE), similarity: 0.08257534354925156 
+	 card.name:degree (team:RED), similarity: 0.0776963159441948 
+	 card.name:doctor (team:BLUE), similarity: 0.07149847596883774 
+	 card.name:grace (team:BLUE), similarity: 0.07073517888784409 
+	 card.name:ring (team:NORMAL), similarity: 0.06800147145986557 
+	 card.name:wake (team:NORMAL), similarity: 0.06493823975324631 
+	 card.name:tablet (team:RED), similarity: 0.06464408338069916 
+	 card.name:pie (team:BLUE), similarity: 0.0574188195168972 
+	 card.name:needle (team:BLUE), similarity: 0.04819758981466293 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.02729356661438942 
+	 card.name:seal (team:NORMAL), similarity: 0.025874149054288864 
+	 card.name:drill (team:RED), similarity: 0.006765898782759905 
+
+word: apartment, total_score: 1.0378475040197372 
+	 card.name:block (team:RED), similarity: 0.3536239564418793 
+	 card.name:fire (team:RED), similarity: 0.264498770236969 
+	 card.name:garden (team:RED), similarity: 0.22318637371063232 
+	 card.name:pool (team:RED), similarity: 0.19653840363025665 
+	 card.name:bridge (team:NORMAL), similarity: 0.1575433760881424 
+	 card.name:degree (team:RED), similarity: 0.15092366933822632 
+	 card.name:heart (team:NORMAL), similarity: 0.13152270019054413 
+	 card.name:doctor (team:BLUE), similarity: 0.11465562134981155 
+	 card.name:table (team:BLUE), similarity: 0.11219818890094757 
+	 card.name:tablet (team:RED), similarity: 0.11086813360452652 
+	 card.name:wake (team:NORMAL), similarity: 0.10919486731290817 
+	 card.name:ring (team:NORMAL), similarity: 0.10609258711338043 
+	 card.name:moon (team:RED), similarity: 0.10129820555448532 
+	 card.name:grace (team:BLUE), similarity: 0.09226976335048676 
+	 card.name:iron (team:BLUE), similarity: 0.0882922112941742 
+	 card.name:tube (team:BLUE), similarity: 0.08537949621677399 
+	 card.name:needle (team:BLUE), similarity: 0.07786154001951218 
+	 card.name:fish (team:NORMAL), similarity: 0.057026125490665436 
+	 card.name:pie (team:BLUE), similarity: 0.027728457003831863 
+	 card.name:whale (team:BLUE), similarity: 0.02549748308956623 
+	 card.name:drill (team:RED), similarity: 0.013828117400407791 
+	 card.name:spring (team:NORMAL), similarity: 0.013726509176194668 
+	 card.name:horn (team:RED), similarity: -0.008757015690207481 
+	 card.name:roulette (team:ASSASSIN), similarity: -0.014899304136633873 
+	 card.name:seal (team:NORMAL), similarity: -0.036162279546260834 
+
+word: driveway, total_score: 1.0324751138687134 
+	 card.name:garden (team:RED), similarity: 0.4095654785633087 
+	 card.name:block (team:RED), similarity: 0.34373903274536133 
+	 card.name:pool (team:RED), similarity: 0.27917060256004333 
+	 card.name:bridge (team:NORMAL), similarity: 0.23063555359840393 
+	 card.name:horn (team:RED), similarity: 0.19501271843910217 
+	 card.name:tube (team:BLUE), similarity: 0.1831352859735489 
+	 card.name:fire (team:RED), similarity: 0.180196613073349 
+	 card.name:table (team:BLUE), similarity: 0.1685110628604889 
+	 card.name:moon (team:RED), similarity: 0.14152811467647552 
+	 card.name:ring (team:NORMAL), similarity: 0.12987975776195526 
+	 card.name:doctor (team:BLUE), similarity: 0.11988271772861481 
+	 card.name:spring (team:NORMAL), similarity: 0.11661863327026367 
+	 card.name:iron (team:BLUE), similarity: 0.07826432585716248 
+	 card.name:drill (team:RED), similarity: 0.07189783453941345 
+	 card.name:needle (team:BLUE), similarity: 0.0657547265291214 
+	 card.name:whale (team:BLUE), similarity: 0.05900298431515694 
+	 card.name:wake (team:NORMAL), similarity: 0.05806859955191612 
+	 card.name:heart (team:NORMAL), similarity: 0.048849768936634064 
+	 card.name:pie (team:BLUE), similarity: 0.03718993440270424 
+	 card.name:degree (team:RED), similarity: 0.03253808245062828 
+	 card.name:tablet (team:RED), similarity: 0.03183106705546379 
+	 card.name:fish (team:NORMAL), similarity: 0.02273084595799446 
+	 card.name:seal (team:NORMAL), similarity: 0.02270522341132164 
+	 card.name:grace (team:BLUE), similarity: 0.002672316739335656 
+	 card.name:roulette (team:ASSASSIN), similarity: -0.008729521185159683 
+
+word: residence, total_score: 0.9936191141605377 
+	 card.name:block (team:RED), similarity: 0.35793983936309814 
+	 card.name:garden (team:RED), similarity: 0.2524905800819397 
+	 card.name:fire (team:RED), similarity: 0.22393500804901123 
+	 card.name:degree (team:RED), similarity: 0.15925368666648865 
+	 card.name:bridge (team:NORMAL), similarity: 0.15464569628238678 
+	 card.name:pool (team:RED), similarity: 0.11992929130792618 
+	 card.name:ring (team:NORMAL), similarity: 0.09976768493652344 
+	 card.name:doctor (team:BLUE), similarity: 0.09693318605422974 
+	 card.name:heart (team:NORMAL), similarity: 0.09598515927791595 
+	 card.name:grace (team:BLUE), similarity: 0.0885811299085617 
+	 card.name:table (team:BLUE), similarity: 0.08364972472190857 
+	 card.name:iron (team:BLUE), similarity: 0.07542397081851959 
+	 card.name:moon (team:RED), similarity: 0.06944540143013 
+	 card.name:fish (team:NORMAL), similarity: 0.046288054436445236 
+	 card.name:tablet (team:RED), similarity: 0.039468053728342056 
+	 card.name:horn (team:RED), similarity: 0.03927634283900261 
+	 card.name:wake (team:NORMAL), similarity: 0.03673042729496956 
+	 card.name:tube (team:BLUE), similarity: 0.034285083413124084 
+	 card.name:spring (team:NORMAL), similarity: 0.030957546085119247 
+	 card.name:seal (team:NORMAL), similarity: 0.030787911266088486 
+	 card.name:drill (team:RED), similarity: 0.020494068041443825 
+	 card.name:whale (team:BLUE), similarity: -0.01060179341584444 
+	 card.name:pie (team:BLUE), similarity: -0.01426179613918066 
+	 card.name:needle (team:BLUE), similarity: -0.04308544471859932 
+	 card.name:roulette (team:ASSASSIN), similarity: -0.07819506525993347 
+
+word: classroom, total_score: 0.917372539639473 
+	 card.name:garden (team:RED), similarity: 0.2706543207168579 
+	 card.name:fire (team:RED), similarity: 0.16908907890319824 
+	 card.name:tablet (team:RED), similarity: 0.16250549256801605 
+	 card.name:degree (team:RED), similarity: 0.15855489671230316 
+	 card.name:pool (team:RED), similarity: 0.1565687507390976 
+	 card.name:table (team:BLUE), similarity: 0.15126557648181915 
+	 card.name:spring (team:NORMAL), similarity: 0.14652693271636963 
+	 card.name:tube (team:BLUE), similarity: 0.14023107290267944 
+	 card.name:drill (team:RED), similarity: 0.13446645438671112 
+	 card.name:doctor (team:BLUE), similarity: 0.11911223828792572 
+	 card.name:bridge (team:NORMAL), similarity: 0.11787256598472595 
+	 card.name:block (team:RED), similarity: 0.09014274924993515 
+	 card.name:needle (team:BLUE), similarity: 0.08012997359037399 
+	 card.name:ring (team:NORMAL), similarity: 0.07951146364212036 
+	 card.name:whale (team:BLUE), similarity: 0.07746454328298569 
+	 card.name:moon (team:RED), similarity: 0.07462640106678009 
+	 card.name:pie (team:BLUE), similarity: 0.0644531100988388 
+	 card.name:fish (team:NORMAL), similarity: 0.05787384882569313 
+	 card.name:iron (team:BLUE), similarity: 0.052696533501148224 
+	 card.name:horn (team:RED), similarity: 0.04617912694811821 
+	 card.name:heart (team:NORMAL), similarity: 0.03564460948109627 
+	 card.name:grace (team:BLUE), similarity: 0.028739146888256073 
+	 card.name:wake (team:NORMAL), similarity: 0.004761420655995607 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.00035912604653276503 
+	 card.name:seal (team:NORMAL), similarity: -0.01747395470738411 
+
+word: lawn, total_score: 0.8842021822929382 
+	 card.name:garden (team:RED), similarity: 0.5983371734619141 
+	 card.name:pool (team:RED), similarity: 0.28586500883102417 
+	 card.name:spring (team:NORMAL), similarity: 0.21066157519817352 
+	 card.name:table (team:BLUE), similarity: 0.19262844324111938 
+	 card.name:moon (team:RED), similarity: 0.15805232524871826 
+	 card.name:fire (team:RED), similarity: 0.1377793252468109 
+	 card.name:block (team:RED), similarity: 0.12946711480617523 
+	 card.name:horn (team:RED), similarity: 0.12217113375663757 
+	 card.name:doctor (team:BLUE), similarity: 0.11902812123298645 
+	 card.name:fish (team:NORMAL), similarity: 0.1160852313041687 
+	 card.name:tube (team:BLUE), similarity: 0.10652769356966019 
+	 card.name:iron (team:BLUE), similarity: 0.10576590150594711 
+	 card.name:whale (team:BLUE), similarity: 0.09016253054141998 
+	 card.name:pie (team:BLUE), similarity: 0.07591229677200317 
+	 card.name:heart (team:NORMAL), similarity: 0.06795673817396164 
+	 card.name:grace (team:BLUE), similarity: 0.062315069139003754 
+	 card.name:degree (team:RED), similarity: 0.05729995667934418 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.056834876537323 
+	 card.name:tablet (team:RED), similarity: 0.05540502071380615 
+	 card.name:wake (team:NORMAL), similarity: 0.05226128548383713 
+	 card.name:bridge (team:NORMAL), similarity: 0.047659751027822495 
+	 card.name:ring (team:NORMAL), similarity: 0.03967083618044853 
+	 card.name:drill (team:RED), similarity: 0.038845520466566086 
+	 card.name:seal (team:NORMAL), similarity: 0.01754695735871792 
+	 card.name:needle (team:BLUE), similarity: 0.00472208671271801 
+
+clue: garage
+num: 5
+garden 0.3655722866300167 RED
+fire 0.29406696244560093 RED
+pool 0.24825196669477337 RED
+block 0.22761056279055747 RED
+horn 0.16129790729476384 RED
+bridge 0.1533964058126095 NORMAL
+tube 0.1527278741799159 BLUE
+table 0.12492498641170788 BLUE
+needle 0.11022515508943949 BLUE
+ring 0.09597424664475467 NORMAL
+spring 0.09194335140150459 NORMAL
+doctor 0.09018154593843142 BLUE
+wake 0.09011668840668022 NORMAL
+heart 0.08961685238263249 NORMAL
+moon 0.08048769046358215 RED
+iron 0.0727589182096144 BLUE
+pie 0.0698967235389657 BLUE
+seal 0.0689349995048368 NORMAL
+fish 0.06512821068666812 NORMAL
+drill 0.059587569765295695 RED
+tablet 0.04846053972200338 RED
+whale 0.0338988287015201 BLUE
+degree 0.014210346214329705 RED
+roulette 0.005756448742208218 ASSASSIN
+grace -0.01889311194637652 BLUE
+answer: 
+garden 0.3655722866300167 RED
+fire 0.29406696244560093 RED
+pool 0.24825196669477337 RED
+block 0.22761056279055747 RED
+horn 0.16129790729476384 RED
+creating word_rank_list...
+word: exploration, total_score: 0.7776978015899658 
+	 card.name:drill (team:RED), similarity: 0.5249406695365906 
+	 card.name:moon (team:RED), similarity: 0.25275713205337524 
+	 card.name:whale (team:BLUE), similarity: 0.13586856424808502 
+	 card.name:iron (team:BLUE), similarity: 0.12500928342342377 
+	 card.name:fish (team:NORMAL), similarity: 0.08632708340883255 
+	 card.name:degree (team:RED), similarity: 0.06655861437320709 
+	 card.name:heart (team:NORMAL), similarity: 0.061997123062610626 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.05054754018783569 
+	 card.name:seal (team:NORMAL), similarity: 0.042654577642679214 
+	 card.name:doctor (team:BLUE), similarity: 0.04191679507493973 
+	 card.name:tablet (team:RED), similarity: 0.03193660080432892 
+	 card.name:ring (team:NORMAL), similarity: 0.02503408119082451 
+	 card.name:grace (team:BLUE), similarity: 0.024517996236681938 
+	 card.name:wake (team:NORMAL), similarity: 0.021159760653972626 
+	 card.name:spring (team:NORMAL), similarity: 0.019719673320651054 
+	 card.name:bridge (team:NORMAL), similarity: -0.00873729307204485 
+
+word: olympics, total_score: 0.6056715324521065 
+	 card.name:drill (team:RED), similarity: 0.20527364313602448 
+	 card.name:moon (team:RED), similarity: 0.14068643748760223 
+	 card.name:tablet (team:RED), similarity: 0.13854680955410004 
+	 card.name:degree (team:RED), similarity: 0.12116464227437973 
+	 card.name:ring (team:NORMAL), similarity: 0.11233244836330414 
+	 card.name:spring (team:NORMAL), similarity: 0.10088185966014862 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.08427416533231735 
+	 card.name:heart (team:NORMAL), similarity: 0.06048684939742088 
+	 card.name:fish (team:NORMAL), similarity: 0.058903343975543976 
+	 card.name:bridge (team:NORMAL), similarity: 0.052451398223638535 
+	 card.name:whale (team:BLUE), similarity: 0.04393775388598442 
+	 card.name:iron (team:BLUE), similarity: 0.04264114052057266 
+	 card.name:seal (team:NORMAL), similarity: 0.02837136760354042 
+	 card.name:wake (team:NORMAL), similarity: 0.027217740193009377 
+	 card.name:doctor (team:BLUE), similarity: 0.02320815622806549 
+	 card.name:grace (team:BLUE), similarity: 0.005605711136013269 
+
+word: capability, total_score: 0.5419027507305145 
+	 card.name:tablet (team:RED), similarity: 0.16033737361431122 
+	 card.name:degree (team:RED), similarity: 0.14213994145393372 
+	 card.name:drill (team:RED), similarity: 0.1309983879327774 
+	 card.name:moon (team:RED), similarity: 0.10842704772949219 
+	 card.name:wake (team:NORMAL), similarity: 0.07530079782009125 
+	 card.name:grace (team:BLUE), similarity: 0.06499235332012177 
+	 card.name:fish (team:NORMAL), similarity: 0.058406583964824677 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.056780777871608734 
+	 card.name:bridge (team:NORMAL), similarity: 0.04191265627741814 
+	 card.name:seal (team:NORMAL), similarity: 0.016917597502470016 
+	 card.name:whale (team:BLUE), similarity: 0.013501015491783619 
+	 card.name:spring (team:NORMAL), similarity: 0.008960866369307041 
+	 card.name:ring (team:NORMAL), similarity: 0.008842756040394306 
+	 card.name:heart (team:NORMAL), similarity: -0.010644436813890934 
+	 card.name:iron (team:BLUE), similarity: -0.01923556439578533 
+	 card.name:doctor (team:BLUE), similarity: -0.07200786471366882 
+
+word: science, total_score: 0.5309211611747742 
+	 card.name:degree (team:RED), similarity: 0.30196163058280945 
+	 card.name:moon (team:RED), similarity: 0.22895953059196472 
+	 card.name:fish (team:NORMAL), similarity: 0.1361798346042633 
+	 card.name:doctor (team:BLUE), similarity: 0.1200888529419899 
+	 card.name:tablet (team:RED), similarity: 0.10923656821250916 
+	 card.name:whale (team:BLUE), similarity: 0.10757020860910416 
+	 card.name:wake (team:NORMAL), similarity: 0.08041274547576904 
+	 card.name:heart (team:NORMAL), similarity: 0.06021740660071373 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.05460691452026367 
+	 card.name:bridge (team:NORMAL), similarity: 0.04434601217508316 
+	 card.name:seal (team:NORMAL), similarity: 0.03812981769442558 
+	 card.name:spring (team:NORMAL), similarity: 0.03391888365149498 
+	 card.name:drill (team:RED), similarity: 0.031485624611377716 
+	 card.name:iron (team:BLUE), similarity: 0.02040620893239975 
+	 card.name:grace (team:BLUE), similarity: -0.0010497315088286996 
+	 card.name:ring (team:NORMAL), similarity: -0.006328893359750509 
+
+word: ring, total_score: 0.5220817625522614 
+	 card.name:moon (team:RED), similarity: 0.19066059589385986 
+	 card.name:tablet (team:RED), similarity: 0.17772018909454346 
+	 card.name:degree (team:RED), similarity: 0.15370097756385803 
+	 card.name:heart (team:NORMAL), similarity: 0.1087302714586258 
+	 card.name:iron (team:BLUE), similarity: 0.108207106590271 
+	 card.name:wake (team:NORMAL), similarity: 0.10771679133176804 
+	 card.name:seal (team:NORMAL), similarity: 0.09878727048635483 
+	 card.name:doctor (team:BLUE), similarity: 0.08574139326810837 
+	 card.name:bridge (team:NORMAL), similarity: 0.08029023557901382 
+	 card.name:drill (team:RED), similarity: 0.06646686047315598 
+	 card.name:grace (team:BLUE), similarity: 0.06469926238059998 
+	 card.name:whale (team:BLUE), similarity: 0.06238643825054169 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.05026225745677948 
+	 card.name:fish (team:NORMAL), similarity: 0.030272837728261948 
+	 card.name:spring (team:NORMAL), similarity: 0.02832052670419216 
+	 card.name:ring (team:NORMAL), similarity: 0.0 
+
+word: orbit, total_score: 0.5207072496414185 
+	 card.name:moon (team:RED), similarity: 0.5207072496414185 
+	 card.name:whale (team:BLUE), similarity: 0.1918029636144638 
+	 card.name:ring (team:NORMAL), similarity: 0.15442197024822235 
+	 card.name:iron (team:BLUE), similarity: 0.13529524207115173 
+	 card.name:degree (team:RED), similarity: 0.1272030919790268 
+	 card.name:drill (team:RED), similarity: 0.11282695084810257 
+	 card.name:grace (team:BLUE), similarity: 0.10504785180091858 
+	 card.name:tablet (team:RED), similarity: 0.08655718713998795 
+	 card.name:bridge (team:NORMAL), similarity: 0.08638956397771835 
+	 card.name:heart (team:NORMAL), similarity: 0.08349720388650894 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.05454900115728378 
+	 card.name:seal (team:NORMAL), similarity: 0.03583294153213501 
+	 card.name:wake (team:NORMAL), similarity: 0.0314953438937664 
+	 card.name:doctor (team:BLUE), similarity: 0.019460590556263924 
+	 card.name:fish (team:NORMAL), similarity: 0.017963655292987823 
+	 card.name:spring (team:NORMAL), similarity: 0.014333452098071575 
+
+word: vertical, total_score: 0.5084183812141418 
+	 card.name:drill (team:RED), similarity: 0.2997206151485443 
+	 card.name:tablet (team:RED), similarity: 0.20869776606559753 
+	 card.name:iron (team:BLUE), similarity: 0.20688767731189728 
+	 card.name:degree (team:RED), similarity: 0.16108286380767822 
+	 card.name:moon (team:RED), similarity: 0.1545383483171463 
+	 card.name:fish (team:NORMAL), similarity: 0.1289699375629425 
+	 card.name:bridge (team:NORMAL), similarity: 0.12095952779054642 
+	 card.name:grace (team:BLUE), similarity: 0.11890045553445816 
+	 card.name:seal (team:NORMAL), similarity: 0.08288728445768356 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.07899418473243713 
+	 card.name:whale (team:BLUE), similarity: 0.07766091078519821 
+	 card.name:spring (team:NORMAL), similarity: 0.07621045410633087 
+	 card.name:ring (team:NORMAL), similarity: 0.05236333608627319 
+	 card.name:heart (team:NORMAL), similarity: 0.03914085775613785 
+	 card.name:wake (team:NORMAL), similarity: -0.019252633675932884 
+	 card.name:doctor (team:BLUE), similarity: -0.07287389785051346 
+
+word: device, total_score: 0.5045264959335327 
+	 card.name:tablet (team:RED), similarity: 0.5045264959335327 
+	 card.name:doctor (team:BLUE), similarity: 0.18940232694149017 
+	 card.name:heart (team:NORMAL), similarity: 0.16462647914886475 
+	 card.name:ring (team:NORMAL), similarity: 0.1518382877111435 
+	 card.name:bridge (team:NORMAL), similarity: 0.1465056985616684 
+	 card.name:drill (team:RED), similarity: 0.13622978329658508 
+	 card.name:degree (team:RED), similarity: 0.13042505085468292 
+	 card.name:seal (team:NORMAL), similarity: 0.11541417986154556 
+	 card.name:whale (team:BLUE), similarity: 0.09985651820898056 
+	 card.name:fish (team:NORMAL), similarity: 0.09575197100639343 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.07695415616035461 
+	 card.name:wake (team:NORMAL), similarity: 0.022154731675982475 
+	 card.name:iron (team:BLUE), similarity: 0.008712401613593102 
+	 card.name:spring (team:NORMAL), similarity: -0.008073846809566021 
+	 card.name:grace (team:BLUE), similarity: -0.010075290687382221 
+	 card.name:moon (team:RED), similarity: -0.021063974127173424 
+
+word: surface, total_score: 0.5044343173503876 
+	 card.name:moon (team:RED), similarity: 0.2746901512145996 
+	 card.name:drill (team:RED), similarity: 0.22974416613578796 
+	 card.name:seal (team:NORMAL), similarity: 0.201461523771286 
+	 card.name:iron (team:BLUE), similarity: 0.19795432686805725 
+	 card.name:whale (team:BLUE), similarity: 0.17474067211151123 
+	 card.name:tablet (team:RED), similarity: 0.16161109507083893 
+	 card.name:fish (team:NORMAL), similarity: 0.15838420391082764 
+	 card.name:bridge (team:NORMAL), similarity: 0.1367696076631546 
+	 card.name:spring (team:NORMAL), similarity: 0.1264718621969223 
+	 card.name:ring (team:NORMAL), similarity: 0.09695050120353699 
+	 card.name:degree (team:RED), similarity: 0.09427586197853088 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.08085115998983383 
+	 card.name:heart (team:NORMAL), similarity: 0.07986950129270554 
+	 card.name:grace (team:BLUE), similarity: 0.04125175625085831 
+	 card.name:doctor (team:BLUE), similarity: 0.0313209593296051 
+	 card.name:wake (team:NORMAL), similarity: -0.06921931356191635 
+
+word: planet, total_score: 0.5024792551994324 
+	 card.name:moon (team:RED), similarity: 0.5024792551994324 
+	 card.name:whale (team:BLUE), similarity: 0.2704640030860901 
+	 card.name:fish (team:NORMAL), similarity: 0.14808443188667297 
+	 card.name:heart (team:NORMAL), similarity: 0.14387084543704987 
+	 card.name:ring (team:NORMAL), similarity: 0.10178841650485992 
+	 card.name:tablet (team:RED), similarity: 0.08400309085845947 
+	 card.name:iron (team:BLUE), similarity: 0.07371283322572708 
+	 card.name:grace (team:BLUE), similarity: 0.05126624554395676 
+	 card.name:degree (team:RED), similarity: 0.04275244474411011 
+	 card.name:seal (team:NORMAL), similarity: 0.04098942130804062 
+	 card.name:doctor (team:BLUE), similarity: 0.0338967964053154 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.031920988112688065 
+	 card.name:spring (team:NORMAL), similarity: 0.02298962138593197 
+	 card.name:wake (team:NORMAL), similarity: 0.02108670584857464 
+	 card.name:drill (team:RED), similarity: 0.003198231803253293 
+	 card.name:bridge (team:NORMAL), similarity: -0.014702093787491322 
+
+clue: exploration
+num: 2
+drill 0.524940698535263 RED
+moon 0.2527571346084901 RED
+whale 0.13586856573687986 BLUE
+iron 0.12500927973253675 BLUE
+fish 0.08632708385411322 NORMAL
+degree 0.06655861168179314 RED
+heart 0.06199712294357504 NORMAL
+roulette 0.05054754071931256 ASSASSIN
+seal 0.042654579174301266 NORMAL
+doctor 0.04191679657579801 BLUE
+tablet 0.031936601740448926 RED
+ring 0.025034080985343467 NORMAL
+grace 0.02451799600312647 BLUE
+wake 0.021159760409039226 NORMAL
+spring 0.01971967312610668 NORMAL
+bridge -0.008737293351312792 NORMAL
+answer: 
+drill 0.524940698535263 RED
+moon 0.2527571346084901 RED
+creating word_rank_list...
+word: device, total_score: 0.5045264959335327 
+	 card.name:tablet (team:RED), similarity: 0.5045264959335327 
+	 card.name:heart (team:NORMAL), similarity: 0.16462647914886475 
+	 card.name:ring (team:NORMAL), similarity: 0.1518382877111435 
+	 card.name:bridge (team:NORMAL), similarity: 0.1465056985616684 
+	 card.name:degree (team:RED), similarity: 0.13042505085468292 
+	 card.name:seal (team:NORMAL), similarity: 0.11541417986154556 
+	 card.name:whale (team:BLUE), similarity: 0.09985651820898056 
+	 card.name:fish (team:NORMAL), similarity: 0.09575197100639343 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.07695415616035461 
+	 card.name:wake (team:NORMAL), similarity: 0.022154731675982475 
+	 card.name:iron (team:BLUE), similarity: 0.008712401613593102 
+	 card.name:spring (team:NORMAL), similarity: -0.008073846809566021 
+	 card.name:grace (team:BLUE), similarity: -0.010075290687382221 
+
+word: dose, total_score: 0.46695786714553833 
+	 card.name:tablet (team:RED), similarity: 0.23801371455192566 
+	 card.name:degree (team:RED), similarity: 0.22894415259361267 
+	 card.name:heart (team:NORMAL), similarity: 0.19623935222625732 
+	 card.name:wake (team:NORMAL), similarity: 0.15792633593082428 
+	 card.name:grace (team:BLUE), similarity: 0.11432979255914688 
+	 card.name:iron (team:BLUE), similarity: 0.09951633960008621 
+	 card.name:ring (team:NORMAL), similarity: 0.06845571100711823 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.05590768903493881 
+	 card.name:fish (team:NORMAL), similarity: 0.051148634403944016 
+	 card.name:spring (team:NORMAL), similarity: 0.046536363661289215 
+	 card.name:seal (team:NORMAL), similarity: 0.03634479269385338 
+	 card.name:whale (team:BLUE), similarity: 0.03443848341703415 
+	 card.name:bridge (team:NORMAL), similarity: 0.019343912601470947 
+
+word: notebook, total_score: 0.46281343698501587 
+	 card.name:tablet (team:RED), similarity: 0.46281343698501587 
+	 card.name:ring (team:NORMAL), similarity: 0.1028389036655426 
+	 card.name:spring (team:NORMAL), similarity: 0.08929093927145004 
+	 card.name:seal (team:NORMAL), similarity: 0.08474799990653992 
+	 card.name:bridge (team:NORMAL), similarity: 0.08448752015829086 
+	 card.name:fish (team:NORMAL), similarity: 0.08007606118917465 
+	 card.name:heart (team:NORMAL), similarity: 0.07473015040159225 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.058359090238809586 
+	 card.name:grace (team:BLUE), similarity: 0.04412250220775604 
+	 card.name:iron (team:BLUE), similarity: 0.025868136435747147 
+	 card.name:degree (team:RED), similarity: 0.01799328438937664 
+	 card.name:whale (team:BLUE), similarity: 0.014498010277748108 
+	 card.name:wake (team:NORMAL), similarity: 0.003267875639721751 
+
+word: graduate, total_score: 0.45553648471832275 
+	 card.name:degree (team:RED), similarity: 0.45553648471832275 
+	 card.name:spring (team:NORMAL), similarity: 0.18121792376041412 
+	 card.name:heart (team:NORMAL), similarity: 0.06294261664152145 
+	 card.name:fish (team:NORMAL), similarity: 0.05990852788090706 
+	 card.name:bridge (team:NORMAL), similarity: 0.057484280318021774 
+	 card.name:whale (team:BLUE), similarity: 0.049824077636003494 
+	 card.name:tablet (team:RED), similarity: 0.03988179191946983 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.029598629102110863 
+	 card.name:grace (team:BLUE), similarity: 0.02846433036029339 
+	 card.name:wake (team:NORMAL), similarity: 0.02798958122730255 
+	 card.name:ring (team:NORMAL), similarity: 0.017281468957662582 
+	 card.name:seal (team:NORMAL), similarity: -0.038450829684734344 
+	 card.name:iron (team:BLUE), similarity: -0.039304837584495544 
+
+word: battery, total_score: 0.4554775208234787 
+	 card.name:tablet (team:RED), similarity: 0.26417356729507446 
+	 card.name:degree (team:RED), similarity: 0.19130395352840424 
+	 card.name:heart (team:NORMAL), similarity: 0.11946313828229904 
+	 card.name:fish (team:NORMAL), similarity: 0.10001486539840698 
+	 card.name:ring (team:NORMAL), similarity: 0.09891970455646515 
+	 card.name:iron (team:BLUE), similarity: 0.09352673590183258 
+	 card.name:seal (team:NORMAL), similarity: 0.07539735734462738 
+	 card.name:wake (team:NORMAL), similarity: 0.07374999672174454 
+	 card.name:whale (team:BLUE), similarity: 0.06013157591223717 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.03902561217546463 
+	 card.name:bridge (team:NORMAL), similarity: 0.037907227873802185 
+	 card.name:spring (team:NORMAL), similarity: 0.006060855928808451 
+	 card.name:grace (team:BLUE), similarity: -0.0027159294113516808 
+
+word: undergraduate, total_score: 0.44493556022644043 
+	 card.name:degree (team:RED), similarity: 0.44493556022644043 
+	 card.name:spring (team:NORMAL), similarity: 0.16282592713832855 
+	 card.name:fish (team:NORMAL), similarity: 0.11048022657632828 
+	 card.name:tablet (team:RED), similarity: 0.10210537910461426 
+	 card.name:grace (team:BLUE), similarity: 0.08041533827781677 
+	 card.name:bridge (team:NORMAL), similarity: 0.08003412932157516 
+	 card.name:whale (team:BLUE), similarity: 0.06072936952114105 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.05075674131512642 
+	 card.name:wake (team:NORMAL), similarity: 0.026476377621293068 
+	 card.name:heart (team:NORMAL), similarity: 0.023079534992575645 
+	 card.name:seal (team:NORMAL), similarity: -0.024701563641428947 
+	 card.name:iron (team:BLUE), similarity: -0.03479885309934616 
+	 card.name:ring (team:NORMAL), similarity: -0.04053619131445885 
+
+word: journalism, total_score: 0.437992200255394 
+	 card.name:degree (team:RED), similarity: 0.27605849504470825 
+	 card.name:tablet (team:RED), similarity: 0.16193370521068573 
+	 card.name:fish (team:NORMAL), similarity: 0.12603294849395752 
+	 card.name:bridge (team:NORMAL), similarity: 0.10750795155763626 
+	 card.name:grace (team:BLUE), similarity: 0.08517271280288696 
+	 card.name:heart (team:NORMAL), similarity: 0.08328832685947418 
+	 card.name:wake (team:NORMAL), similarity: 0.06744399666786194 
+	 card.name:whale (team:BLUE), similarity: 0.05586167052388191 
+	 card.name:spring (team:NORMAL), similarity: 0.048112284392118454 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.03441709652543068 
+	 card.name:ring (team:NORMAL), similarity: 0.031073346734046936 
+	 card.name:seal (team:NORMAL), similarity: -0.043994348496198654 
+	 card.name:iron (team:BLUE), similarity: -0.05419327691197395 
+
+word: exam, total_score: 0.42628179490566254 
+	 card.name:degree (team:RED), similarity: 0.2595522403717041 
+	 card.name:tablet (team:RED), similarity: 0.16672955453395844 
+	 card.name:seal (team:NORMAL), similarity: 0.09405995905399323 
+	 card.name:bridge (team:NORMAL), similarity: 0.07033093273639679 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.06389734894037247 
+	 card.name:spring (team:NORMAL), similarity: 0.05818614736199379 
+	 card.name:iron (team:BLUE), similarity: 0.05733573064208031 
+	 card.name:ring (team:NORMAL), similarity: 0.05424688011407852 
+	 card.name:wake (team:NORMAL), similarity: 0.05040336027741432 
+	 card.name:heart (team:NORMAL), similarity: 0.028950778767466545 
+	 card.name:grace (team:BLUE), similarity: 0.017523664981126785 
+	 card.name:fish (team:NORMAL), similarity: -0.020441342145204544 
+	 card.name:whale (team:BLUE), similarity: -0.024221859872341156 
+
+word: medicine, total_score: 0.408897340297699 
+	 card.name:tablet (team:RED), similarity: 0.23807498812675476 
+	 card.name:degree (team:RED), similarity: 0.1708223521709442 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.1689595878124237 
+	 card.name:heart (team:NORMAL), similarity: 0.12574264407157898 
+	 card.name:fish (team:NORMAL), similarity: 0.11136752367019653 
+	 card.name:wake (team:NORMAL), similarity: 0.10587335377931595 
+	 card.name:ring (team:NORMAL), similarity: 0.06793687492609024 
+	 card.name:iron (team:BLUE), similarity: 0.06608446687459946 
+	 card.name:seal (team:NORMAL), similarity: 0.06316207349300385 
+	 card.name:grace (team:BLUE), similarity: 0.027504367753863335 
+	 card.name:bridge (team:NORMAL), similarity: 0.027234291657805443 
+	 card.name:whale (team:BLUE), similarity: 0.00737965339794755 
+	 card.name:spring (team:NORMAL), similarity: 0.0034829701762646437 
+
+word: pill, total_score: 0.39589035511016846 
+	 card.name:tablet (team:RED), similarity: 0.39589035511016846 
+	 card.name:ring (team:NORMAL), similarity: 0.1573747843503952 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.1536892205476761 
+	 card.name:fish (team:NORMAL), similarity: 0.14730337262153625 
+	 card.name:wake (team:NORMAL), similarity: 0.14668059349060059 
+	 card.name:heart (team:NORMAL), similarity: 0.1442902833223343 
+	 card.name:whale (team:BLUE), similarity: 0.13034702837467194 
+	 card.name:seal (team:NORMAL), similarity: 0.11977550387382507 
+	 card.name:iron (team:BLUE), similarity: 0.10198696702718735 
+	 card.name:bridge (team:NORMAL), similarity: 0.04496588557958603 
+	 card.name:grace (team:BLUE), similarity: 0.028013121336698532 
+	 card.name:degree (team:RED), similarity: 0.009161794558167458 
+	 card.name:spring (team:NORMAL), similarity: 0.008363020606338978 
+
+clue: device
+num: 1
+tablet 0.5045264714213142 RED
+heart 0.16462648371396596 NORMAL
+ring 0.15183828774669889 NORMAL
+bridge 0.1465056945368445 NORMAL
+degree 0.1304250495514231 RED
+seal 0.11541417854094106 NORMAL
+whale 0.09985652119233127 BLUE
+fish 0.095751974610254 NORMAL
+roulette 0.07695415413884624 ASSASSIN
+wake 0.02215473157873502 NORMAL
+iron 0.008712401715733354 BLUE
+spring -0.008073846889189669 NORMAL
+grace -0.0100752911073154 BLUE
+answer: 
+tablet 0.5045264714213142 RED
+creating word_rank_list...
+word: graduate, total_score: 0.45553648471832275 
+	 card.name:degree (team:RED), similarity: 0.45553648471832275 
+	 card.name:spring (team:NORMAL), similarity: 0.18121792376041412 
+	 card.name:heart (team:NORMAL), similarity: 0.06294261664152145 
+	 card.name:fish (team:NORMAL), similarity: 0.05990852788090706 
+	 card.name:bridge (team:NORMAL), similarity: 0.057484280318021774 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.029598629102110863 
+	 card.name:grace (team:BLUE), similarity: 0.02846433036029339 
+	 card.name:wake (team:NORMAL), similarity: 0.02798958122730255 
+	 card.name:ring (team:NORMAL), similarity: 0.017281468957662582 
+	 card.name:seal (team:NORMAL), similarity: -0.038450829684734344 
+	 card.name:iron (team:BLUE), similarity: -0.039304837584495544 
+
+word: undergraduate, total_score: 0.44493556022644043 
+	 card.name:degree (team:RED), similarity: 0.44493556022644043 
+	 card.name:spring (team:NORMAL), similarity: 0.16282592713832855 
+	 card.name:fish (team:NORMAL), similarity: 0.11048022657632828 
+	 card.name:grace (team:BLUE), similarity: 0.08041533827781677 
+	 card.name:bridge (team:NORMAL), similarity: 0.08003412932157516 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.05075674131512642 
+	 card.name:wake (team:NORMAL), similarity: 0.026476377621293068 
+	 card.name:heart (team:NORMAL), similarity: 0.023079534992575645 
+	 card.name:seal (team:NORMAL), similarity: -0.024701563641428947 
+	 card.name:iron (team:BLUE), similarity: -0.03479885309934616 
+	 card.name:ring (team:NORMAL), similarity: -0.04053619131445885 
+
+word: psychology, total_score: 0.39243561029434204 
+	 card.name:degree (team:RED), similarity: 0.39243561029434204 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.11862442642450333 
+	 card.name:heart (team:NORMAL), similarity: 0.10918783396482468 
+	 card.name:wake (team:NORMAL), similarity: 0.09793522208929062 
+	 card.name:spring (team:NORMAL), similarity: 0.0919104516506195 
+	 card.name:ring (team:NORMAL), similarity: 0.08399403095245361 
+	 card.name:fish (team:NORMAL), similarity: 0.05321048945188522 
+	 card.name:grace (team:BLUE), similarity: 0.008799295872449875 
+	 card.name:bridge (team:NORMAL), similarity: 0.006585456896573305 
+	 card.name:seal (team:NORMAL), similarity: 0.0009974933927878737 
+	 card.name:iron (team:BLUE), similarity: -0.005486095789819956 
+
+word: mathematics, total_score: 0.334862619638443 
+	 card.name:degree (team:RED), similarity: 0.334862619638443 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.14024481177330017 
+	 card.name:iron (team:BLUE), similarity: 0.08528578281402588 
+	 card.name:bridge (team:NORMAL), similarity: 0.08316731452941895 
+	 card.name:heart (team:NORMAL), similarity: 0.07445965707302094 
+	 card.name:fish (team:NORMAL), similarity: 0.0705220177769661 
+	 card.name:spring (team:NORMAL), similarity: 0.05051814019680023 
+	 card.name:grace (team:BLUE), similarity: 0.038093678653240204 
+	 card.name:ring (team:NORMAL), similarity: 0.03244117274880409 
+	 card.name:wake (team:NORMAL), similarity: 0.02145346999168396 
+	 card.name:seal (team:NORMAL), similarity: -0.05109666660428047 
+
+word: college, total_score: 0.3285030424594879 
+	 card.name:degree (team:RED), similarity: 0.3285030424594879 
+	 card.name:spring (team:NORMAL), similarity: 0.23590107262134552 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.11128759384155273 
+	 card.name:grace (team:BLUE), similarity: 0.07288870215415955 
+	 card.name:heart (team:NORMAL), similarity: 0.07178981602191925 
+	 card.name:bridge (team:NORMAL), similarity: 0.06676773726940155 
+	 card.name:wake (team:NORMAL), similarity: 0.0592053197324276 
+	 card.name:ring (team:NORMAL), similarity: 0.052778005599975586 
+	 card.name:fish (team:NORMAL), similarity: 0.04769325628876686 
+	 card.name:iron (team:BLUE), similarity: 0.024875571951270103 
+	 card.name:seal (team:NORMAL), similarity: -0.03046778030693531 
+
+word: university, total_score: 0.32206210494041443 
+	 card.name:degree (team:RED), similarity: 0.32206210494041443 
+	 card.name:spring (team:NORMAL), similarity: 0.13994570076465607 
+	 card.name:wake (team:NORMAL), similarity: 0.10918562859296799 
+	 card.name:bridge (team:NORMAL), similarity: 0.10196655243635178 
+	 card.name:heart (team:NORMAL), similarity: 0.09337843209505081 
+	 card.name:grace (team:BLUE), similarity: 0.06673063337802887 
+	 card.name:ring (team:NORMAL), similarity: 0.057583991438150406 
+	 card.name:seal (team:NORMAL), similarity: 0.04171186685562134 
+	 card.name:fish (team:NORMAL), similarity: 0.0308969859033823 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.026850609108805656 
+	 card.name:iron (team:BLUE), similarity: -0.018923314288258553 
+
+word: profession, total_score: 0.3150848150253296 
+	 card.name:degree (team:RED), similarity: 0.3150848150253296 
+	 card.name:ring (team:NORMAL), similarity: 0.1476636379957199 
+	 card.name:grace (team:BLUE), similarity: 0.10526847839355469 
+	 card.name:iron (team:BLUE), similarity: 0.09189312905073166 
+	 card.name:bridge (team:NORMAL), similarity: 0.09084126353263855 
+	 card.name:heart (team:NORMAL), similarity: 0.08311515301465988 
+	 card.name:fish (team:NORMAL), similarity: 0.07945656776428223 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.07349640876054764 
+	 card.name:wake (team:NORMAL), similarity: 0.05327853932976723 
+	 card.name:spring (team:NORMAL), similarity: -0.005737899802625179 
+	 card.name:seal (team:NORMAL), similarity: -0.08388803899288177 
+
+word: professor, total_score: 0.3113614618778229 
+	 card.name:degree (team:RED), similarity: 0.3113614618778229 
+	 card.name:heart (team:NORMAL), similarity: 0.101724773645401 
+	 card.name:wake (team:NORMAL), similarity: 0.08150352537631989 
+	 card.name:roulette (team:ASSASSIN), similarity: 0.08056429028511047 
+	 card.name:fish (team:NORMAL), similarity: 0.05902229994535446 
+	 card.name:bridge (team:NORMAL), similarity: 0.056974466890096664 
+	 card.name:ring (team:NORMAL), similarity: 0.02624637447297573 
+	 card.name:spring (team:NORMAL), similarity: 0.017527004703879356 
+	 card.name:iron (team:BLUE), similarity: 0.0033918428234755993 
+	 card.name:grace (team:BLUE), similarity: -0.015575208701193333 
+	 card.name:seal (team:NORMAL), similarity: -0.01755095086991787 
+
+word: student, total_score: 0.30805307626724243 
+	 card.name:degree (team:RED), similarity: 0.30805307626724243 
+	 card.name:bridge (team:NORMAL), similarity: 0.12365937232971191 
+	 card.name:spring (team:NORMAL), similarity: 0.10037469863891602 
+	 card.name:heart (team:NORMAL), similarity: 0.0599200576543808 
+	 card.name:grace (team:BLUE), similarity: 0.04809511452913284 
+	 card.name:fish (team:NORMAL), similarity: 0.04712989553809166 
+	 card.name:wake (team:NORMAL), similarity: 0.037359509617090225 
+	 card.name:ring (team:NORMAL), similarity: -0.0038728404324501753 
+	 card.name:seal (team:NORMAL), similarity: -0.02213083766400814 
+	 card.name:roulette (team:ASSASSIN), similarity: -0.030844436958432198 
+	 card.name:iron (team:BLUE), similarity: -0.03296054154634476 
+
+word: grade, total_score: 0.3048829436302185 
+	 card.name:degree (team:RED), similarity: 0.3048829436302185 
+	 card.name:iron (team:BLUE), similarity: 0.13731053471565247 
+	 card.name:ring (team:NORMAL), similarity: 0.12379076331853867 
+	 card.name:bridge (team:NORMAL), similarity: 0.07014597952365875 
+	 card.name:spring (team:NORMAL), similarity: 0.054968275129795074 
+	 card.name:heart (team:NORMAL), similarity: 0.03887578472495079 
+	 card.name:seal (team:NORMAL), similarity: 0.021988218650221825 
+	 card.name:fish (team:NORMAL), similarity: 0.01378327701240778 
+	 card.name:grace (team:BLUE), similarity: 0.006849806290119886 
+	 card.name:wake (team:NORMAL), similarity: -0.025250185281038284 
+	 card.name:roulette (team:ASSASSIN), similarity: -0.041647300124168396 
+
+clue: graduate
+num: 1
+degree 0.45553648889819465 RED
+spring 0.18121792192214717 NORMAL
+heart 0.06294261525773925 NORMAL
+fish 0.05990852634215375 NORMAL
+bridge 0.05748427872794271 NORMAL
+roulette 0.029598628437899045 ASSASSIN
+grace 0.02846432951814384 BLUE
+wake 0.0279895815809769 NORMAL
+ring 0.01728146822542464 NORMAL
+seal -0.03845083033624828 NORMAL
+iron -0.03930483943257948 BLUE
+answer: 
+degree 0.45553648889819465 RED

@@ -1,0 +1,224 @@
+field set.
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+turn: RED, turn count: 0
+clue: garage, num: 5
+guessed card: garden
+Correct! team: RED got 1 points.
+guessed card: fire
+Correct! team: RED got 1 points.
+guessed card: pool
+Correct! team: RED got 1 points.
+guessed card: block
+Correct! team: RED got 1 points.
+guessed card: horn
+Correct! team: RED got 1 points.
+RED: 5 vs BLUE: 0
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      None      None      None
+      None       RED      None      None      None
+      None      None      None      None      None
+      None      None      None      None       RED
+turn: BLUE, turn count: 1
+clue: spoon, num: 4
+guessed card: tube
+Correct! team: BLUE got 1 points.
+guessed card: needle
+Correct! team: BLUE got 1 points.
+guessed card: pie
+Correct! team: BLUE got 1 points.
+guessed card: table
+Correct! team: BLUE got 1 points.
+RED: 5 vs BLUE: 4
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      BLUE      None      None
+      None       RED      None      None      BLUE
+      None      None      None      None      None
+      None      BLUE      None      BLUE       RED
+turn: RED, turn count: 2
+clue: exploration, num: 2
+guessed card: drill
+Correct! team: RED got 1 points.
+guessed card: moon
+Correct! team: RED got 1 points.
+RED: 7 vs BLUE: 4
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      BLUE      None      None
+       RED       RED       RED      None      BLUE
+      None      None      None      None      None
+      None      BLUE      None      BLUE       RED
+turn: BLUE, turn count: 3
+clue: physician, num: 1
+guessed card: doctor
+Correct! team: BLUE got 1 points.
+RED: 7 vs BLUE: 5
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      BLUE      None      None
+       RED       RED       RED      None      BLUE
+      None      None      BLUE      None      None
+      None      BLUE      None      BLUE       RED
+turn: RED, turn count: 4
+clue: device, num: 1
+guessed card: tablet
+Correct! team: RED got 1 points.
+RED: 8 vs BLUE: 5
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      BLUE      None      None
+       RED       RED       RED      None      BLUE
+      None      None      BLUE      None      None
+      None      BLUE       RED      BLUE       RED
+turn: BLUE, turn count: 5
+clue: shark, num: 1
+guessed card: whale
+Correct! team: BLUE got 1 points.
+RED: 8 vs BLUE: 6
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      BLUE      BLUE      None
+       RED       RED       RED      None      BLUE
+      None      None      BLUE      None      None
+      None      BLUE       RED      BLUE       RED
+turn: RED, turn count: 6
+clue: graduate, num: 1
+guessed card: degree
+Correct! team: RED got 1 points.
+RED: 9 vs BLUE: 6
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      BLUE      BLUE      None
+       RED       RED       RED      None      BLUE
+      None      None      BLUE      None       RED
+      None      BLUE       RED      BLUE       RED
+turn: BLUE, turn count: 7
+clue: wood, num: 1
+game terminated.
+guessed card: iron
+Correct! team: BLUE got 1 points.
+RED: 9 vs BLUE: 7
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+       RED      None       RED      None      None
+       RED      None      BLUE      BLUE      None
+       RED       RED       RED      None      BLUE
+      None      BLUE      BLUE      None       RED
+      None      BLUE       RED      BLUE       RED

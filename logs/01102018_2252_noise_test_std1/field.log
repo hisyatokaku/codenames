@@ -1,0 +1,195 @@
+field set.
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+turn: RED, turn count: 0
+clue: garage, num: 5
+guessed card: doctor
+Wrong! team: BLUE got 1 points. RED turn ends.
+RED: 0 vs BLUE: 1
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+      None      None      None      None      None
+      None      None      None      None      None
+      None      None      None      None      None
+      None      None       RED      None      None
+      None      None      None      None      None
+turn: BLUE, turn count: 1
+clue: spoon, num: 4
+guessed card: fish
+Wrong! Normal card. BLUE turn ends.
+RED: 0 vs BLUE: 1
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+      None      None      None      None      None
+      None      None      None      None      None
+      None      None      None      BLUE      None
+      None      None       RED      None      None
+      None      None      None      None      None
+turn: RED, turn count: 2
+clue: garage, num: 5
+guessed card: needle
+Wrong! team: BLUE got 1 points. RED turn ends.
+RED: 0 vs BLUE: 2
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+      None      None      None      None      None
+      None      None      None      None      None
+      None      None      None      BLUE      None
+      None      None       RED      None      None
+      None       RED      None      None      None
+turn: BLUE, turn count: 3
+clue: spoon, num: 4
+guessed card: iron
+Correct! team: BLUE got 1 points.
+guessed card: moon
+Wrong! team: RED got 1 points. BLUE turn ends.
+RED: 1 vs BLUE: 3
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+      None      None      None      None      None
+      None      None      None      None      None
+      BLUE      None      None      BLUE      None
+      None      BLUE       RED      None      None
+      None       RED      None      None      None
+turn: RED, turn count: 4
+clue: garage, num: 5
+guessed card: drill
+Correct! team: RED got 1 points.
+guessed card: fire
+Correct! team: RED got 1 points.
+guessed card: tablet
+Correct! team: RED got 1 points.
+guessed card: heart
+Wrong! Normal card. RED turn ends.
+RED: 4 vs BLUE: 3
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+      None      None       RED      None       RED
+      None      None      None      None      None
+      BLUE      None       RED      BLUE      None
+      None      BLUE       RED      None      None
+      None       RED       RED      None      None
+turn: BLUE, turn count: 5
+clue: spoon, num: 4
+guessed card: table
+Correct! team: BLUE got 1 points.
+guessed card: ring
+Wrong! Normal card. BLUE turn ends.
+RED: 4 vs BLUE: 4
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+      None      None       RED      BLUE       RED
+      None      None      BLUE      None      None
+      BLUE      None       RED      BLUE      None
+      None      BLUE       RED      None      None
+      None       RED       RED      None      None
+turn: RED, turn count: 6
+clue: backyard, num: 3
+guessed card: horn
+Correct! team: RED got 1 points.
+guessed card: roulette
+ASSASSIN! team: RED loses.
+RED: 5 vs BLUE: 4
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+      None      None       RED      BLUE       RED
+       RED      None      BLUE      None      None
+      BLUE      None       RED      BLUE      None
+      None      BLUE       RED       RED      None
+      None       RED       RED      None      None
