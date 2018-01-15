@@ -69,11 +69,15 @@ def main():
     word_table_path = setting_exp.get('spywtable')
     word_rank_list_path = setting_exp.get('spywrlist')
     restrict_words_path = setting_exp.get('spyrwords')
+    wv_noise_pkl_path = setting_exp.get('wvnoise')
+    enable_wv_noise = setting_exp.getint('enable_wv_noise')
 
     field = Field(lined_file_path, logger=field_logger)
     field.print_field()
 
-    red_guesser = Guesser(w2v_path, field=field.field, logger=red_team_logger, test=is_test)
+    red_guesser = Guesser(w2v_path, field=field.field, logger=red_team_logger,
+                          wv_noise_pkl_path=wv_noise_pkl_path,
+                          wv_noise=enable_wv_noise, test=is_test)
     red_spymaster = Spymaster(w2v_path, field=field.field,
                               logger=red_team_logger, team="RED",
                               word_table_path=word_table_path,
@@ -81,7 +85,9 @@ def main():
                               restrict_words_path=restrict_words_path,
                               test=is_test)
 
-    blue_guesser = Guesser(w2v_path, field=field.field, logger=blue_team_logger, test=is_test)
+    blue_guesser = Guesser(w2v_path, field=field.field, logger=blue_team_logger,
+                           wv_noise_pkl_path=wv_noise_pkl_path,
+                           wv_noise=enable_wv_noise, test=is_test)
     blue_spymaster = Spymaster(w2v_path, field=field.field,
                                logger=blue_team_logger, team="BLUE",
                                word_table_path=word_table_path,

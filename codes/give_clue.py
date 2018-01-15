@@ -135,7 +135,6 @@ class Vocab(object):
     my own vocabulary class.
     same structure is also implemented in gensim.models.vocab.
     """
-
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 

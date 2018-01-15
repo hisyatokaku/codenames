@@ -17,7 +17,7 @@ class Guesser(object):
         self.w2v_dir = w2v_dir
         self.field = field
         self.logger = logger
-        self.wv_noise = wv_noise
+        self.wv_noise = wv_noise # True or False
         self.wv_noise_pkl_path = wv_noise_pkl_path
         self.wv = None
         self.model = self.load_model(self.w2v_dir)
@@ -29,12 +29,13 @@ class Guesser(object):
         else:
             model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
             if self.wv_noise:
-                new_wv = add_noise(model, mean=0, std=0.01)
+                new_wv = add_noise(model, mean=0, std=0.1)
                 self.wv = new_wv
-                with open(self.wv_noise_pkl_path, 'wb') as w:
-                    pickle.dump(new_wv, w)
-                log_text = "noised wv saved on {}".format(self.wv_noise_pkl_path)
-                self.logger.info(log_text)
+                self.logger.info("use noised vectors.")
+                # with open(self.wv_noise_pkl_path, 'wb') as w:
+                #     pickle.dump(new_wv, w)
+                # log_text = "noised wv saved on {}".format(self.wv_noise_pkl_path)
+                # self.logger.info(log_text)
 
         self.logger.info("player model loaded.")
         return model
@@ -55,6 +56,7 @@ gkt         """
             if self.wv_noise:
                 sorted_card = [(card, cossim(self.wv[clue], self.wv[card.name]), card.color)\
                         for card in self.field if card.taken_by=="None"]
+                self.logger.info("score calculated by new_wv vectors.")
                 sorted_card = sorted(sorted_card, key=lambda x: x[1], reverse=True)
             else:
                 sorted_card = [(card, self.model.similarity(clue, card.name), card.color)\

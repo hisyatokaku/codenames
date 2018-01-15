@@ -94,7 +94,7 @@ class Field(object):
         :param answer_cards: list of instances of Card
         :return: None
         """
-        if self.red_score > 9 or self.blue_score > 9:
+        if self.red_score >= 9 or self.blue_score >= 9:
             self.logger.info("game terminated.")
             self.game_continue = False
 
@@ -167,3 +167,4 @@ class Field(object):
                 if (i + 1) % 5 == 0:
                     self.logger.info(print_string)
                     print_string = ""
+        self.logger.info("\n")
