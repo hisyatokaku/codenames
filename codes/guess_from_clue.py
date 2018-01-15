@@ -73,4 +73,7 @@ gkt         """
             print_text = "{} {} {}".format(card[0].name, card[1], card[2])
             self.logger.info(print_text)
 
-        return [card[0] for card in ans_cards]
+        # return [card[0] for card in ans_cards]
+        # return type:
+        # [(card, similarity with clue, card.color), (...), ...]
+        return ans_cards

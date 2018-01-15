@@ -295,6 +295,8 @@ class Spymaster(object):
                 self.logger.info(Wordrank.print_word(Wr_class))
 
             clue = word_rank_list[0].word
+            possible_answers = word_rank_list[0].card_score_pair
+
             self.logger.info("clue: " + clue)
 
             num_count = 0
@@ -309,7 +311,7 @@ class Spymaster(object):
                     count_continue = False
 
             self.logger.info("num: " + str(num_count))
-            return clue, num_count
+            return clue, num_count, possible_answers
 
     def give_clue(self, turn, top_n=100):
         """

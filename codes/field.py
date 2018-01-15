@@ -90,6 +90,7 @@ class Field(object):
     def check_answer(self, team, answer_cards):
         """
         checking teams to which team the guessed cards belong.
+        :input: [card, similarity with clue, card.color]
         :param team: the guessing team who is in current turn
         :param answer_cards: list of instances of Card
         :return: None
@@ -99,6 +100,7 @@ class Field(object):
             self.game_continue = False
 
         for card in answer_cards:
+            card = card[0]
             log_text = "guessed card: {}".format(str(card.name))
             self.logger.info(log_text)
             self.field[card.id].taken_by = team
@@ -131,6 +133,34 @@ class Field(object):
                 self.game_continue = False
                 self.logger.info("ASSASSIN! team: {} loses.".format(team))
                 break
+
+    def evaluate_answer(self, team, possible_cards, answer_cards):
+        """
+        additional function for calculating score by using metrics
+        memo: can it be decorator for check_answer?
+        :param team:
+        :param possible_cards: the cards which spymaster want player to guess
+        [[card, similarity with clue], [...], ...] (sorted by similarity)
+
+        :param answer_cards: the cards which player guessed
+        [(card, similarity with clue, card.color), (...), ...] (sorted by similarity)
+        :return: score (type:float)
+        """
+
+        # mask top-n cards into 1, others to 0
+        # [0, 0, 1, 0, 0, 1, ...]
+        onehot_score = [0.0 for _ in range(len(self.field))]
+        top_n = len(answer_cards)
+        for (card, _) in possible_cards[:top_n]:
+            onehot_score[card.id] += 1.
+
+        # extract similarity score from answer_cards
+        # [0, 0.4, 0.5, 0, 0, ...]
+        fieldindexed_answer_cards = sorted(answer_cards, key=lambda x: x[0].id, reverse=False)
+        ans_score = [x[1] for x in fieldindexed_answer_cards]
+
+        # calculate value by the metrics you chose
+
 
     def print_score(self):
         """
