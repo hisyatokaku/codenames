@@ -21,6 +21,12 @@ class Field(object):
         self.loser = None
 
     def init_field(self, lines):
+        """
+        initialize field with color and card name.
+        if there are only 5 cards, it is regarded as test
+        :param lines:
+        :return: None
+        """
         self.field = [Card(word, i) for (i, word) in enumerate(lines)]
         if len(self.field) == 5:
             self.init_color_for_simple_field()
@@ -30,6 +36,10 @@ class Field(object):
         self.logger.info("field set.")
 
     def init_color_for_simple_field(self):
+        """
+        initialize field with color and card name.
+        :return: None
+        """
         RED_NUM = 2
         BLUE_NUM = 2
         DOUBLE_NUM = 0
@@ -82,14 +92,15 @@ class Field(object):
         checking teams to which team the guessed cards belong.
         :param team: the guessing team who is in current turn
         :param answer_cards: list of instances of Card
-        :return:
+        :return: None
         """
-        if self.red_score > 9 or self.blue_score > 9:
+        if self.red_score >= 9 or self.blue_score >= 9:
             self.logger.info("game terminated.")
             self.game_continue = False
 
         for card in answer_cards:
-            self.logger.info("guessed card: ", card.name)
+            log_text = "guessed card: {}".format(str(card.name))
+            self.logger.info(log_text)
             self.field[card.id].taken_by = team
 
             # correct answer
@@ -122,6 +133,11 @@ class Field(object):
                 break
 
     def print_score(self):
+        """
+        print the score between red and blue.
+        :return: None
+        """
+
         self.logger.info("RED: {} vs BLUE: {}".format(self.red_score,self.blue_score))
         self.print_field(display_colors=True,display_taken_by=True)
 
@@ -151,3 +167,4 @@ class Field(object):
                 if (i + 1) % 5 == 0:
                     self.logger.info(print_string)
                     print_string = ""
+        self.logger.info("\n")
