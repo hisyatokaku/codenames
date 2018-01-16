@@ -105,7 +105,7 @@ def main():
             clue, num, possible_answers = red_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
             log_text = "clue: {}, num: {}".format(str(clue), str(num))
             field_logger.info(log_text)
-            answers = red_guesser.guess_from_clue(clue, num)  # [Card0, Card1, ...]
+            answers = red_guesser.guess_from_clue(clue, num)  # [(card, similarity with clue, card.color), (...), ...]
             field.check_answer(team=cur_team, answer_cards=answers)
             field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers)
         else:
@@ -114,7 +114,7 @@ def main():
             clue, num, possible_answers = blue_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
             log_text = "clue: {}, num: {}".format(str(clue), str(num))
             field_logger.info(log_text)
-            answers = blue_guesser.guess_from_clue(clue, num)  # [Card0, Card1, ...]
+            answers = blue_guesser.guess_from_clue(clue, num) # [(card, similarity with clue, card.color), (...), ...]
             field.check_answer(team=cur_team, answer_cards=answers)
             field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers)
 
