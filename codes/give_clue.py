@@ -246,7 +246,7 @@ class Spymaster(object):
                             self.word_table[w_ix][c_ix] = self.model.similarity(word, card.name)
                         else:
                             self.word_table[w_ix][c_ix] = 0
-            with open('../models/word_table.pkl', 'wb') as w:
+            with open(self.word_table_path, 'wb') as w:
                 pickle.dump(self.word_table, w)
         self.logger.info("fill_table end.")
 
@@ -264,7 +264,8 @@ class Spymaster(object):
         """
         word_rank_list_path = self.word_rank_list_path + str(turn)
         word_rank_list = []
-        if os.path.exists(word_rank_list_path):
+        # if os.path.exists(word_rank_list_path):
+        if False: # TODO: fix for model loading
             self.logger.info(word_rank_list_path + " exists.")
             with open(word_rank_list_path, 'rb') as r:
                 word_rank_list = pickle.load(r)
@@ -284,8 +285,9 @@ class Spymaster(object):
 
             word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
             if not os.path.exists(word_rank_list_path):
-                with open(word_rank_list_path, 'wb') as w:
-                    pickle.dump(word_rank_list, w)
+                pass
+                # with open(word_rank_list_path, 'wb') as w:
+                #     pickle.dump(word_rank_list, w)
             else:
                 self.logger.info(word_rank_list_path + " exists.")
 
@@ -313,7 +315,7 @@ class Spymaster(object):
             self.logger.info("num: " + str(num_count))
             return clue, num_count, possible_answers
 
-    def give_clue(self, turn, top_n=100):
+    def give_clue(self, turn, top_n):
         """
         calculate the clue-likelihood for each word in vocabulary
         :param turn: "RED" or "BLUE"
@@ -381,8 +383,10 @@ class Spymaster(object):
 
         # save model
         if not os.path.exists(word_rank_list_path):
-            with open(word_rank_list_path, 'wb') as w:
-                pickle.dump(word_rank_list, w)
+            # is is truly necessary to save the word rank list ?
+            pass
+            # with open(word_rank_list_path, 'wb') as w:
+            #     pickle.dump(word_rank_list, w)
         else:
             self.logger.info(word_rank_list_path + " exists.")
 

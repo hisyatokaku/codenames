@@ -1,4 +1,9 @@
 import random
+import sys
+sys.path.append('../metrics')
+from functions import f1_score, cross_entropy, dcg
+import json
+from collections import defaultdict
 
 class Card(object):
     def __init__(self, name, id):
@@ -8,25 +13,30 @@ class Card(object):
         self.taken_by = "None"
 
 class Field(object):
-    def __init__(self, lined_file, logger):
+    def __init__(self, lined_file, logger, red_metrics_path, blue_metrics_path):
         self.field = None
         self.logger = logger
-        lines = open(lined_file, 'r').readlines()
-        lines = [line.rstrip().lower() for line in lines]
-        self.init_field(lines)
-
+        self.init_field(lined_file)
         self.red_score = 0
         self.blue_score = 0
         self.game_continue = True
         self.loser = None
 
-    def init_field(self, lines):
+        self.red_metrics = defaultdict(list)
+        self.blue_metrics = defaultdict(list)
+        self.red_metrics_path = red_metrics_path
+        self.blue_metrics_path = blue_metrics_path
+
+    def init_field(self, lined_file):
         """
         initialize field with color and card name.
         if there are only 5 cards, it is regarded as test
-        :param lines:
+        :param lined_file:
         :return: None
         """
+
+        lines = open(lined_file, 'r').readlines()
+        lines = [line.rstrip().lower() for line in lines]
         self.field = [Card(word, i) for (i, word) in enumerate(lines)]
         if len(self.field) == 5:
             self.init_color_for_simple_field()
@@ -87,7 +97,7 @@ class Field(object):
         for (i, color_ix) in enumerate(color_ix_list):
             self.field[i].color = ix_to_str[color_ix]
 
-    def check_answer(self, team, answer_cards):
+    def check_answer(self, team, answer_cards, top_n):
         """
         checking teams to which team the guessed cards belong.
         :input: [card, similarity with clue, card.color]
@@ -96,10 +106,11 @@ class Field(object):
         :return: None
         """
         if self.red_score >= 9 or self.blue_score >= 9:
-            self.logger.info("game terminated.")
+            self.logger.info("game terminating...")
             self.game_continue = False
+            return None
 
-        for card in answer_cards:
+        for card in answer_cards[:top_n]:
             card = card[0]
             log_text = "guessed card: {}".format(str(card.name))
             self.logger.info(log_text)
@@ -134,7 +145,7 @@ class Field(object):
                 self.logger.info("ASSASSIN! team: {} loses.".format(team))
                 break
 
-    def evaluate_answer(self, team, possible_cards, answer_cards):
+    def evaluate_answer(self, team, possible_cards, answer_cards, top_n):
         """
         additional function for calculating score by using metrics
         memo: can it be decorator for check_answer?
@@ -144,32 +155,55 @@ class Field(object):
 
         :param answer_cards: the cards which player guessed
         [(card, similarity with clue, card.color), (...), ...] (sorted by similarity)
+        # note that, len(answer_cards) might be less than 25 after round 1.
+        # because from the field we strip the card which has already guessed by players.
+
         :return: score (type:float)
         """
+        if self.red_score >= 9 or self.blue_score >= 9:
+            self.logger.info("game terminated.")
+            self.game_continue = False
+            return None
 
         # mask top-n cards into 1, others to 0
         # [0, 0, 1, 0, 0, 1, ...]
+        self.logger.debug('evaluate_answer() running...')
         onehot_score = [0.0 for _ in range(len(self.field))]
-        top_n = len(answer_cards)
+        # onehot_score = [0.0 for _ in range(len(answer_cards))]
         for (card, _) in possible_cards[:top_n]:
             onehot_score[card.id] += 1.
+        self.logger.debug('onehot_score: ')
+        self.logger.debug(onehot_score)
 
         # extract similarity score from answer_cards
         # [0, 0.4, 0.5, 0, 0, ...]
-        fieldindexed_answer_cards = sorted(answer_cards, key=lambda x: x[0].id, reverse=False)
-        ans_score = [x[1] for x in fieldindexed_answer_cards]
+        # TODO: clean it
+        ans_score = [0.0 for _ in range(len(self.field))]
+        for (card, score, color) in answer_cards:
+            ans_score[card.id] = score
+
+        # fieldindexed_answer_cards = sorted(answer_cards, key=lambda x: x[0].id, reverse=False)
+        # ans_score = [x[1] for x in fieldindexed_answer_cards]
+
+        self.logger.debug('ans_score: ')
+        self.logger.debug(ans_score)
 
         # calculate value by the metrics you chose
+        f1 = f1_score(onehot_score, ans_score)
+        c_e = cross_entropy(onehot_score, ans_score)
+        dcg_score = dcg(onehot_score, ans_score, top_n)
+        self._update_dict(team=team, f1=f1, c_e=c_e, dcg_score=dcg_score)
 
+        log_text = "f1: {}, cross_entropy: {}, dcg_score: {}".format(f1, c_e, dcg_score)
+        self.logger.debug(log_text)
 
     def print_score(self):
         """
         print the score between red and blue.
         :return: None
         """
-
         self.logger.info("RED: {} vs BLUE: {}".format(self.red_score,self.blue_score))
-        self.print_field(display_colors=True,display_taken_by=True)
+        # self.print_field(display_colors=True,display_taken_by=True)
 
     def print_field(self, display_colors=True, display_taken_by=False):
         maxwordlen = max([len(card.name) for card in self.field])
@@ -198,3 +232,23 @@ class Field(object):
                     self.logger.info(print_string)
                     print_string = ""
         self.logger.info("\n")
+
+    def _update_dict(self, team, **kwargs):
+        """
+        :param kwargs: metrics
+        :return:
+        """
+        if team == "RED":
+            for key, val in kwargs.items():
+                self.red_metrics[key].append(val)
+
+        if team == "BLUE":
+            for key, val in kwargs.items():
+                self.blue_metrics[key].append(val)
+
+    def dump_metrics(self):
+        with open(self.red_metrics_path, 'w') as w:
+            json.dump(self.red_metrics, w)
+
+        with open(self.blue_metrics_path, 'w') as w:
+            json.dump(self.blue_metrics, w)

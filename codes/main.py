@@ -16,7 +16,9 @@ sys.path.append('../')
 # argparse
 parser = argparse.ArgumentParser(description='input argument')
 parser.add_argument('--setting', '-s', type=str, default=None, help='section name in ../config/settings.exp')
-parser.add_argument('--exname', default=None, help='experiment name.')
+parser.add_argument('--exname', '-e', default=None, help='experiment name.')
+parser.add_argument('--noise', '-n', type=float, default=0., help='noise for the embeddings of player. you should includ'
+                                                                  'e this value in args.exname for readability')
 args = parser.parse_args()
 print(args.exname)
 
@@ -40,7 +42,7 @@ ex_setting_logger = setup_filelogger(logger_name='experiment_setting',
                                      )
 field_logger = setup_filelogger(logger_name='field',
                                 file_name=os.path.join(log_dir_path, 'field.log'),
-                                level=logging.INFO,
+                                level=logging.DEBUG,
                                 add_console=True
                                 )
 red_team_logger = setup_filelogger(logger_name='red',
@@ -69,15 +71,27 @@ def main():
     word_table_path = setting_exp.get('spywtable')
     word_rank_list_path = setting_exp.get('spywrlist')
     restrict_words_path = setting_exp.get('spyrwords')
-    wv_noise_pkl_path = setting_exp.get('wvnoise')
+    wv_noise_pkl_path = setting_exp.get('wv_noise_path')
     enable_wv_noise = setting_exp.getint('enable_wv_noise')
+    red_metrics_path = os.path.join(log_dir_path, "red_metrics.json")
+    blue_metrics_path = os.path.join(log_dir_path, "blue_metrics.json")
 
-    field = Field(lined_file_path, logger=field_logger)
+    if enable_wv_noise:
+        # if there exists cmd line argument, overwrite the value
+        wv_noise_value = args.noise
+        if wv_noise_value == 0:
+            raise ValueError("wv_noise cant be 0 with setting enable_wv_noise=1 at the same time.")
+        log_text = "wv_noise_value set: {}".format(wv_noise_value)
+        ex_setting_logger.info(log_text)
+
+    field = Field(lined_file_path, logger=field_logger,
+                  red_metrics_path=red_metrics_path, blue_metrics_path=blue_metrics_path)
     field.print_field()
 
     red_guesser = Guesser(w2v_path, field=field.field, logger=red_team_logger,
                           wv_noise_pkl_path=wv_noise_pkl_path,
-                          wv_noise=enable_wv_noise, test=is_test)
+                          wv_noise_value = wv_noise_value,
+                          is_wv_noise=enable_wv_noise, test=is_test)
     red_spymaster = Spymaster(w2v_path, field=field.field,
                               logger=red_team_logger, team="RED",
                               word_table_path=word_table_path,
@@ -87,7 +101,9 @@ def main():
 
     blue_guesser = Guesser(w2v_path, field=field.field, logger=blue_team_logger,
                            wv_noise_pkl_path=wv_noise_pkl_path,
-                           wv_noise=enable_wv_noise, test=is_test)
+                           wv_noise_value = wv_noise_value,
+                           is_wv_noise=enable_wv_noise, test=is_test)
+
     blue_spymaster = Spymaster(w2v_path, field=field.field,
                                logger=blue_team_logger, team="BLUE",
                                word_table_path=word_table_path,
@@ -106,8 +122,9 @@ def main():
             log_text = "clue: {}, num: {}".format(str(clue), str(num))
             field_logger.info(log_text)
             answers = red_guesser.guess_from_clue(clue, num)  # [(card, similarity with clue, card.color), (...), ...]
-            field.check_answer(team=cur_team, answer_cards=answers)
-            field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers)
+            field.check_answer(team=cur_team, answer_cards=answers, top_n=num)
+            field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers, top_n=num)
+
         else:
             cur_team = "BLUE"
             field_logger.info("turn: {}, turn count: {}".format(cur_team, turn_count))
@@ -115,12 +132,21 @@ def main():
             log_text = "clue: {}, num: {}".format(str(clue), str(num))
             field_logger.info(log_text)
             answers = blue_guesser.guess_from_clue(clue, num) # [(card, similarity with clue, card.color), (...), ...]
-            field.check_answer(team=cur_team, answer_cards=answers)
-            field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers)
+            field.check_answer(team=cur_team, answer_cards=answers, top_n=num)
+            field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers, top_n=num)
 
         field.print_score()
         turn = not turn
         turn_count += 1
+
+    # TODO: serialize metrics into files
+    field.dump_metrics()
+    field_logger.info("game terminated.")
+
+def gridsearch_noise():
+    noises = []
+    # for noise in noises:
+    pass
 
 '''
 def _main():
@@ -168,7 +194,7 @@ def _main():
         finally:
             turn = not turn
 '''
-
+'''
 def test_spymaster():
     lined_file_path = setting_exp.get('cards')
     w2v_path = setting_exp.get('embed')
@@ -192,6 +218,7 @@ def test_spymaster():
     red_team_logger.info("Spymaster set.")
     # turn = True
     spymaster.give_clue(top_n=100)
-
+'''
 if __name__ == "__main__":
     main()
+    # gridsearch_noise()
