@@ -148,13 +148,10 @@ class Spymaster(object):
     :param word_table_path: path to save pkl file
     :param word_rank_list_path: path to save pkl file
     :param restrict_words_path: path to save pkl file
-    :param test: bool value
     """
 
     def __init__(self, w2v_path, field, logger, team,
-                 word_table_path, word_rank_list_path, restrict_words_path,
-                 test=False):
-        self.test = test
+                 word_table_path, word_rank_list_path, restrict_words_path):
         self.w2v_path = w2v_path
         self.word_table_path = word_table_path
         self.word_rank_list_path = word_rank_list_path
@@ -262,58 +259,46 @@ class Spymaster(object):
         :param top_n:
         :return:
         """
-        word_rank_list_path = self.word_rank_list_path + str(turn)
+        # word_rank_list_path = self.word_rank_list_path + str(turn)
         word_rank_list = []
-        # if os.path.exists(word_rank_list_path):
-        if False: # TODO: fix for model loading
-            self.logger.info(word_rank_list_path + " exists.")
-            with open(word_rank_list_path, 'rb') as r:
-                word_rank_list = pickle.load(r)
-        else:
-            self.logger.info("creating word_rank_list...")
+        self.logger.info("creating word_rank_list...")
 
-            for word in self.vocab:
-                card_score_pair = []
-                word_ix = self.vocab[word].index
-                for card in self.field:
-                    score = self.word_table[word_ix][card.id]
-                    card_score_pair.append([card, score])
-                card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
+        for word in self.vocab:
+            card_score_pair = []
+            word_ix = self.vocab[word].index
+            for card in self.field:
+                score = self.word_table[word_ix][card.id]
+                card_score_pair.append([card, score])
+            card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
 
-                a_wordrank = Wordrank(word, card_score_pair, team=self.team)
-                word_rank_list.append(a_wordrank)
+            a_wordrank = Wordrank(word, card_score_pair, team=self.team)
+            word_rank_list.append(a_wordrank)
 
-            word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
-            if not os.path.exists(word_rank_list_path):
-                pass
-                # with open(word_rank_list_path, 'wb') as w:
-                #     pickle.dump(word_rank_list, w)
+        word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
+        # self.logger.info(word_rank_list_path + " exists.")
+        word_rank_list = word_rank_list[:top_n]
+
+        for Wr_class in word_rank_list:
+            self.logger.info(Wordrank.print_word(Wr_class))
+
+        clue = word_rank_list[0].word
+        possible_answers = word_rank_list[0].card_score_pair
+
+        self.logger.info("clue: " + clue)
+
+        num_count = 0
+        count_ix = 0
+        count_continue = True
+        while count_continue:
+            cur_card = word_rank_list[0].card_score_pair[count_ix][0]
+            if cur_card.color in [self.team, "DOUBLE"]:
+                num_count += 1
+                count_ix += 1
             else:
-                self.logger.info(word_rank_list_path + " exists.")
+                count_continue = False
 
-            word_rank_list = word_rank_list[:top_n]
-
-            for Wr_class in word_rank_list:
-                self.logger.info(Wordrank.print_word(Wr_class))
-
-            clue = word_rank_list[0].word
-            possible_answers = word_rank_list[0].card_score_pair
-
-            self.logger.info("clue: " + clue)
-
-            num_count = 0
-            count_ix = 0
-            count_continue = True
-            while count_continue:
-                cur_card = word_rank_list[0].card_score_pair[count_ix][0]
-                if cur_card.color in [self.team, "DOUBLE"]:
-                    num_count += 1
-                    count_ix += 1
-                else:
-                    count_continue = False
-
-            self.logger.info("num: " + str(num_count))
-            return clue, num_count, possible_answers
+        self.logger.info("num: " + str(num_count))
+        return clue, num_count, possible_answers
 
     def give_clue(self, turn, top_n):
         """
@@ -347,12 +332,6 @@ class Spymaster(object):
         else:
             self.logger.info("creating word_rank_list...")
 
-            # brute force
-            if self.test:
-                # try small combination set
-                self.logger.info("trying small combination set...")
-                combinations = combinations[50:55]
-
             for comb in combinations:
                 comb_cards = [self.field[i] for i in comb]
 
@@ -383,6 +362,7 @@ class Spymaster(object):
 
         # save model
         if not os.path.exists(word_rank_list_path):
+            # TODO: make it clean
             # is is truly necessary to save the word rank list ?
             pass
             # with open(word_rank_list_path, 'wb') as w:

@@ -9,11 +9,9 @@ class Guesser(object):
     :param w2v_dir: path for pretrained embeddings
     :param field: instances of Field
     :param logger:
-    :param test: bool
     """
 
-    def __init__(self, w2v_dir, field, logger, wv_noise_pkl_path, wv_noise_value, is_wv_noise=False, test=False):
-        self.test = test
+    def __init__(self, w2v_dir, field, logger, wv_noise_pkl_path, wv_noise_value, is_wv_noise=False):
         self.w2v_dir = w2v_dir
         self.field = field
         self.logger = logger
@@ -25,21 +23,19 @@ class Guesser(object):
 
     def load_model(self, w2v_dir):
         self.logger.info("player model loading...")
-        if self.test:
-            model = None
-        else:
-            model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
-            if self.is_wv_noise:
-                new_wv = add_noise(model, mean=0, std=self.wv_noise_value)
-                log_text = "noise_lebel: {}".format(self.wv_noise_value)
-                self.logger.info(log_text)
-                self.wv = new_wv
-                self.logger.info("use noised vectors.")
 
-                # with open(self.wv_noise_pkl_path, 'wb') as w:
-                #     pickle.dump(new_wv, w)
-                # log_text = "noised wv saved on {}".format(self.wv_noise_pkl_path)
-                # self.logger.info(log_text)
+        model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
+        if self.is_wv_noise:
+            new_wv = add_noise(model, mean=0, std=self.wv_noise_value)
+            log_text = "noise_lebel: {}".format(self.wv_noise_value)
+            self.logger.info(log_text)
+            self.wv = new_wv
+            self.logger.info("use noised vectors.")
+
+            # with open(self.wv_noise_pkl_path, 'wb') as w:
+            #     pickle.dump(new_wv, w)
+            # log_text = "noised wv saved on {}".format(self.wv_noise_pkl_path)
+            # self.logger.info(log_text)
 
         self.logger.info("player model loaded.")
         return model
@@ -49,23 +45,18 @@ class Guesser(object):
         given a clue and number from spymaster, calculates all the similarity for each cards in the field.
         :param clue: word (string)
         :param num: number of cards which have to be guessed by that clue
-        :return: list for the word which was guessed
-gkt         """
-        if self.test:
-            dammy_card = [(card.name, random.randint(0, 10), card.color)\
-                                for card in self.field]
-            sorted_card = sorted(dammy_card, key=lambda x: x[1], reverse = True)
+        :return: list of the word which was guessed
+        """
 
+        if self.is_wv_noise:
+            sorted_card = [(card, cossim(self.wv[clue], self.wv[card.name]), card.color)\
+                    for card in self.field if card.taken_by=="None"]
+            self.logger.info("score calculated by new_wv vectors.")
+            sorted_card = sorted(sorted_card, key=lambda x: x[1], reverse=True)
         else:
-            if self.is_wv_noise:
-                sorted_card = [(card, cossim(self.wv[clue], self.wv[card.name]), card.color)\
-                        for card in self.field if card.taken_by=="None"]
-                self.logger.info("score calculated by new_wv vectors.")
-                sorted_card = sorted(sorted_card, key=lambda x: x[1], reverse=True)
-            else:
-                sorted_card = [(card, self.model.similarity(clue, card.name), card.color)\
-                        for card in self.field if card.taken_by=="None"]
-                sorted_card = sorted(sorted_card, key=lambda x: x[1], reverse=True)
+            sorted_card = [(card, self.model.similarity(clue, card.name), card.color)\
+                    for card in self.field if card.taken_by=="None"]
+            sorted_card = sorted(sorted_card, key=lambda x: x[1], reverse=True)
 
         for card in sorted_card:
             print_text = "{} {} {}".format(card[0].name, card[1], card[2])
@@ -78,7 +69,5 @@ gkt         """
             print_text = "{} {} {}".format(card[0].name, card[1], card[2])
             self.logger.info(print_text)
 
-        # return [card[0] for card in ans_cards]
-        # return type:
         # [(card, similarity with clue, card.color), (...), ...]
         return ans_cards

@@ -67,12 +67,14 @@ for key in setting_exp:
 def main():
     lined_file_path = setting_exp.get('cards')
     w2v_path = setting_exp.get('embed')
-    is_test = setting_exp.getint('test')
+    # is_test = setting_exp.getint('test')
     word_table_path = setting_exp.get('spywtable')
     word_rank_list_path = setting_exp.get('spywrlist')
     restrict_words_path = setting_exp.get('spyrwords')
     wv_noise_pkl_path = setting_exp.get('wv_noise_path')
     enable_wv_noise = setting_exp.getint('enable_wv_noise')
+
+    # hard coded paths
     red_metrics_path = os.path.join(log_dir_path, "red_metrics.json")
     blue_metrics_path = os.path.join(log_dir_path, "blue_metrics.json")
 
@@ -83,6 +85,8 @@ def main():
             raise ValueError("wv_noise cant be 0 with setting enable_wv_noise=1 at the same time.")
         log_text = "wv_noise_value set: {}".format(wv_noise_value)
         ex_setting_logger.info(log_text)
+    else:
+        wv_noise_value = -1
 
     field = Field(lined_file_path, logger=field_logger,
                   red_metrics_path=red_metrics_path, blue_metrics_path=blue_metrics_path)
@@ -90,26 +94,24 @@ def main():
 
     red_guesser = Guesser(w2v_path, field=field.field, logger=red_team_logger,
                           wv_noise_pkl_path=wv_noise_pkl_path,
-                          wv_noise_value = wv_noise_value,
-                          is_wv_noise=enable_wv_noise, test=is_test)
+                          wv_noise_value=wv_noise_value,
+                          is_wv_noise=enable_wv_noise)
     red_spymaster = Spymaster(w2v_path, field=field.field,
                               logger=red_team_logger, team="RED",
                               word_table_path=word_table_path,
                               word_rank_list_path=word_rank_list_path,
-                              restrict_words_path=restrict_words_path,
-                              test=is_test)
+                              restrict_words_path=restrict_words_path)
 
     blue_guesser = Guesser(w2v_path, field=field.field, logger=blue_team_logger,
                            wv_noise_pkl_path=wv_noise_pkl_path,
                            wv_noise_value = wv_noise_value,
-                           is_wv_noise=enable_wv_noise, test=is_test)
+                           is_wv_noise=enable_wv_noise)
 
     blue_spymaster = Spymaster(w2v_path, field=field.field,
                                logger=blue_team_logger, team="BLUE",
                                word_table_path=word_table_path,
                                word_rank_list_path=word_rank_list_path,
-                               restrict_words_path=restrict_words_path,
-                               test=is_test)
+                               restrict_words_path=restrict_words_path)
 
     turn = True
     turn_count = 0
