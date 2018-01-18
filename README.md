@@ -22,13 +22,21 @@ Required:
 - embed: (str) pretrained embedding in models/ 
 - spywtable: (str) word table path. word table is used for effective computation. (can be extra but required for now)
 - spyrwords: (str) restricted vocabulary for spymaster. if empty, the vocabulary with size 300,000 which was used in training word2vec will be used. (not recommended)
-- enable_wv_noise: (int) 0 or 1. you can execute noised selfplay by giving 1 to this entry.
 
 Extra:
 - test: deprecated. do not have to specify.
 - wv_noise_path: (str) store noise vector as pkl file when you execute noised selfplay.
 - spywrlist: will be deprecated. stores clue score calculated by spymaster for each turn. 
+- enable_wv_noise: (int or None) you can execute noised selfplay by giving 1 to this entry.
 
+## directory description
+- Config: config files
+- cards: field cards. each word should be separated by newline.
+- codes: sources
+- images: figure images from pyplot
+- logs: log
+- notebooks: jupyter notebooks
+- models: word2vec, pkl file
 
 ## output files
 normally:

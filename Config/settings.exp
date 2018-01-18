@@ -8,7 +8,6 @@ wv_noise_path: ../models/wvnoise_5e-1.pkl
 enable_wv_noise: 1
 
 [selfplay]
-test: 0
 cards: ../cards/youtubetest1.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
@@ -16,7 +15,6 @@ spywrlist: ../models/wrl_top20_restrict_vocab_selfplay.pkl
 spyrwords: ../models/freq_wordlist.csv
 
 [selfplay_threshold_rank]
-test: 0
 cards: ../cards/youtubetest1.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
@@ -26,7 +24,6 @@ wv_noise_path:
 enable_wv_noise: 0
 
 [selfplay_noise_embed]
-test: 0
 cards: ../cards/youtubetest1.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
