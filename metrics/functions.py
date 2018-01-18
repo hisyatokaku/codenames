@@ -14,12 +14,6 @@ def f1_score(possible_answers, actual_answers):
     TODO: modify this rough settings
     """
 
-    p_nonzero_num = reduce(lambda x,y:x+y, possible_answers)
-    r_nonzero_num = reduce(lambda x,y:x+y, map(lambda z:z>0, actual_answers))
-
-    p_nonzero_index = [ix for (ix, val) in enumerate(possible_answers) if val > 0]
-    r_nonzero_index = [ix for (ix, val) in enumerate(actual_answers) if val > 0]
-
     tp, fp, fn = 0, 0, 0
 
     for ix in range(len(actual_answers)):
@@ -49,6 +43,8 @@ def dcg(possible_answers, actual_answers, top_n):
     calculate ndcg score.
     :param possible_answers: [0, 1, 0, 0, 1, 0,...]
     :param actual_answers: [0.01, 0.4, 0.02, 0.6, 0.01, ...]
+    :param top-n: the number of elements in actual_answers you need for calculate dcg (unnecessary??)
+    TODO: fix bug
     :return:
     """
 
