@@ -12,13 +12,14 @@ class Guesser(object):
     :param test: bool
     """
 
-    def __init__(self, w2v_dir, field, logger, wv_noise_pkl_path, wv_noise=False, test=False):
+    def __init__(self, w2v_dir, field, logger, wv_noise_pkl_path, wv_noise_value, is_wv_noise=False, test=False):
         self.test = test
         self.w2v_dir = w2v_dir
         self.field = field
         self.logger = logger
-        self.wv_noise = wv_noise # True or False
+        self.is_wv_noise = is_wv_noise # True or False
         self.wv_noise_pkl_path = wv_noise_pkl_path
+        self.wv_noise_value = wv_noise_value
         self.wv = None
         self.model = self.load_model(self.w2v_dir)
 
@@ -28,10 +29,13 @@ class Guesser(object):
             model = None
         else:
             model = gensim.models.KeyedVectors.load_word2vec_format(w2v_dir, binary=True)
-            if self.wv_noise:
-                new_wv = add_noise(model, mean=0, std=0.1)
+            if self.is_wv_noise:
+                new_wv = add_noise(model, mean=0, std=self.wv_noise_value)
+                log_text = "noise_lebel: {}".format(self.wv_noise_value)
+                self.logger.info(log_text)
                 self.wv = new_wv
                 self.logger.info("use noised vectors.")
+
                 # with open(self.wv_noise_pkl_path, 'wb') as w:
                 #     pickle.dump(new_wv, w)
                 # log_text = "noised wv saved on {}".format(self.wv_noise_pkl_path)
@@ -53,7 +57,7 @@ gkt         """
             sorted_card = sorted(dammy_card, key=lambda x: x[1], reverse = True)
 
         else:
-            if self.wv_noise:
+            if self.is_wv_noise:
                 sorted_card = [(card, cossim(self.wv[clue], self.wv[card.name]), card.color)\
                         for card in self.field if card.taken_by=="None"]
                 self.logger.info("score calculated by new_wv vectors.")
@@ -67,10 +71,14 @@ gkt         """
             print_text = "{} {} {}".format(card[0].name, card[1], card[2])
             self.logger.info(print_text)
 
-        ans_cards = sorted_card[:num]
+        ans_cards = sorted_card
+
         self.logger.info("answer: ")
         for card in sorted_card[:num]:
             print_text = "{} {} {}".format(card[0].name, card[1], card[2])
             self.logger.info(print_text)
 
-        return [card[0] for card in ans_cards]
+        # return [card[0] for card in ans_cards]
+        # return type:
+        # [(card, similarity with clue, card.color), (...), ...]
+        return ans_cards

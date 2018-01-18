@@ -1,0 +1,29 @@
+field set.
+      pool    bridge      fire      ring     heart
+      horn    spring     table     whale      seal
+      moon     block     drill      fish      tube
+     grace      iron    doctor  roulette    degree
+      wake    needle    tablet       pie    garden
+
+
+       RED    NORMAL       RED    NORMAL    NORMAL
+       RED    NORMAL      BLUE      BLUE    NORMAL
+       RED       RED       RED    NORMAL      BLUE
+      BLUE      BLUE      BLUE  ASSASSIN       RED
+    NORMAL      BLUE       RED      BLUE       RED
+
+
+
+
+turn: RED, turn count: 0
+clue: garage, num: 5
+guessed card: roulette
+ASSASSIN! team: RED loses.
+evaluate_answer() running...
+onehot_score: 
+[1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+ans_score: 
+[0.061667699261917841, -0.015567259471212624, -0.057702909679598013, -0.053847678132921351, -0.034791881629120169, -0.020223187621000616, 0.013402398359615542, 0.05078031277129913, 0.030595828377995904, -0.069206207011179188, 0.02961372735699308, 0.020250871322378572, -0.12700814867026078, -0.11150226081544146, 0.066796080379760148, -0.052797299535396913, -0.053550456890442355, -0.11014330208909384, 0.080688011912807278, -0.018942034612764003, -0.022946576452229861, 0.030263679158582857, -0.053011015204748713, -0.074999560809482446, -0.016884131601163643]
+f1: 0.3636363636363636, cross_entropy: 9.645213373894322, dcg_score: 0.06166769926191784
+RED: 0 vs BLUE: 0
+game terminated.
