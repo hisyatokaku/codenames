@@ -11,7 +11,7 @@ $Pos$ is uniquely picked by following constraints.
 ## player strategy
 add gaussian noise vector to pretrained embeddings.
 
-noise parameters are given by the forms of standard deviation.
+noise parameters are given by the form of standard deviation.
 
 For example, the last part of the directory name, std0.2, means that the experiment was done in
 the setting of std = 0.2 .
