@@ -42,7 +42,7 @@ ex_setting_logger = setup_filelogger(logger_name='experiment_setting',
                                      )
 field_logger = setup_filelogger(logger_name='field',
                                 file_name=os.path.join(log_dir_path, 'field.log'),
-                                level=logging.DEBUG,
+                                level=logging.INFO,
                                 add_console=True
                                 )
 red_team_logger = setup_filelogger(logger_name='red',
@@ -141,7 +141,6 @@ def main():
         turn = not turn
         turn_count += 1
 
-    # TODO: serialize metrics into files
     field.dump_metrics()
     field_logger.info("game terminated.")
 
