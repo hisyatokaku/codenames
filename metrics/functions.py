@@ -2,7 +2,7 @@ from functools import reduce
 import math
 import numpy as np
 
-def f1_score(possible_answers, actual_answers):
+def f1_score(possible_answers, actual_answers, top_n):
     """
     calculate f1 score.
 
@@ -13,6 +13,11 @@ def f1_score(possible_answers, actual_answers):
     threshold is set to 0 (if prob is more than 0, it is considered to be positive.
     TODO: modify this rough settings
     """
+
+    # keep top_n values and make others zero probability
+    top_n_values = sorted(actual_answers, reverse=True)[:2]
+    for (i, x) in enumerate(actual_answers):
+        actual_answers[i] = 0 if x not in top_n_values else s[i]
 
     tp, fp, fn = 0, 0, 0
 
