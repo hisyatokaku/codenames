@@ -6,3 +6,5 @@ freq_wordlist.xlsx
 codes/__pycache__/
 notebooks/
 execution_at_euler.txt
+.DS_Store
+logs/.DS_Store
