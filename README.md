@@ -12,9 +12,10 @@ Using the pre-trained word2vec vectors will also require downloading the binary 
 ```
 python main.py --setting selfplay --exname experiment_name
 ```
---setting: setting name. You can define the parameters and paths in Config/setting.exp
---exname: experiment name. This character is concatenated to the name of directory for log.
---n: word2vec noise. noise is sampled from gaussian distribution with mean=0.0, std=noise.
+
+- --setting: setting name. You can define the parameters and paths in Config/setting.exp
+- --exname: experiment name. This character is concatenated to the name of directory for log.
+- --n: word2vec noise. noise is sampled from gaussian distribution with mean=0.0, std=noise.
 
 ## Parameters in setting.exp
 Required:
