@@ -7,7 +7,19 @@ def softmax(_list):
     :param _list: type:list
     :return: type:list
     """
-    return list(np.exp(_list)/np.sum(np.exp(_list),axis=0))
+    return list(np.exp(_list)/np.sum(np.exp(_list), axis=0))
+
+def codename_score(field, team):
+    """
+    return codename score.
+    :param field: Field object defined in field.py
+    :param team: "RED" or "BLUE"
+    :return: score
+    """
+    if team=="RED":
+        return field.red_score
+    else:
+        return field.blue_score
 
 def f1_score(gt_label, prediction, top_n):
     """
@@ -72,6 +84,7 @@ def ndcg(gt_label, prediction, top_n):
     :param top-n: the number of elements in prediction you need for calculate dcg (unnecessary??)
     :return:
     """
+
     ideal_rank_index = list(np.array(gt_label).argsort()[::-1].argsort() + 1)
     DCG = dcg(gt_label, prediction, top_n)
     IDCG = sum([rel / math.log2(rank+1) for (rel, rank) in zip(gt_label, ideal_rank_index)])
