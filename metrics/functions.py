@@ -2,28 +2,37 @@ from functools import reduce
 import math
 import numpy as np
 
-def f1_score(possible_answers, actual_answers):
+def softmax(_list):
+    """
+    :param _list: type:list
+    :return: type:list
+    """
+    return list(np.exp(_list)/np.sum(np.exp(_list),axis=0))
+
+def f1_score(gt_label, prediction, top_n):
     """
     calculate f1 score.
 
-    :param possible_answers: 1-d one-hot vector like: [0, 0, 1, ...]
-    :param actual_answers: 1-d vector with probability like: [0.05, 0.1, 0.4, 0.03, ...]
+    :param gt_label: 1-d one-hot vector like: [0, 0, 1, ...]
+    :param prediction: 1-d vector with probability like: [0.05, 0.1, 0.4, 0.03, ...]
     :return: f1_score
-
-    threshold is set to 0 (if prob is more than 0, it is considered to be positive.
-    TODO: modify this rough settings
     """
+
+    # keep top_n values and make others zero probability
+    top_n_values = sorted(prediction, reverse=True)[:top_n]
+    for (i, x) in enumerate(prediction):
+        prediction[i] = 0 if x not in top_n_values else s[i]
 
     tp, fp, fn = 0, 0, 0
 
-    for ix in range(len(actual_answers)):
-        if actual_answers[ix] > 0 and possible_answers[ix] == 0.0:
+    for ix in range(len(prediction)):
+        if prediction[ix] > 0 and gt_label[ix] == 0.0:
             # false positive
             fp += 1
-        if actual_answers[ix] > 0 and possible_answers[ix] == 1:
+        if prediction[ix] > 0 and gt_label[ix] == 1:
             # true positive
             tp += 1
-        if actual_answers[ix] == 0 and possible_answers[ix] == 1:
+        if prediction[ix] == 0 and gt_label[ix] == 1:
             # false negative
             fn += 1
 
@@ -31,42 +40,40 @@ def f1_score(possible_answers, actual_answers):
     recall = float(tp)/(tp+fn)
     return 2*(precision * recall)/(precision+recall)
 
-def cross_entropy(possible_answers, actual_answers):
-    ans = 0
-    for (a_label, a_prob) in zip(possible_answers, actual_answers):
-        if a_prob > 0:
-            ans += a_label * math.log2(a_prob)
-    return ans * (-1.0)
-
-def dcg(possible_answers, actual_answers, top_n):
+def cross_entropy(gt_label, prediction):
     """
-    calculate ndcg score.
-    :param possible_answers: [0, 1, 0, 0, 1, 0,...]
-    :param actual_answers: [0.01, 0.4, 0.02, 0.6, 0.01, ...]
-    :param top-n: the number of elements in actual_answers you need for calculate dcg (unnecessary??)
-    TODO: fix bug
+    calculate cross_entropy score.
+    :param gt_label: [0, 1, 0, 0, 1, 0,...]
+    :param prediction: [0.01, 0.4, 0.02, 0.6, 0.01, ...]
+    :return: cross_entropy (float)
+    """
+    sf_prediction = softmax(prediction)
+    return sum([l * p for(l, p) in zip(gt_label, sf_prediction)])
+    # return reduce(lambda su,(x,y): su+x*y, zip(gt_label, sf_prediction), 0)
+
+def dcg(gt_label, prediction, top_n):
+    """
+    calculate dcg score.
+    :param gt_label: [0, 1, 0, 0, 1, 0,...]
+    :param prediction: [0.01, 0.4, 0.02, 0.6, 0.01, ...]
+    :param top-n: the number of elements in prediction you need for calculate dcg (unnecessary??)
     :return:
     """
 
-    # mask the probability in actual_answers by indices of positive answer. if positive: +1, negative: -1.
-    '''
-    cp_actual_answers = -np.copy(actual_answers) # cast it into numpy.array
-    _ = actual_answers
-    least_n_indices = sorted(range(len(_)), key=lambda i: _[i])[:-top_n] # get least_n value indexes
-    cp_actual_answers[least_n_indices] = 0#
-    cp_actual_answers[np.nonzero(possible_answers)] *= -1
-    sorted_actual_answers = -np.sort(-cp_actual_answers)
-    '''
-    cp_actual_answers = np.copy(actual_answers)  # cast it into numpy.array
-    _ = actual_answers
-    least_n_indices = sorted(range(len(_)), key=lambda i: _[i])[:-top_n]  # get least_n value indexes
-    cp_actual_answers[least_n_indices] = 0  # mark least n numbers as 0 (because they are not used for dcg)
-    cp_actual_answers[np.nonzero(possible_answers)] *= -1 # correct answer times -1 and it is multiplied -1 again afterward.
-    sorted_actual_answers = np.sort(-cp_actual_answers)[::-1] # reversed=True
+    # calculate the rank of the element in prediction array. This should be rank used in the dcg formula.
+    sorted_rank_index = list(np.array(prediction).argsort()[::-1].argsort()+1)
+    return sum([rel/math.log2(rank+1) for (rel, rank) in zip(gt_label, sorted_rank_index)])
 
-    # calculate dcg (scores are already sorted, so we do not normalize the score by calculating ndcg
-    dcg = 0.
-    for (ix, score) in enumerate(list(sorted_actual_answers)):
-        if score > 0: # it might be good to add negative score in the sense to penalize.
-            dcg += score/math.log2(ix+2) # use ix+2 to correspond to the formula's denominators which are  2, 3, 4...
-    return dcg
+def ndcg(gt_label, prediction, top_n):
+    """
+    calculate ndcg score.
+    :param gt_label: [0, 1, 0, 0, 1, 0,...]
+    :param prediction: [0.01, 0.4, 0.02, 0.6, 0.01, ...]
+    :param top-n: the number of elements in prediction you need for calculate dcg (unnecessary??)
+    :return:
+    """
+    ideal_rank_index = list(np.array(gt_label).argsort()[::-1].argsort() + 1)
+    DCG = dcg(gt_label, prediction, top_n)
+    IDCG = sum([rel / math.log2(rank+1) for (rel, rank) in zip(gt_label, ideal_rank_index)])
+    return DCG/IDCG
+

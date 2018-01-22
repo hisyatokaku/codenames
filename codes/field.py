@@ -21,7 +21,6 @@ class Field(object):
         self.blue_score = 0
         self.game_continue = True
         self.loser = None
-
         self.red_metrics = defaultdict(list)
         self.blue_metrics = defaultdict(list)
         self.red_metrics_path = red_metrics_path
@@ -189,7 +188,7 @@ class Field(object):
         self.logger.debug(ans_score)
 
         # calculate value by the metrics you chose
-        f1 = f1_score(onehot_score, ans_score)
+        f1 = f1_score(onehot_score, ans_score, top_n)
         c_e = cross_entropy(onehot_score, ans_score)
         dcg_score = dcg(onehot_score, ans_score, top_n)
         self._update_dict(team=team, f1=f1, c_e=c_e, dcg_score=dcg_score)
