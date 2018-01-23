@@ -200,9 +200,22 @@ class Spymaster(object):
         if len(self.restrict_words_path) == 0:
             self.logger.info("load vocabulary from gensim.models.KeyedVectors.")
             vocab = self.model.vocab
+
+        elif self.restrict_words_path[-3:] == 'txt':
+            vocab = dict()
+            cur_id = 0
+            self.logger.info("load vocabulary from {}".format(self.restrict_words_path))
+            _vocab = list(open(self.restrict_words_path, 'r').readlines())
+
+            for word in _vocab:
+                word = word.strip()
+                if word not in vocab:
+                    vocab[word] = Vocab(index=cur_id)
+                    cur_id += 1
+
         else:
             vocab = dict()
-            self.logger.info("load restrict words from csv: " + self.restrict_words_path)
+            self.logger.info("load restrict words from csv: {}".format(self.restrict_words_path))
             with open(self.restrict_words_path, 'r') as c:
                 reader = csv.reader(c)
                 header = next(reader)
@@ -212,6 +225,7 @@ class Spymaster(object):
                     if word not in vocab:
                         vocab[word] = Vocab(index=cur_id)
                         cur_id += 1
+
         return vocab
 
     def fill_table(self):
@@ -235,7 +249,6 @@ class Spymaster(object):
                 for card in self.field:
                     w_ix = self.vocab[word].index
                     c_ix = card.id
-
                     if word not in self.model.vocab:
                         self.word_table[w_ix][c_ix] = 0.0
                     else:
