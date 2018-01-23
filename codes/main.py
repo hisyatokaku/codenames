@@ -119,23 +119,27 @@ def main():
     while field.game_continue:
         if turn:
             cur_team = "RED"
-            field_logger.info("turn: {}, turn count: {}".format(cur_team, turn_count))
-            clue, num, possible_answers = red_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
-            log_text = "clue: {}, num: {}".format(str(clue), str(num))
-            field_logger.info(log_text)
-            answers = red_guesser.guess_from_clue(clue, num)  # [(card, similarity with clue, card.color), (...), ...]
-            field.check_answer(team=cur_team, answer_cards=answers, top_n=num)
-            field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers, top_n=num)
-
+            clue_func = red_spymaster.give_clue_with_threshold
+            guess_func = red_guesser.guess_from_clue
         else:
             cur_team = "BLUE"
-            field_logger.info("turn: {}, turn count: {}".format(cur_team, turn_count))
-            clue, num, possible_answers = blue_spymaster.give_clue_with_threshold(turn=cur_team+str(turn_count), top_n=10)
-            log_text = "clue: {}, num: {}".format(str(clue), str(num))
-            field_logger.info(log_text)
-            answers = blue_guesser.guess_from_clue(clue, num) # [(card, similarity with clue, card.color), (...), ...]
-            field.check_answer(team=cur_team, answer_cards=answers, top_n=num)
-            field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers, top_n=num)
+            clue_func = blue_spymaster.give_clue_with_threshold
+            guess_func = blue_guesser.guess_from_clue
+
+        log_text = "turn: {}, turn count: {}".format(cur_team, turn_count)
+        field_logger.info(log_text)
+
+        # spymaster gives clue
+        clue, num, possible_answers = clue_func(turn=cur_team+str(turn_count), top_n=10)
+
+        log_text = "clue: {}, num: {}".format(str(clue), str(num))
+        field_logger.info(log_text)
+
+        # player makes guessing
+        answers = guess_func(clue, num)  # [(card, similarity with clue, card.color), (...), ...]
+
+        field.check_answer(team=cur_team, answer_cards=answers, top_n=num)
+        field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers, top_n=num)
 
         field.print_score()
         turn = not turn

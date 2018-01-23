@@ -1,4 +1,5 @@
-models/*
+models/*.pkl
+models/*.gz
 .idea/
 thoughts.pdf
 freq_wordlist.csv
