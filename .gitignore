@@ -1,4 +1,5 @@
 models/*
+logs/*
 .idea/
 thoughts.pdf
 freq_wordlist.csv
