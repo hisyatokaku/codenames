@@ -16,7 +16,7 @@ def codename_score(field, team):
     :param team: "RED" or "BLUE"
     :return: score
     """
-    if team=="RED":
+    if team == "RED":
         return field.red_score
     else:
         return field.blue_score
@@ -33,7 +33,7 @@ def f1_score(gt_label, prediction, top_n):
     # keep top_n values and make others zero probability
     top_n_values = sorted(prediction, reverse=True)[:top_n]
     for (i, x) in enumerate(prediction):
-        prediction[i] = 0 if x not in top_n_values else s[i]
+        prediction[i] = 0 if x not in top_n_values else prediction[i]
 
     tp, fp, fn = 0, 0, 0
 
