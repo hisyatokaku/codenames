@@ -132,13 +132,14 @@ def main():
         # TODO: refactor the function below at least for clear names of the parameters.
         field.evaluate_answer(team=team, possible_cards=spymaster_ranking, answer_cards=guesser_cards, top_n=clue_number)
         
+        field.check_game_terminated()
+        
         turn = not turn
         turn_count += 1
 
     field.dump_metrics()
     
-   
-    field_logger.info("\nGame terminated with the score:")
+    # field_logger.info("\nGame terminated with the score:")
     field.print_score()
 
     

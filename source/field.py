@@ -1,7 +1,7 @@
 import random
 import sys
 sys.path.append('../metrics')
-from functions import f1_score, cross_entropy, dcg
+from functions import f1_score, cross_entropy, dcg, ndcg, codename_score
 import json
 from collections import defaultdict
 
@@ -96,7 +96,31 @@ class Field(object):
 
         for (i, color_ix) in enumerate(color_ix_list):
             self.field[i].color = ix_to_str[color_ix]
-            
+   
+
+    def check_game_terminated(self):
+        """
+        check the field, then,
+        if all RED or BLUE card are taken by either RED or BLUE teams,
+        return True.
+        otherwise, False.
+        :return:
+        """
+
+        team_cards = list(filter(lambda card: card.color in ["RED", "BLUE"], self.field))
+        not_taken_cards = list(filter(lambda card: card.taken_by == "None", team_cards))
+        
+        # Game terminating.
+        if (len(not_taken_cards) == 0):
+            self.logger.info("\nGame terminated.")
+            self.game_continue = False
+    
+        # log_text = "is_end gets False.\ncard.name:{}, card.color:{}, card.taken_by:{}".format(
+        # card.name, card.color, card.taken_by)
+        # self.logger.debug(log_text)
+
+ 
+    
     def print_cards(self, list_of_card_score_pairs):
         """Logs a ranked list of card names and their colors to the file."""
         
@@ -114,12 +138,6 @@ class Field(object):
         
         # TODO: pass only answer_cards[top_n]
         # TODO: improve docstring
-        
-        # Why is this check here? Was the latest turn neeed?
-        if self.red_score >= 9 or self.blue_score >= 9:
-            self.logger.info("game terminating...")
-            self.game_continue = False
-            return None
         
         guesses = []
         points = 0
@@ -158,7 +176,6 @@ class Field(object):
         
         self.logger.info("\n{} team got {} points.".format(team, points))
                 
-
     def evaluate_answer(self, team, possible_cards, answer_cards, top_n):
         """
         additional function for calculating score by using metrics
@@ -166,32 +183,25 @@ class Field(object):
         :param team:
         :param possible_cards: the cards which spymaster want player to guess
         [[card, similarity with clue], [...], ...] (sorted by similarity)
-
         :param answer_cards: the cards which player guessed
         [(card, similarity with clue, card.color), (...), ...] (sorted by similarity)
         # note that, len(answer_cards) might be less than 25 after round 1.
         # because from the field we strip the card which has already guessed by players.
-
         :return: score (type:float)
         """
-        if self.red_score >= 9 or self.blue_score >= 9:
-            self.logger.info("game terminated.")
-            self.game_continue = False
-            return None
 
         # mask top-n cards into 1, others to 0
         # [0, 0, 1, 0, 0, 1, ...]
         self.logger.debug('evaluate_answer() running...')
         onehot_score = [0.0 for _ in range(len(self.field))]
-        # onehot_score = [0.0 for _ in range(len(answer_cards))]
-        for (card, _) in possible_cards[:top_n]:
+        for (card, _ ) in possible_cards[:top_n]:
             onehot_score[card.id] += 1.
         self.logger.debug('onehot_score: ')
         self.logger.debug(onehot_score)
 
         # extract similarity score from answer_cards
         # [0, 0.4, 0.5, 0, 0, ...]
-        # TODO: clean it
+        # TODO: needs to be clean
         ans_score = [0.0 for _ in range(len(self.field))]
         for (card, score) in answer_cards:
             ans_score[card.id] = score
@@ -203,10 +213,13 @@ class Field(object):
         self.logger.debug(ans_score)
 
         # calculate value by the metrics you chose
-        f1 = f1_score(onehot_score, ans_score)
+        code_name_score = codename_score(self, team)
+        f1 = f1_score(onehot_score, ans_score, top_n)
         c_e = cross_entropy(onehot_score, ans_score)
         dcg_score = dcg(onehot_score, ans_score, top_n)
-        self._update_dict(team=team, f1=f1, c_e=c_e, dcg_score=dcg_score)
+        ndcg_score = ndcg(onehot_score, ans_score, top_n)
+        self._update_dict(team=team, code_name_score=code_name_score, 
+                          f1=f1, c_e=c_e, dcg_score=dcg_score, ndcg_score=ndcg_score)
 
         log_text = "f1: {}, cross_entropy: {}, dcg_score: {}".format(f1, c_e, dcg_score)
         self.logger.debug(log_text)
@@ -217,7 +230,6 @@ class Field(object):
         :return: None
         """
         self.logger.info("RED: {} vs BLUE: {}".format(self.red_score, self.blue_score))
-        # self.print_field(display_colors=True,display_taken_by=True)
 
     def print_field(self, display_colors=True, display_taken_by=False):
         maxwordlen = max([len(card.name) for card in self.field])
