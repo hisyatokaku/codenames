@@ -1,5 +1,6 @@
 models/*.pkl
 models/*.gz
+logs/*
 .idea/
 thoughts.pdf
 freq_wordlist.csv
@@ -8,4 +9,3 @@ codes/__pycache__/
 notebooks/
 execution_at_euler.txt
 .DS_Store
-logs/.DS_Store

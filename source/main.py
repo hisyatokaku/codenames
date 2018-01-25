@@ -17,8 +17,8 @@ sys.path.append('../')
 parser = argparse.ArgumentParser(description='input argument')
 parser.add_argument('--setting', '-s', type=str, default=None, help='section name in ../config/settings.exp')
 parser.add_argument('--exname', '-e', default=None, help='experiment name.')
-parser.add_argument('--noise', '-n', type=float, default=0., help='noise for the embeddings of player. you should includ'
-                                                                  'e this value in args.exname for readability')
+parser.add_argument('--noise', '-n', type=float, default=0., help='noise for the embeddings of player. you should '
+                                                                  'include this value in args.exname for readability')
 args = parser.parse_args()
 print(args.exname)
 
@@ -38,23 +38,23 @@ logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S
 ex_setting_logger = setup_filelogger(logger_name='experiment_setting',
                                      file_name=os.path.join(log_dir_path, 'exp_setting.log'),
                                      level=logging.INFO,
-                                     add_console=True
-                                     )
+                                     add_console=False)
+
 field_logger = setup_filelogger(logger_name='field',
                                 file_name=os.path.join(log_dir_path, 'field.log'),
                                 level=logging.INFO,
-                                add_console=True
-                                )
-red_team_logger = setup_filelogger(logger_name='red',
-                                    file_name=os.path.join(log_dir_path, 'red_spy_player.log'),
-                                    level=logging.INFO,
-                                    add_console=True
-                                    )
-blue_team_logger = setup_filelogger(logger_name='blue',
-                                    file_name=os.path.join(log_dir_path, 'blue_spy_player.log'),
-                                    level=logging.INFO,
-                                    add_console=True
-                                    )
+                                add_console=False)
+
+team_logger = setup_filelogger(logger_name='team',
+                               file_name=os.path.join(log_dir_path, 'team.log'),
+                               level=logging.INFO,
+                               add_console=False)
+
+# blue_team_logger = setup_filelogger(logger_name='blue',
+#                                    file_name=os.path.join(log_dir_path, 'blue_spy_player.log'),
+#                                    level=logging.INFO,
+#                                    add_console=True
+#                                    )
 
 config = configparser.ConfigParser()
 config.read('../Config/settings.exp')
@@ -70,7 +70,7 @@ def main():
     # is_test = setting_exp.getint('test')
     word_table_path = setting_exp.get('spywtable')
     word_rank_list_path = setting_exp.get('spywrlist')
-    restrict_words_path = setting_exp.get('spyrwords')
+    spymaster_vocabulary_path = setting_exp.get('spymaster_vocabulary_path')
     wv_noise_pkl_path = setting_exp.get('wv_noise_path')
     enable_wv_noise = setting_exp.getint('enable_wv_noise')
 
@@ -92,138 +92,55 @@ def main():
                   red_metrics_path=red_metrics_path, blue_metrics_path=blue_metrics_path)
     field.print_field()
 
-    red_guesser = Guesser(w2v_path, field=field.field, logger=red_team_logger,
-                          wv_noise_pkl_path=wv_noise_pkl_path,
-                          wv_noise_value=wv_noise_value,
-                          is_wv_noise=enable_wv_noise)
-    red_spymaster = Spymaster(w2v_path, field=field.field,
-                              logger=red_team_logger, team="RED",
-                              word_table_path=word_table_path,
-                              word_rank_list_path=word_rank_list_path,
-                              restrict_words_path=restrict_words_path)
+    
+    guesser = Guesser(w2v_path, field=field.field, logger=team_logger,
+                      wv_noise_pkl_path=wv_noise_pkl_path,
+                      wv_noise_value=wv_noise_value,
+                      is_wv_noise=enable_wv_noise)
+    
+    spymaster = Spymaster(w2v_path, field=field.field,
+                          logger=team_logger,
+                          word_table_path=word_table_path,
+                          word_rank_list_path=word_rank_list_path,
+                          vocabulary_path=spymaster_vocabulary_path)
 
-    blue_guesser = Guesser(w2v_path, field=field.field, logger=blue_team_logger,
-                           wv_noise_pkl_path=wv_noise_pkl_path,
-                           wv_noise_value = wv_noise_value,
-                           is_wv_noise=enable_wv_noise)
-
-    blue_spymaster = Spymaster(w2v_path, field=field.field,
-                               logger=blue_team_logger, team="BLUE",
-                               word_table_path=word_table_path,
-                               word_rank_list_path=word_rank_list_path,
-                               restrict_words_path=restrict_words_path)
-
+    team = "RED"
     turn = True
     turn_count = 0
 
     while field.game_continue:
         if turn:
-            cur_team = "RED"
-            clue_func = red_spymaster.give_clue_with_threshold
-            guess_func = red_guesser.guess_from_clue
+            team = "RED"
         else:
-            cur_team = "BLUE"
-            clue_func = blue_spymaster.give_clue_with_threshold
-            guess_func = blue_guesser.guess_from_clue
+            team = "BLUE"
+                  
+        field_logger.info("\n" + "-----{} turn-----".format(team))
+        team_logger.info( "\n" + "-----{} turn-----".format(team))
 
-        log_text = "turn: {}, turn count: {}".format(cur_team, turn_count)
-        field_logger.info(log_text)
-
-        # spymaster gives clue
-        clue, num, possible_answers = clue_func(turn=cur_team+str(turn_count), top_n=10)
-
-        log_text = "clue: {}, num: {}".format(str(clue), str(num))
-        field_logger.info(log_text)
-
-        # player makes guessing
-        answers = guess_func(clue, num)  # [(card, similarity with clue, card.color), (...), ...]
-
-        field.check_answer(team=cur_team, answer_cards=answers, top_n=num)
-        field.evaluate_answer(team=cur_team, possible_cards=possible_answers, answer_cards=answers, top_n=num)
-
-        field.print_score()
+        # Spymaster action.
+        clue, clue_number, spymaster_ranking = spymaster.give_clue_with_threshold(team, turn_count, top_n=10)
+    
+        field_logger.info("\nClue given: {}:{}".format(str(clue), str(clue_number)))
+        field.print_cards(spymaster_ranking[:clue_number + 2])
+ 
+        # Guesser action.
+        guesser_cards = guesser.guess_from_clue(clue, clue_number)
+        
+        field_logger.info("\nGuesses given:")
+        field.print_cards(guesser_cards)
+        
+        field.check_answer(team=team, guesser_cards=guesser_cards)
+        field.evaluate_answer(team=team, possible_cards=spymaster_ranking, answer_cards=guesser_cards, top_n=clue_number)
+        field.check_game_terminated()
+        
         turn = not turn
         turn_count += 1
 
     field.dump_metrics()
-    field_logger.info("game terminated.")
+    
+    field_logger.info("\nGame terminated with the score:")
+    field.print_score()
 
-def gridsearch_noise():
-    noises = []
-    # for noise in noises:
-    pass
-
-'''
-def _main():
-    lined_file_path = setting_exp.get('cards')
-    w2v_path = setting_exp.get('embed')
-    is_test = setting_exp.getint('test')
-
-    # spy settings
-    word_table_path = setting_exp.get('spywtable')
-    word_rank_list_path = setting_exp.get('spywrlist')
-    restrict_words_path = setting_exp.get('spyrwords')
-
-    field = Field(lined_file_path, logger=logger)
-    field.print_field()
-
-    is_continue = True
-    guesser = Guesser(w2v_path, field=field.field, logger=logger, test=is_test)
-
-    # print("To quit, enter Q")
-    logger.info("To quit, enter Q.")
-    turn = True
-
-    while (is_continue):
-        if turn:
-            print("turn: ", 'RED')
-            logger.info("turn: RED")
-        else:
-            print("turn: ", 'BLUE')
-            logger.info("turn: BLUE")
-
-        print("clue:")
-        logger.info("clue:")
-        clue = input()
-        print("clue:", clue)
-        # logger.info("clue:")
-        logger.info(clue)
-        if clue == "Q":
-            break
-
-        try:
-            guesser.guess_from_clue(clue)
-        except:
-            print("the word is not in vocabulary.")
-            logger.warn("the word is not in vocabulary.")
-        finally:
-            turn = not turn
-'''
-'''
-def test_spymaster():
-    lined_file_path = setting_exp.get('cards')
-    w2v_path = setting_exp.get('embed')
-    is_test = setting_exp.getint('test')
-    word_table_path = setting_exp.get('spywtable')
-    word_rank_list_path = setting_exp.get('spywrlist')
-    restrict_words_path = setting_exp.get('spyrwords')
-
-    field = Field(lined_file_path, logger=field_logger)
-    field.print_field()
-
-    spymaster = Spymaster(w2v_path, field=field.field,
-                          logger=red_team_logger, team="RED",
-                          word_table_path=word_table_path,
-                          word_rank_list_path=word_rank_list_path,
-                          restrict_words_path=restrict_words_path,
-                          test=is_test)
-
-    # print("To quit, enter Q")
-    print("Spymaster set.")
-    red_team_logger.info("Spymaster set.")
-    # turn = True
-    spymaster.give_clue(top_n=100)
-'''
+    
 if __name__ == "__main__":
     main()
-    # gridsearch_noise()
