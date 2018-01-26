@@ -1,41 +1,47 @@
+[anna_selfplay]
+cards: ../cards/youtubetest1.txt
+embed: ../models/GoogleNews.bin
+spywtable:
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+ 
 [selfplay_threshold_rank_test_metrics]
 cards: ../cards/youtubetest1.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
 spywrlist: ../models/wrd_top10_restrict_vocab_selfplay_threshold_rank.pkl
-spyrwords: ../models/freq_wordlist.csv
+spymaster_vocabulary_path: ../models/freq_wordlist.csv
 wv_noise_path: ../models/wvnoise_5e-1.pkl
 enable_wv_noise: 1
-
+ 
 [selfplay]
 cards: ../cards/youtubetest1.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
 spywrlist: ../models/wrl_top20_restrict_vocab_selfplay.pkl
-spyrwords: ../models/freq_wordlist.csv
-
+spymaster_vocabulary_path: ../models/freq_wordlist.csv
+ 
 [selfplay_threshold_rank]
 cards: ../cards/youtubetest1.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
 spywrlist: ../models/wrd_top10_restrict_vocab_selfplay_threshold_rank.pkl
-spyrwords: ../models/freq_wordlist.csv
+spymaster_vocabulary_path: ../models/freq_wordlist.csv
 wv_noise_path:
 enable_wv_noise: 0
-
+ 
 [selfplay_noise_embed]
 cards: ../cards/youtubetest1.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
 spywrlist: ../models/wrd_top10_restrict_vocab_selfplay_noise_embed_std1.pkl
-spyrwords: ../models/freq_wordlist.csv
+spymaster_vocabulary_path: ../models/freq_wordlist.csv
 wv_noise_path: ../models/wvnoise.pkl
 enable_wv_noise: 1
-
+ 
 [5cardstest]
 test: 0
 cards: ../cards/debugset.txt
 embed: ../models/GoogleNews.bin.gz
 spywtable: ../models/word_table_5cardsset.pkl
 spywrlist: ../models/wrl_top100_5cardsset.pkl
-spyrwords:
+spymaster_vocabulary_path:

@@ -6,10 +6,10 @@ import json
 from collections import defaultdict
 
 class Card(object):
-    def __init__(self, name, id):
+    def __init__(self, name, index):
         self.name = name
         self.color = None
-        self.id = id
+        self.index = index
         self.taken_by = "None"
 
 class Field(object):
@@ -19,8 +19,13 @@ class Field(object):
         self.init_field(lined_file)
         self.red_score = 0
         self.blue_score = 0
+        
+        # TODO:
+        # self.score = {"BLUE": 0, "RED": 0}
+        
         self.game_continue = True
         self.loser = None
+
         self.red_metrics = defaultdict(list)
         self.blue_metrics = defaultdict(list)
         self.red_metrics_path = red_metrics_path
@@ -94,9 +99,9 @@ class Field(object):
         ix_to_str = ['RED', 'BLUE', 'DOUBLE', 'NORMAL', 'ASSASSIN']
 
         for (i, color_ix) in enumerate(color_ix_list):
-            self.field[i].color = ix_to_str[color_ix]
+            self.field[i].color = ix_to_str[color_ix]  
 
-    def _check_ending(self):
+    def check_game_terminated(self):
         """
         check the field, then,
         if all RED or BLUE card are taken by either RED or BLUE teams,
@@ -104,69 +109,66 @@ class Field(object):
         otherwise, False.
         :return:
         """
-        is_end = True
 
-        for card in self.field:
-            if (card.color in ["RED", "BLUE"]):
-                if (card.taken_by in ["RED", "BLUE"]):
-                    pass
-                else:  # card.taken_by = None, in this case.
-                    # there still remains untaken card, so the game is not ended.
-                    log_text = "is_end gets False.\ncard.name:{}, card.color:{}, card.taken_by:{}".format(card.name, card.color, card.taken_by)
-                    self.logger.debug(log_text)
-                    is_end = False
-        return is_end
-
-    def check_answer(self, team, answer_cards, top_n):
+        team_cards = list(filter(lambda card: card.color in ["RED", "BLUE"], self.field))
+        not_taken_cards = list(filter(lambda card: card.taken_by == "None", team_cards))
+        
+        # Game terminated.
+        if (len(not_taken_cards) == 0):
+            self.game_continue = False
+    
+    def print_cards(self, list_of_card_score_pairs):
+        """Logs a ranked list of card names and their colors to the file."""
+        
+        for (card, score) in list_of_card_score_pairs:
+            self.logger.info("  {0:.6s}: {1}, sim={2:.2f}".format(card.color, card.name, score))
+       
+    def check_answer(self, team, guesser_cards): 
         """
-        checking teams to which team the guessed cards belong.
-        :input: [card, similarity with clue, card.color]
-        :param team: the guessing team who is in current turn
-        :param answer_cards: list of instances of Card
+        Checking the cards of the guesser and update points.
+      
+        :param team: "BLUE" or "RED", current guessing team.
+        :param guesser_cards: list of (card, score) pairs.
         :return: None
         """
 
-        # if there is no RED card or BLUE card to be taken, game ends.
-        if self._check_ending():
-            self.logger.info("game terminating...")
-            self.game_continue = False
-            return None
+        guesses = []
+        points = 0
+        
+        for card_score_pair in guesser_cards:
+            card = card_score_pair[0]
+            card_color = self.field[card.index].color
+            self.field[card.index].taken_by = team
+            
+            guesses.append(card.name)
 
-        for card in answer_cards[:top_n]:
-            card = card[0]
-            log_text = "guessed card: {}".format(str(card.name))
-            self.logger.info(log_text)
-            self.field[card.id].taken_by = team
-
-            # correct answer
-            if self.field[card.id].color == team:
-                exec("self.{}_score += 1".format(team.lower()))
-                self.logger.info("Correct! team: {} got 1 points.".format(team))
-
-            elif self.field[card.id].color == "DOUBLE":
-                exec("self.{}_score += 1".format(team.lower()))
-                self.logger.info("Correct! team: {} got 1 points.".format(team))
-
-            # wrong answer, give score to enemy, turn ends
-            # updated on 22, Jan. -> minus ally's score
-            elif self.field[card.id].color == "RED" and team == "BLUE":
-                exec("self.{}_score -= 1".format("BLUE".lower()))
-                self.logger.info("Wrong! team: BLUE lost 1 points.")
-
-            elif self.field[card.id].color == "BLUE" and team == "RED":
-                exec("self.{}_score -= 1".format("RED".lower()))
-                self.logger.info("Wrong! team: RED lost 1 points.")
-
+            # correct answer, plus point
+            if card_color == team or card_color == "DOUBLE":
+                points += 1
+                
             # wrong answer, turn ends
-            elif self.field[card.id].color == "NORMAL":
-                self.logger.info("Wrong! Normal card. {} turn ends.".format(team))
-
-            elif self.field[card.id].color == "ASSASSIN":
+            elif card_color == "NORMAL":
+                break
+                
+            elif card_color == "ASSASSIN":
                 self.loser = team
-                self.game_continue = False
-                self.logger.info("ASSASSIN! team: {} loses.".format(team))
+                self.game_continue = False   
+                self.logger.info("ASSASIN discovered!")
                 break
 
+            # wrong answer, minus point, turn ends
+            elif card_color != team:
+                points -= 1
+                break
+                
+            else:
+                assert(False, "Untracked case in check_answer.")
+        
+        # TODO: store scores in dict to access them easier.
+        exec("self.{}_score += {}".format(team.lower(), points))
+        
+        self.logger.info("\n{} team got {} points.".format(team, points))
+                
     def evaluate_answer(self, team, possible_cards, answer_cards, top_n):
         """
         additional function for calculating score by using metrics
@@ -174,26 +176,23 @@ class Field(object):
         :param team:
         :param possible_cards: the cards which spymaster want player to guess
         [[card, similarity with clue], [...], ...] (sorted by similarity)
-
         :param answer_cards: the cards which player guessed
         [(card, similarity with clue, card.color), (...), ...] (sorted by similarity)
         # note that, len(answer_cards) might be less than 25 after round 1.
         # because from the field we strip the card which has already guessed by players.
-
         :return: score (type:float)
         """
-
-        if self.red_score >= 9 or self.blue_score >= 9:
-            self.logger.info("game terminated.")
-            self.game_continue = False
-            return None
+        
+        # TODO: refactor names of the arguments, e.g. to expexted_cards and predicted_cards.
+        # TODO: note that answer_cards has now only clue_number elements! Check that 
+        # the evaluation is still correct. Also, consider to cut possible_cards as well.
 
         # mask top-n cards into 1, others to 0
         # [0, 0, 1, 0, 0, 1, ...]
         self.logger.debug('evaluate_answer() running...')
         onehot_score = [0.0 for _ in range(len(self.field))]
         for (card, _ ) in possible_cards[:top_n]:
-            onehot_score[card.id] += 1.
+            onehot_score[card.index] += 1.
         self.logger.debug('onehot_score: ')
         self.logger.debug(onehot_score)
 
@@ -201,22 +200,23 @@ class Field(object):
         # [0, 0.4, 0.5, 0, 0, ...]
         # TODO: needs to be clean
         ans_score = [0.0 for _ in range(len(self.field))]
-        for (card, score, color) in answer_cards:
-            ans_score[card.id] = score
+        for (card, score) in answer_cards:
+            ans_score[card.index] = score
 
-        # fieldindexed_answer_cards = sorted(answer_cards, key=lambda x: x[0].id, reverse=False)
+        # fieldindexed_answer_cards = sorted(answer_cards, key=lambda x: x[0].index, reverse=False)
         # ans_score = [x[1] for x in fieldindexed_answer_cards]
 
         self.logger.debug('ans_score: ')
         self.logger.debug(ans_score)
 
         # calculate value by the metrics you chose
-        code_name_score = codename_score(self.field, team)
+        code_name_score = codename_score(self, team)
         f1 = f1_score(onehot_score, ans_score, top_n)
         c_e = cross_entropy(onehot_score, ans_score)
         dcg_score = dcg(onehot_score, ans_score, top_n)
         ndcg_score = ndcg(onehot_score, ans_score, top_n)
-        self._update_dict(team=team, code_name_score=code_name_score, f1=f1, c_e=c_e, dcg_score=dcg_score, ndcg_score=ndcg_score)
+        self._update_dict(team=team, code_name_score=code_name_score, 
+                          f1=f1, c_e=c_e, dcg_score=dcg_score, ndcg_score=ndcg_score)
 
         log_text = "f1: {}, cross_entropy: {}, dcg_score: {}".format(f1, c_e, dcg_score)
         self.logger.debug(log_text)
@@ -226,8 +226,7 @@ class Field(object):
         print the score between red and blue.
         :return: None
         """
-        self.logger.info("RED: {} vs BLUE: {}".format(self.red_score,self.blue_score))
-        # self.print_field(display_colors=True,display_taken_by=True)
+        self.logger.info("RED: {} vs BLUE: {}".format(self.red_score, self.blue_score))
 
     def print_field(self, display_colors=True, display_taken_by=False):
         maxwordlen = max([len(card.name) for card in self.field])

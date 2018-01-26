@@ -24,7 +24,6 @@ def codename_score(field, team):
 def f1_score(gt_label, prediction, top_n):
     """
     calculate f1 score.
-
     :param gt_label: 1-d one-hot vector like: [0, 0, 1, ...]
     :param prediction: 1-d vector with probability like: [0.05, 0.1, 0.4, 0.03, ...]
     :return: f1_score
@@ -89,4 +88,3 @@ def ndcg(gt_label, prediction, top_n):
     DCG = dcg(gt_label, prediction, top_n)
     IDCG = sum([rel / math.log2(rank+1) for (rel, rank) in zip(gt_label, ideal_rank_index)])
     return DCG/IDCG
-
