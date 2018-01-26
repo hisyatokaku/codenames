@@ -13,10 +13,10 @@ class Card(object):
         self.taken_by = "None"
 
 class Field(object):
-    def __init__(self, lined_file, logger, red_metrics_path, blue_metrics_path):
+    def __init__(self, logger, red_metrics_path, blue_metrics_path, cards_path=None, vocabulary_path=None):
         self.field = None
         self.logger = logger
-        self.init_field(lined_file)
+        self.init_field(cards_path, vocabulary_path)
         self.red_score = 0
         self.blue_score = 0
         
@@ -24,40 +24,58 @@ class Field(object):
         # self.score = {"BLUE": 0, "RED": 0}
         
         self.game_continue = True
-        self.loser = None
 
         self.red_metrics = defaultdict(list)
         self.blue_metrics = defaultdict(list)
         self.red_metrics_path = red_metrics_path
         self.blue_metrics_path = blue_metrics_path
 
-    def init_field(self, lined_file):
+    def init_field(self, cards_path=None, vocabulary_path=None):
         """
-        initialize field with color and card name.
-        if there are only 5 cards, it is regarded as test
-        :param lined_file:
+        Initialize field with cards (names and colors).
+        
+        If cards_path given, then the names are taken from there.
+        If not, random 25 words are sampled from the vocabulary.
+        
+        If there are only 5 cards in the given field, 
+        it is treated as a test example and initialized with fixed colors.
+        
+        :param field_path: File with card names for a field, one per line.
+        :param vocabulary_path: File with card names vocabulary, one per line.
         :return: None
         """
+        
+        if cards_path:
+            words = open(cards_path, 'r').readlines()
+            words = [x.rstrip().lower() for x in words]
+            assert(len(words) == 25, "Field with incorrect number of cards given.")          
+        elif vocabulary_path:
+            words = open(vocabulary_path, 'r').readlines()
+            words = [x.strip() for x in words] # no lower() intentionally
+            random.shuffle(words)  
+        else:
+             raise ValueError("Neither cards, nor vocabulary given for field init.")
+                
+        # Set card names.
+        self.field = [Card(word, i) for (i, word) in enumerate(words[:25])]
 
-        lines = open(lined_file, 'r').readlines()
-        lines = [line.rstrip().lower() for line in lines]
-        self.field = [Card(word, i) for (i, word) in enumerate(lines)]
+        # Set colors.
         if len(self.field) == 5:
             self.init_color_for_simple_field()
         else:
-            self.init_color()
+            self.init_color(have_assassin=False)
 
-        self.logger.info("field set.")
+        self.logger.info("Field is set.")
 
     def init_color_for_simple_field(self):
         """
-        initialize field with color and card name.
-        :return: None
+        Set colors for toy test data of 5 cards.
         """
-        RED_NUM = 2
+        
+        RED_NUM = 3
         BLUE_NUM = 2
         DOUBLE_NUM = 0
-        NORMAL_NUM = 1
+        NORMAL_NUM = 0
         ASSASSIN_NUM = 0
 
         # set arbitrary color here
@@ -70,58 +88,58 @@ class Field(object):
         for (i, color_ix) in enumerate(color_ix_list):
             self.field[i].color = ix_to_str[color_ix]
 
-    def init_color(self):
+    def init_color(self, have_assassin=True):
         """
+        Set random colors for 25 field cards.
+        
         red:0, blue:1, double:2, normal:3, assassin: 4
         """
+        
         RED_NUM = 8
         BLUE_NUM = 8
         DOUBLE_NUM = 1
         NORMAL_NUM = 7
-        ASSASSIN_NUM = 1
+        
+        if have_assassin:
+            ASSASSIN_NUM = 1
+        else:
+            ASSASSIN_NUM = 0
+            NORMAL_NUM += 1
 
         color_ix_list = [0 for _ in range(RED_NUM)] + \
                         [1 for _ in range(BLUE_NUM)] + \
                         [2 for _ in range(DOUBLE_NUM)] + \
                         [3 for _ in range(NORMAL_NUM)] + \
-                        [4]
+                        [4 for _ in range(ASSASSIN_NUM)]                       
         random.shuffle(color_ix_list)
-
-        # set arbitrary color here
-        color_ix_list = [
-            0, 3, 0, 3, 3, \
-            0, 3, 1, 1, 3, \
-            0, 0, 0, 3, 1, \
-            1, 1, 1, 4, 0, \
-            3, 1, 0, 1, 0 \
-            ]
-
+    
         ix_to_str = ['RED', 'BLUE', 'DOUBLE', 'NORMAL', 'ASSASSIN']
-
         for (i, color_ix) in enumerate(color_ix_list):
             self.field[i].color = ix_to_str[color_ix]  
 
     def check_game_terminated(self):
         """
-        check the field, then,
-        if all RED or BLUE card are taken by either RED or BLUE teams,
-        return True.
-        otherwise, False.
-        :return:
+        Check wheather the *team* has just finished the game
+        by guessing all remaining cards of their color. 
         """
 
-        team_cards = list(filter(lambda card: card.color in ["RED", "BLUE"], self.field))
-        not_taken_cards = list(filter(lambda card: card.taken_by == "None", team_cards))
+        not_taken_cards = list(filter(lambda card: card.taken_by == "None", self.field))
         
-        # Game terminated.
-        if (len(not_taken_cards) == 0):
+        if (len(list(filter(lambda card: card.color in ["BLUE", "DOUBLE"], not_taken_cards))) == 0 or
+            len(list(filter(lambda card: card.color in ["RED",  "DOUBLE"], not_taken_cards))) == 0):   
             self.game_continue = False
+            
+            self.logger.info("\nGame terminated with the score:")
+            self.print_score()
+        
     
     def print_cards(self, list_of_card_score_pairs):
         """Logs a ranked list of card names and their colors to the file."""
         
         for (card, score) in list_of_card_score_pairs:
-            self.logger.info("  {0:.6s}: {1}, sim={2:.2f}".format(card.color, card.name, score))
+            card_is_taken = card.taken_by in ["BLUE", "RED"]
+            self.logger.info("  {0:.6s}: {1}, sim={2:.2f}, taken={3}".format(
+                    card.color, card.name, score, card_is_taken))
        
     def check_answer(self, team, guesser_cards): 
         """
@@ -151,9 +169,8 @@ class Field(object):
                 break
                 
             elif card_color == "ASSASSIN":
-                self.loser = team
                 self.game_continue = False   
-                self.logger.info("ASSASIN discovered!")
+                self.logger.info("ASSASIN discovered, {} loses!".format(team))
                 break
 
             # wrong answer, minus point, turn ends
@@ -162,7 +179,7 @@ class Field(object):
                 break
                 
             else:
-                assert(False, "Untracked case in check_answer.")
+                raise ValueError("Untracked case in check_answer.")
         
         # TODO: store scores in dict to access them easier.
         exec("self.{}_score += {}".format(team.lower(), points))
