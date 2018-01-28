@@ -1,6 +1,6 @@
 from guess_from_clue import Guesser
 from field import Card, Field
-from give_clue import Wordrank, Spymaster
+from give_clue import Spymaster
 from utils import setup_filelogger
 
 import logging
@@ -50,12 +50,6 @@ team_logger = setup_filelogger(logger_name='team',
                                level=logging.INFO,
                                add_console=False)
 
-# blue_team_logger = setup_filelogger(logger_name='blue',
-#                                    file_name=os.path.join(log_dir_path, 'blue_spy_player.log'),
-#                                    level=logging.INFO,
-#                                    add_console=True
-#                                    )
-
 config = configparser.ConfigParser()
 config.read('../Config/settings.exp')
 setting_exp = config[args.setting]
@@ -65,12 +59,15 @@ for key in setting_exp:
     ex_setting_logger.info(log_string)
 
 def main():
-    lined_file_path = setting_exp.get('cards')
-    w2v_path = setting_exp.get('embed')
+    cards_path = setting_exp.get('cards')
+    w2v_path = setting_exp.get('embeddings')
+    field_vocabulary_path = setting_exp.get('field_vocabulary_path')
+    spymaster_vocabulary_path = setting_exp.get('spymaster_vocabulary_path')
+    
     # is_test = setting_exp.getint('test')
     word_table_path = setting_exp.get('spywtable')
     word_rank_list_path = setting_exp.get('spywrlist')
-    spymaster_vocabulary_path = setting_exp.get('spymaster_vocabulary_path')
+    
     wv_noise_pkl_path = setting_exp.get('wv_noise_path')
     enable_wv_noise = setting_exp.getint('enable_wv_noise')
 
@@ -88,8 +85,9 @@ def main():
     else:
         wv_noise_value = -1
 
-    field = Field(lined_file_path, logger=field_logger,
-                  red_metrics_path=red_metrics_path, blue_metrics_path=blue_metrics_path)
+    field = Field(logger=field_logger, 
+                  red_metrics_path=red_metrics_path, blue_metrics_path=blue_metrics_path,
+                  cards_path=cards_path, vocabulary_path=field_vocabulary_path)
     field.print_field()
 
     
@@ -137,9 +135,7 @@ def main():
         turn_count += 1
 
     field.dump_metrics()
-    
-    field_logger.info("\nGame terminated with the score:")
-    field.print_score()
+
 
     
 if __name__ == "__main__":

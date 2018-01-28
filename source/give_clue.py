@@ -10,70 +10,57 @@ import random
 import time
 import sys
 
-class Wordrank(object):
+class Clue(object):
+    """ Class for a clue with its score and ranked (card, score) answer pairs."""
 
-    """
-    Class for retaining the card_score_pair: [vocab word, field word, similarity].
-    :param word:
-    :param card_score_pair: [
-    [Card_0, score with 'word'],
-    [Card_1, score with 'word'],
-    ...
-    ]
-    """
-
-    def __init__(self, word, card_score_pair, team):
-
-        self.word = word
-        self.card_score_pair = card_score_pair
+    def __init__(self, clue, sorted_card_score_pairs, team):
+        self.clue = clue
+        self.sorted_card_score_pairs = sorted_card_score_pairs    
         self.team = team
+        self.total_score, self.clue_number = self._calculate_score_with_threshold()
 
-        if team not in ["RED", "BLUE"]:
-            raise ValueError("Team name must be either RED or BLUE.")
-
-        if team == "RED":
-            self.enemy = "BLUE"
-        else:
-            self.enemy = "RED"
-
-        self.total_score = self._calculate_score_with_threshold(card_score_pair)
-
-    def _calculate_score_with_threshold(self, card_score_pair):
+    def _calculate_score_with_threshold(self):
         """
         Helper function.
 
-        total_score = sigma(pos_score)
-        pos_score is calculated from the cards whose similarity is greater than the one with negative cards.
-        :param card_score_pair:
-        :return: total_score
+        total_score = sum_{card in clue_answers} similarity(clue, card).
+        clue_answers set is defined as all the cards with similarity greater than 
+        for any negative card (wrong team, assasin, normal).
+      
+        :return: total_score, clue_number
         """
+        # TODO: compute normalized negative score and add it to the total score.
+        
+        clue_number = 0
         total_score = 0
-        pos_score, neg_score = 0, 0
-        pos_num, neg_num = 0, 0
-        negative_list = [self.enemy, "NORMAL", "ASSASSIN"]
+    
+        for card, score in self.sorted_card_score_pairs:
+            # Collect positive set until the first negative word occurrence.
+            if card.color in [self.team, "DOUBLE"]:
+                clue_number += 1
+                total_score += score
+            else:
+                break
+                
+        return total_score, clue_number
+    
+    def get_summary(self):
+        """
+        Printing function for this class.
 
-        sorted_card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
-        max_negative_score = -1
-        for card, score in sorted_card_score_pair:
-            # if card.taken_by is not None:
-            if card.taken_by == "None":
-                if card.color in negative_list:
-                    if max_negative_score < score:
-                        max_negative_score = score
-
-        for card, score in sorted_card_score_pair:
-            if card.taken_by == "None":
-                if card.color in negative_list:
-                    break
-                else:
-                    if score > max_negative_score:
-                        total_score += score
-
-        return total_score
+        :param clue: object of Clue class.
+        :return: text for logging
+        """
+        
+        text = "word: {}, total_score: {} \n".format(self.clue, self.total_score)
+        for card, score in self.sorted_card_score_pairs:
+            card_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
+            text += card_text
+        return text
 
     def _calculate_score(self, card_score_pair):
         """
-        Helper function to calculate the total score.
+        Deprecated.
 
         total_score = sigma(pos_score)/len(positive_cards) - sigma(neg_score)/len(negative_cards)
         pos_score is the similarity for the field card which belongs to same team as
@@ -109,23 +96,6 @@ class Wordrank(object):
 
         total_score = pos_score/float(pos_num) - neg_score/float(neg_num)
         return total_score
-
-    @staticmethod
-    def print_word(Wr_class):
-        """
-        Printing function for this class.
-
-        :param Wr_class
-        (must be the instance of this class)
-        :return: None
-
-        """
-        print_text = "word: {}, total_score: {} \n".format(Wr_class.word, Wr_class.total_score)
-        for card, score in Wr_class.card_score_pair:
-            if card.taken_by == "None":
-                card_score_text = "\t card.name:{} (team:{}), similarity: {} \n".format(card.name, card.color, score)
-                print_text += card_score_text
-        return print_text
 
 
 class Vocab(object):
@@ -247,7 +217,7 @@ class Spymaster(object):
         self.logger.info("fill_table start.")
         word_table_path = self.word_table_path
 
-        if os.path.exists(word_table_path):
+        if self.word_table_path and os.path.exists(word_table_path):
             self.logger.info(word_table_path + " exists.")
             with open(word_table_path, 'rb') as r:
                 self.word_table = pickle.load(r)
@@ -260,7 +230,6 @@ class Spymaster(object):
                     c_ix = card.index
 
                     if word not in self.model.vocab or card.name not in self.model.vocab:
-                        # Ideally, this should never happen, but good to check.
                         self.logger.warning("OOV word or card, setting similarity to 0.")
                         self.word_table[w_ix][c_ix] = 0.0
                     else:
@@ -271,7 +240,7 @@ class Spymaster(object):
                     pickle.dump(self.word_table, w)
         self.logger.info("fill_table end.")
 
-    def give_clue_with_threshold(self, team, turn_count, top_n=100):
+    def give_clue_with_threshold(self, team, turn_count, top_n=10):
         """
         Give a clue, maximizig the sum of similarities to the positive words set
         and minimizing the average similarity to all negative words of the field.
@@ -289,41 +258,25 @@ class Spymaster(object):
         if team not in ["RED", "BLUE"]:
             raise ValueError("Team string must be RED or BLUE.")
        
-        word_rank_list = []
-        for word in self.vocab:
-            card_score_pair = []
-            word_ix = self.vocab[word].index
-            for card in self.field:
-                score = self.word_table[word_ix][card.index]
-                card_score_pair.append([card, score])
-            card_score_pair = sorted(card_score_pair, key=lambda x: x[1], reverse=True)
+        clue_candidates = []
+        for clue in self.vocab:
+            card_score_pairs = []
+            clue_ix = self.vocab[clue].index
+            for card in filter(lambda x: x.taken_by == "None", self.field):
+                score = self.word_table[clue_ix][card.index]
+                card_score_pairs.append((card, score))
 
-            a_wordrank = Wordrank(word, card_score_pair, team=team)
-            word_rank_list.append(a_wordrank)
+            sorted_card_score_pairs = sorted(card_score_pairs, key=lambda x: x[1], reverse=True)
+            clue = Clue(clue, sorted_card_score_pairs, team)
+            clue_candidates.append(clue)
             
-        word_rank_list = sorted(word_rank_list, key=lambda x: x.total_score, reverse=True)
-       
-        # Printing clue candidates with predicted ranking for each.
-        for Wr_class in word_rank_list[:top_n]:
-            self.logger.info(Wordrank.print_word(Wr_class))
-
-        clue = word_rank_list[0].word
-        possible_answers = word_rank_list[0].card_score_pair
+        clue_candidates = sorted(clue_candidates, key=lambda x: x.total_score, reverse=True)
+        clue = clue_candidates[0]
         
-        # Choosing num_count based on predicted ranking.
-        num_count = 0
-        count_continue = True
-        while count_continue:
-            cur_card = possible_answers[num_count][0]
-            if cur_card.color in [team, "DOUBLE"]:
-                num_count += 1
-            else:
-                count_continue = False
+        for clue in clue_candidates[:top_n]:
+            self.logger.info(clue.get_summary())
 
-        self.logger.info("clue: " + clue)
-        self.logger.info("num: " + str(num_count))
-        
-        return clue, num_count, possible_answers
+        return clue.clue, clue.clue_number, clue.sorted_card_score_pairs
 
     def give_clue(self, team, turn_count, top_n):
         """
