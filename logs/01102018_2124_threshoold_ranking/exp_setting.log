@@ -1,8 +1,0 @@
-test: 0
-cards: ../cards/youtubetest1.txt
-embed: ../models/GoogleNews.bin.gz
-spywtable: ../models/word_table_restrict_vocab_selfplay.pkl
-spywrlist: ../models/wrd_top10_restrict_vocab_selfplay_threshold_rank.pkl
-spyrwords: ../models/freq_wordlist.csv
-wvnoise: 
-enable_wv_noise: 0

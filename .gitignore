@@ -1,5 +1,6 @@
 models/*.pkl
 models/*.gz
+models/*.bin
 logs/*
 .idea/
 thoughts.pdf
