@@ -10,25 +10,29 @@ class Card(object):
         self.name = name
         self.color = None
         self.index = index
+        # TODO: make in None object instead of the string.
         self.taken_by = "None"
 
 class Field(object):
     def __init__(self, logger, red_metrics_path, blue_metrics_path, cards_path=None, vocabulary_path=None):
-        self.field = None
         self.logger = logger
         self.init_field(cards_path, vocabulary_path)
+        self.print_field()
+        self.red_metrics_path = red_metrics_path
+        self.blue_metrics_path = blue_metrics_path 
+        self.reset_scores()
+        
+    
+    def reset_scores(self):      
+        # TODO: self.score = {"BLUE": 0, "RED": 0}
         self.red_score = 0
         self.blue_score = 0
-        
-        # TODO:
-        # self.score = {"BLUE": 0, "RED": 0}
-        
-        self.game_continue = True
-
         self.red_metrics = defaultdict(list)
         self.blue_metrics = defaultdict(list)
-        self.red_metrics_path = red_metrics_path
-        self.blue_metrics_path = blue_metrics_path
+        
+        for (i, card) in enumerate(self.field):
+            self.field[i].taken_by = "None"
+        self.game_continue = True
 
     def init_field(self, cards_path=None, vocabulary_path=None):
         """
@@ -200,6 +204,7 @@ class Field(object):
         :return: score (type:float)
         """
         
+        # TODO: fix "diivision by zero" error in case of both precision and recall are 0!!
         # TODO: refactor names of the arguments, e.g. to expexted_cards and predicted_cards.
         # TODO: note that answer_cards has now only clue_number elements! Check that 
         # the evaluation is still correct. Also, consider to cut possible_cards as well.
@@ -262,7 +267,7 @@ class Field(object):
                 if (i + 1) % 5 == 0:
                     self.logger.info(print_string)
                     print_string = ""
-        self.logger.info("\n")
+            self.logger.info("\n")
 
         if display_taken_by:
             print_string = ""
@@ -271,7 +276,7 @@ class Field(object):
                 if (i + 1) % 5 == 0:
                     self.logger.info(print_string)
                     print_string = ""
-        self.logger.info("\n")
+            self.logger.info("\n")
 
     def _update_dict(self, team, **kwargs):
         """
@@ -287,8 +292,8 @@ class Field(object):
                 self.blue_metrics[key].append(val)
 
     def dump_metrics(self):
-        with open(self.red_metrics_path, 'w') as w:
-            json.dump(self.red_metrics, w)
+        with open(self.red_metrics_path, 'a') as fout:
+            json.dump(self.red_metrics, fout)
 
-        with open(self.blue_metrics_path, 'w') as w:
-            json.dump(self.blue_metrics, w)
+        with open(self.blue_metrics_path, 'a') as fout:
+            json.dump(self.blue_metrics, fout)
