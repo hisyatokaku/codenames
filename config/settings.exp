@@ -1,10 +1,16 @@
-[anna_selfplay]
+[multiple_games]
 embeddings_path: ../models/GoogleNews.bin
-field_vocabulary_path: ../cards/original_word_list.txt
+field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
 wv_noise_std_min: 0.0
 wv_noise_std_max: 1.0
 wv_noise_std_step: 0.1
+games_averaging: 5
+
+[one_game]
+embeddings_path: ../models/GoogleNews.bin
+field_vocabulary_path: ../cards/original_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
  
 [selfplay_threshold_rank_test_metrics]
 cards: ../cards/youtubetest1.txt

@@ -9,19 +9,8 @@ def softmax(_list):
     """
     return list(np.exp(_list)/np.sum(np.exp(_list), axis=0))
 
-def codename_score(field, team):
-    """
-    return codename score.
-    :param field: Field object defined in field.py
-    :param team: "RED" or "BLUE"
-    :return: score
-    """
-    if team == "RED":
-        return field.red_score
-    else:
-        return field.blue_score
 
-def f1_score(gt_label, prediction, top_n):
+def compute_f1(gt_label, prediction, top_n):
     """
     calculate f1 score.
     :param gt_label: 1-d one-hot vector like: [0, 0, 1, ...]
@@ -51,7 +40,8 @@ def f1_score(gt_label, prediction, top_n):
     recall = float(tp)/(tp+fn)
     return 2*(precision * recall)/(precision+recall)
 
-def cross_entropy(gt_label, prediction):
+
+def compute_crossentropy(gt_label, prediction):
     """
     calculate cross_entropy score.
     :param gt_label: [0, 1, 0, 0, 1, 0,...]
@@ -60,9 +50,9 @@ def cross_entropy(gt_label, prediction):
     """
     sf_prediction = softmax(prediction)
     return sum([l * p for(l, p) in zip(gt_label, sf_prediction)])
-    # return reduce(lambda su,(x,y): su+x*y, zip(gt_label, sf_prediction), 0)
-
-def dcg(gt_label, prediction, top_n):
+  
+    
+def compute_dcg(gt_label, prediction, top_n):
     """
     calculate dcg score.
     :param gt_label: [0, 1, 0, 0, 1, 0,...]
@@ -75,7 +65,8 @@ def dcg(gt_label, prediction, top_n):
     sorted_rank_index = list(np.array(prediction).argsort()[::-1].argsort()+1)
     return sum([rel/math.log2(rank+1) for (rel, rank) in zip(gt_label, sorted_rank_index)])
 
-def ndcg(gt_label, prediction, top_n):
+
+def compute_ndcg(gt_label, prediction, top_n):
     """
     calculate ndcg score.
     :param gt_label: [0, 1, 0, 0, 1, 0,...]
@@ -85,6 +76,6 @@ def ndcg(gt_label, prediction, top_n):
     """
 
     ideal_rank_index = list(np.array(gt_label).argsort()[::-1].argsort() + 1)
-    DCG = dcg(gt_label, prediction, top_n)
+    DCG = compute_dcg(gt_label, prediction, top_n)
     IDCG = sum([rel / math.log2(rank+1) for (rel, rank) in zip(gt_label, ideal_rank_index)])
     return DCG/IDCG

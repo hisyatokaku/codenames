@@ -177,7 +177,7 @@ class Spymaster(object):
                 with open(similarities_table_path, 'wb') as w:
                     pickle.dump(self.similarities_table_path, w)
 
-    def give_clue_with_threshold(self, team, turn_count, top_n=10):
+    def give_clue_with_threshold(self, team, turn_count, top_to_print=5):
         """
         Give a clue, maximizig the sum of similarities to the positive words set
         and minimizing the average similarity to all negative words of the field.
@@ -188,7 +188,7 @@ class Spymaster(object):
         
         :param team: "RED" or "BLUE".
         :param turn_count: integer, deprecated.
-        :param top_n: how many clue candidates should be printed.
+        :param top_to_print: how many clue candidates should be printed.
         :return:
         """
         
@@ -210,7 +210,7 @@ class Spymaster(object):
         clue_candidates = sorted(clue_candidates, key=lambda x: x.total_score, reverse=True)
         clue = clue_candidates[0]
         
-        for clue in clue_candidates[:top_n]:
+        for clue in clue_candidates[:top_to_print]:
             self.logger.info(clue.get_summary())
 
         return clue.clue, clue.clue_number, clue.sorted_card_score_pairs
