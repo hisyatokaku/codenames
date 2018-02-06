@@ -1,11 +1,10 @@
 import random
 import sys
-sys.path.append('../metrics')
 import json
 from collections import defaultdict
 import numpy as np
 from sklearn.metrics import f1_score, roc_auc_score
-from functions import compute_crossentropy, compute_dcg, compute_ndcg
+from metrics import compute_crossentropy, compute_dcg, compute_ndcg
 
 class Card(object):
     def __init__(self, name, index):
