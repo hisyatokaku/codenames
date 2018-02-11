@@ -1,41 +1,41 @@
 import random
 import sys
-sys.path.append('../metrics')
-from functions import f1_score, cross_entropy, dcg, ndcg, codename_score
 import json
 from collections import defaultdict
+import numpy as np
+from sklearn.metrics import f1_score, roc_auc_score
+from metrics import compute_crossentropy, compute_dcg, compute_ndcg
 
 class Card(object):
     def __init__(self, name, index):
         self.name = name
         self.color = None
         self.index = index
+        # TODO: make in None object instead of the string.
         self.taken_by = "None"
 
 class Field(object):
-    def __init__(self, logger, red_metrics_path, blue_metrics_path, cards_path=None, vocabulary_path=None):
-        self.field = None
+    def __init__(self, logger, metrics_path, cards_path=None, vocabulary_path=None):
         self.logger = logger
-        self.init_field(cards_path, vocabulary_path)
-        self.red_score = 0
-        self.blue_score = 0
+        self.metrics_path = metrics_path
+        self.cards_path = cards_path
+        self.vocabulary_path = vocabulary_path
         
-        # TODO:
-        # self.score = {"BLUE": 0, "RED": 0}
-        
+    def reset_scores(self):   
         self.game_continue = True
+        self.game_score = {"BLUE": 0, "RED": 0}
+        self.metrics = {"BLUE": defaultdict(list), "RED": defaultdict(list)}
+        for (i, card) in enumerate(self.field):
+            self.field[i].taken_by = "None"
 
-        self.red_metrics = defaultdict(list)
-        self.blue_metrics = defaultdict(list)
-        self.red_metrics_path = red_metrics_path
-        self.blue_metrics_path = blue_metrics_path
-
-    def init_field(self, cards_path=None, vocabulary_path=None):
+    def generate_cards(self):
         """
         Initialize field with cards (names and colors).
         
         If cards_path given, then the names are taken from there.
         If not, random 25 words are sampled from the vocabulary.
+        
+        Colors are set at random (8 for each team, 1 double, 8 normal).
         
         If there are only 5 cards in the given field, 
         it is treated as a test example and initialized with fixed colors.
@@ -45,12 +45,13 @@ class Field(object):
         :return: None
         """
         
-        if cards_path:
-            words = open(cards_path, 'r').readlines()
+        if self.cards_path:
+            words = open(self.cards_path, 'r').readlines()
             words = [x.rstrip().lower() for x in words]
-            assert(len(words) == 25, "Field with incorrect number of cards given.")          
-        elif vocabulary_path:
-            words = open(vocabulary_path, 'r').readlines()
+            if len(words) != 25:
+                raise ValueError("Field with incorrect number of cards given.")
+        elif self.vocabulary_path:
+            words = open(self.vocabulary_path, 'r').readlines()
             words = [x.strip() for x in words] # no lower() intentionally
             random.shuffle(words)  
         else:
@@ -65,7 +66,8 @@ class Field(object):
         else:
             self.init_color(have_assassin=False)
 
-        self.logger.info("Field is set.")
+        self.logger.info("New field generated:")
+        self.print_field()
 
     def init_color_for_simple_field(self):
         """
@@ -131,8 +133,8 @@ class Field(object):
             
             self.logger.info("\nGame terminated with the score:")
             self.print_score()
-        
-    
+            self.logger.info("-------------------------------------\n\n")
+           
     def print_cards(self, list_of_card_score_pairs):
         """Logs a ranked list of card names and their colors to the file."""
         
@@ -160,11 +162,11 @@ class Field(object):
             
             guesses.append(card.name)
 
-            # correct answer, plus point
+            # Correct answer, plus point.
             if card_color == team or card_color == "DOUBLE":
                 points += 1
                 
-            # wrong answer, turn ends
+            # Wrong answer, turn ends.
             elif card_color == "NORMAL":
                 break
                 
@@ -173,7 +175,7 @@ class Field(object):
                 self.logger.info("ASSASIN discovered, {} loses!".format(team))
                 break
 
-            # wrong answer, minus point, turn ends
+            # Wrong answer, minus point, turn ends.
             elif card_color != team:
                 points -= 1
                 break
@@ -181,69 +183,86 @@ class Field(object):
             else:
                 raise ValueError("Untracked case in check_answer.")
         
-        # TODO: store scores in dict to access them easier.
-        exec("self.{}_score += {}".format(team.lower(), points))
+        # Update score.
+        self.game_score[team] += points
         
         self.logger.info("\n{} team got {} points.".format(team, points))
                 
-    def evaluate_answer(self, team, possible_cards, answer_cards, top_n):
+    def evaluate_answer(self, team, expected_ranking, guesser_ranking, top_n):
         """
-        additional function for calculating score by using metrics
-        memo: can it be decorator for check_answer?
-        :param team:
-        :param possible_cards: the cards which spymaster want player to guess
-        [[card, similarity with clue], [...], ...] (sorted by similarity)
-        :param answer_cards: the cards which player guessed
-        [(card, similarity with clue, card.color), (...), ...] (sorted by similarity)
-        # note that, len(answer_cards) might be less than 25 after round 1.
-        # because from the field we strip the card which has already guessed by players.
-        :return: score (type:float)
+        Compute evaluation metrics for the answer.
+        :param team: "RED" or "BLUE"
+        :param expected_ranking: (card, score) pairs sorted by spymaster (true labels)
+        :param guesser_ranking : (card, score) pairs sorted by guesser (precitions)
         """
         
-        # TODO: refactor names of the arguments, e.g. to expexted_cards and predicted_cards.
-        # TODO: note that answer_cards has now only clue_number elements! Check that 
-        # the evaluation is still correct. Also, consider to cut possible_cards as well.
-
-        # mask top-n cards into 1, others to 0
-        # [0, 0, 1, 0, 0, 1, ...]
         self.logger.debug('evaluate_answer() running...')
-        onehot_score = [0.0 for _ in range(len(self.field))]
-        for (card, _ ) in possible_cards[:top_n]:
-            onehot_score[card.index] += 1.
-        self.logger.debug('onehot_score: ')
-        self.logger.debug(onehot_score)
+        
+        # Binary vector, 1 for expected cards.
+        labels = [0 for _ in range(len(self.field))]
+        for (card, _ ) in expected_ranking[:top_n]:
+            labels[card.index] = 1
+            
+        # Binary vector, 1 for guesser cards.
+        predictions = [0 for _ in range(len(self.field))]
+        for (card, _) in guesser_ranking[:top_n]:
+            predictions[card.index] = 1
+            
+        # Float vector with card probabilities from guesser.
+        probabilities = [0.0 for _ in range(len(self.field))]
+        for (card, score) in guesser_ranking:
+            probabilities[card.index] = score
+        
+        # Classification measures.
+        f1 = f1_score(labels, predictions)
+        roc_auc = roc_auc_score(labels, probabilities)     
+        crossentropy = compute_crossentropy(labels, probabilities)
+        
+        # Ranking measures are computed at k equal to field size! 
+        dcg = compute_dcg(labels, probabilities, len(labels))
+        ndcg = compute_ndcg(labels, probabilities, len(labels))
+        
+        self._update_metrics(team=team, f1=f1, roc_auc=roc_auc, 
+                             crossentropy=crossentropy, 
+                             dcg=dcg, ndcg=ndcg)
+     
+        self.logger.debug('labels: ')
+        self.logger.debug(labels)
+        self.logger.debug('probabilities: ')
+        self.logger.debug(probabilities)
+        self.logger.debug("f1: {}, crossentropy: {}, dcg: {}, ndcg: {}".format(
+                f1, crossentropy, dcg, ndcg))
+ 
+    def _update_metrics(self, team, **kwargs):
+        for key, val in kwargs.items():
+            self.metrics[team][key].append(val)
 
-        # extract similarity score from answer_cards
-        # [0, 0.4, 0.5, 0, 0, ...]
-        # TODO: needs to be clean
-        ans_score = [0.0 for _ in range(len(self.field))]
-        for (card, score) in answer_cards:
-            ans_score[card.index] = score
+    def append_game_metrics(self, multiple_game_metrics):
+        for team in ["RED", "BLUE"]:
+            # Average metrics over game turns.
+            one_team_metrics = {key: np.mean(values_by_turns) 
+                                for key, values_by_turns in self.metrics[team].items()}
+            # Track only the final score.
+            one_team_metrics.update({"game_score": self.game_score[team]}) 
 
-        # fieldindexed_answer_cards = sorted(answer_cards, key=lambda x: x[0].index, reverse=False)
-        # ans_score = [x[1] for x in fieldindexed_answer_cards]
-
-        self.logger.debug('ans_score: ')
-        self.logger.debug(ans_score)
-
-        # calculate value by the metrics you chose
-        code_name_score = codename_score(self, team)
-        f1 = f1_score(onehot_score, ans_score, top_n)
-        c_e = cross_entropy(onehot_score, ans_score)
-        dcg_score = dcg(onehot_score, ans_score, top_n)
-        ndcg_score = ndcg(onehot_score, ans_score, top_n)
-        self._update_dict(team=team, code_name_score=code_name_score, 
-                          f1=f1, c_e=c_e, dcg_score=dcg_score, ndcg_score=ndcg_score)
-
-        log_text = "f1: {}, cross_entropy: {}, dcg_score: {}".format(f1, c_e, dcg_score)
-        self.logger.debug(log_text)
-
+            # Append to the given accumulated structure.
+            for key, value in one_team_metrics.items():
+                print("multiple: {}".format(multiple_game_metrics))
+                print("one: {}".format(one_team_metrics))
+                multiple_game_metrics[team][key].append(value)
+        return multiple_game_metrics
+      
+    def dump_external_metrics(self, external_metrics):
+        with open(self.metrics_path, 'a') as fout:
+            json.dump(external_metrics, fout)
+            fout.write("\n")
+                
     def print_score(self):
         """
         print the score between red and blue.
         :return: None
         """
-        self.logger.info("RED: {} vs BLUE: {}".format(self.red_score, self.blue_score))
+        self.logger.info("RED: {} vs BLUE: {}".format(self.game_score["RED"], self.game_score["BLUE"]))
 
     def print_field(self, display_colors=True, display_taken_by=False):
         maxwordlen = max([len(card.name) for card in self.field])
@@ -262,7 +281,7 @@ class Field(object):
                 if (i + 1) % 5 == 0:
                     self.logger.info(print_string)
                     print_string = ""
-        self.logger.info("\n")
+            self.logger.info("\n")
 
         if display_taken_by:
             print_string = ""
@@ -271,24 +290,4 @@ class Field(object):
                 if (i + 1) % 5 == 0:
                     self.logger.info(print_string)
                     print_string = ""
-        self.logger.info("\n")
-
-    def _update_dict(self, team, **kwargs):
-        """
-        :param kwargs: metrics
-        :return:
-        """
-        if team == "RED":
-            for key, val in kwargs.items():
-                self.red_metrics[key].append(val)
-
-        if team == "BLUE":
-            for key, val in kwargs.items():
-                self.blue_metrics[key].append(val)
-
-    def dump_metrics(self):
-        with open(self.red_metrics_path, 'w') as w:
-            json.dump(self.red_metrics, w)
-
-        with open(self.blue_metrics_path, 'w') as w:
-            json.dump(self.blue_metrics, w)
+            self.logger.info("\n")

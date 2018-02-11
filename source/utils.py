@@ -5,6 +5,7 @@ spymaster_logger: ranking
 import logging
 from scipy import spatial
 import numpy as np
+import gensim
 
 def setup_filelogger(logger_name, file_name, level, add_console=True):
     logger = logging.getLogger(logger_name)
@@ -20,6 +21,19 @@ def setup_filelogger(logger_name, file_name, level, add_console=True):
     logger.addHandler(handler)
     return logger
 
+def load_embeddings(w2v_path, logger, limit=500000):
+    """
+    Load pretrained embeddings.
+
+    :param w2v_path: path to the pretrained embeddings.
+    :return: gensim embeddings model.
+    """
+
+    logger.info("Loading embeddings with limits {}...".format(limit))
+    embeddings = gensim.models.KeyedVectors.load_word2vec_format(w2v_path, binary=True, limit=limit)
+    logger.info("Embeddings loaded.")
+    return embeddings
+
 def cossim(vec1, vec2):
     """
     calculate cossine similarity
@@ -31,20 +45,18 @@ def cossim(vec1, vec2):
 
 def add_noise(model, mean=0, std=0.01):
     """
-    load w2v from existing model, then add gaussian noise,
-    restore them into pkl file.
+    Add gaussian noise to pretrained embeddings.
 
     :param model: gensim model.
     :param mean:
     :param std:
     :return: dict({"word": vector})
     """
-    vocab = model.vocab
-    n_dim = len(model.wv['cat'])
+ 
     new_dict = {}
-    for word in vocab.keys():
-        noise = np.random.normal(mean, std**2, n_dim)
-        new_wv = model.wv[word] + noise
-        a_dict = {word:new_wv}
-        new_dict.update(a_dict)
+    for word in model.vocab.keys():
+        vector = model.wv[word]
+        noise = np.random.normal(mean, std**2, len(vector))
+        new_dict[word] = vector + noise
     return new_dict
+
