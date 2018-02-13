@@ -69,27 +69,6 @@ class Field(object):
         self.logger.info("New field generated:")
         self.print_field()
 
-    def init_color_for_simple_field(self):
-        """
-        Set colors for toy test data of 5 cards.
-        """
-        
-        RED_NUM = 3
-        BLUE_NUM = 2
-        DOUBLE_NUM = 0
-        NORMAL_NUM = 0
-        ASSASSIN_NUM = 0
-
-        # set arbitrary color here
-        color_ix_list = [
-            0, 0, 0, 1, 1
-            ]
-
-        ix_to_str = ['RED', 'BLUE', 'DOUBLE', 'NORMAL', 'ASSASSIN']
-
-        for (i, color_ix) in enumerate(color_ix_list):
-            self.field[i].color = ix_to_str[color_ix]
-
     def init_color(self, have_assassin=True):
         """
         Set random colors for 25 field cards.
