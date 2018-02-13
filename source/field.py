@@ -219,7 +219,7 @@ class Field(object):
         crossentropy = compute_crossentropy(labels, probabilities)
         
         # Ranking measures are computed at k equal to field size! 
-        dcg = compute_dcg(labels, probabilities, len(labels))
+        sorted_rank, dcg = compute_dcg(labels, probabilities, len(labels))
         ndcg = compute_ndcg(labels, probabilities, len(labels))
         
         self._update_metrics(team=team, f1=f1, roc_auc=roc_auc, 
@@ -230,6 +230,8 @@ class Field(object):
         self.logger.debug(labels)
         self.logger.debug('probabilities: ')
         self.logger.debug(probabilities)
+        self.logger.debug('sorted_rank: ')
+        self.logger.debug(sorted_rank)
         self.logger.debug("f1: {}, crossentropy: {}, dcg: {}, ndcg: {}".format(
                 f1, crossentropy, dcg, ndcg))
  

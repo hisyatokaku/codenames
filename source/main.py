@@ -41,12 +41,12 @@ ex_setting_logger = setup_filelogger(logger_name='experiment_setting',
 
 field_logger = setup_filelogger(logger_name='field',
                                 file_name=os.path.join(log_dir_path, 'field.log'),
-                                level=logging.INFO,
+                                level=logging.DEBUG,
                                 add_console=False)
 
 team_logger = setup_filelogger(logger_name='team',
                                file_name=os.path.join(log_dir_path, 'team.log'),
-                               level=logging.INFO,
+                               level=logging.DEBUG,
                                add_console=False)
 
 config = configparser.ConfigParser()
@@ -86,14 +86,17 @@ def play_one_game(field, spymaster_embeddings, guesser_embeddings_dict,
         # Spymaster action.
         clue, clue_number, spymaster_ranking = spymaster.give_clue_with_threshold(team, turn_count, top_to_print=1)
         field_logger.info("\nClue given: {}:{}".format(str(clue), str(clue_number)))
-        field.print_cards(spymaster_ranking[:clue_number + 2])
- 
+        # field.print_cards(spymaster_ranking[:clue_number + 2])
+        field.print_cards(spymaster_ranking)
+
         # Guesser action.
         guesser_ranking = guesser.guess_from_clue(clue)
-        guesser_cards = guesser_ranking[:clue_number]
+        # guesser_cards = guesser_ranking[:clue_number]
+        guesser_cards = guesser_ranking
         field_logger.info("\nGuesses given:")
+        # field.print_cards(guesser_cards)
         field.print_cards(guesser_cards)
-        
+
         # Evaluation.
         field.check_answer(team=team, guesser_cards=guesser_cards)
         field.evaluate_answer(team=team, expected_ranking=spymaster_ranking, 
