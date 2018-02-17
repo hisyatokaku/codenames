@@ -124,7 +124,7 @@ class Spymaster(object):
         if self.vocabulary_path:            
             # For now, the file format is derived from the file extension.
             if self.vocabulary_path.endswith('csv'):
-                self.logger.info("Filter spymaster vocabulary by csv-file: " + self.vocabulary_path)
+                self.logger.info("Filter spymaster vocabulary by csv-file: {}".format(self.vocabulary_path))
                 with open(self.vocabulary_path, 'r') as fin:
                     reader = csv.reader(fin)
                     header = next(reader)
@@ -132,7 +132,7 @@ class Spymaster(object):
                         word = row[1].lower()
                         self.update_vocab(word)                       
             elif self.vocabulary_path.endswith('txt'):
-                self.logger.info("Filter spymaster vocabulary by txt-file: " + self.vocabulary_path)
+                self.logger.info("Filter spymaster vocabulary by txt-file: {}".format(self.vocabulary_path))
                 with open(self.vocabulary_path, 'r') as fin:
                     for line in fin:
                         word = line.strip()
@@ -168,7 +168,7 @@ class Spymaster(object):
                     c_ix = card.index
 
                     if word not in self.model.vocab or card.name not in self.model.vocab:
-                        self.logger.warning("OOV word or card, setting similarity to 0.")
+                        self.logger.warning("OOV word or card :{}, setting similarity to 0.".format(word))
                         self.similarities_table[w_ix][c_ix] = 0.0
                     else:
                         self.similarities_table[w_ix][c_ix] = self.model.similarity(word, card.name)

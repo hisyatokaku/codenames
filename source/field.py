@@ -37,9 +37,6 @@ class Field(object):
         
         Colors are set at random (8 for each team, 1 double, 8 normal).
         
-        If there are only 5 cards in the given field, 
-        it is treated as a test example and initialized with fixed colors.
-        
         :param field_path: File with card names for a field, one per line.
         :param vocabulary_path: File with card names vocabulary, one per line.
         :return: None
