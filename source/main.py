@@ -128,25 +128,57 @@ def setup_averaging():
         games_averaging = 1
     return games_averaging
 
+def setup_embeddings():
+    """
+    if both embeddings_path_spymaster and embeddings_path_guesser are found, load them separately,
+    if only embeddings_path are found, load it and share them between spymaster and guesser.
+    """
+    embeddings_path = setting_exp.get('embeddings_path')
+    embeddings_path_spymaster = setting_exp.get('embeddings_path_spymaster')
+    embeddings_path_guesser = setting_exp.get('embeddings_path_guesser')
+
+    # Load pretrained embeddings.
+    if embeddings_path_spymaster and embeddings_path_guesser:
+        # if 3 embeddings are found, raise an error.
+        if embeddings_path:
+            raise ValueError("extra embeddings found. Remove either embeddings_path or embeddings_path_{epymaster, guesser}.")
+        # load spymaster and guesser embeddings
+        else:
+            embeddings_spymaster = load_embeddings(embeddings_path_spymaster, ex_setting_logger, limit=500000)
+            embeddings_guesser = load_embeddings(embeddings_path_guesser, ex_setting_logger, limit=500000)
+
+    # either one of them is empty, or two of them are empty.
+    else:
+        if embeddings_path:
+            embeddings = load_embeddings(embeddings_path, ex_setting_logger, limit=500000)
+            embeddings_spymaster, embeddings_guesser = embeddings, embeddings
+
+        elif embeddings_path_spymaster or embeddings_path_guesser:
+            raise ValueError("Both of spymaster embeddings and guesser embeddings must be designated.")
+        else:
+            raise ValueError("no embeddings found.")
+
+    return embeddings_spymaster, embeddings_guesser
+
 def main():
     cards_path = setting_exp.get('cards')
-    embeddings_path = setting_exp.get('embeddings_path')
     field_vocabulary_path = setting_exp.get('field_vocabulary_path')
     spymaster_vocabulary_path = setting_exp.get('spymaster_vocabulary_path')
     similarities_table_path = setting_exp.get('similarities_table')
     metrics_path = os.path.join(log_dir_path, "metrics.json")
     games_averaging = setup_averaging()
     wv_noise_std_range = setup_noise_params()
-    
-    # Load pretrained embeddings.
-    embeddings = load_embeddings(embeddings_path, ex_setting_logger, limit=500000)
-    
+
+    # load embeddings.
+    embeddings_spymaster, embeddings_guesser = setup_embeddings()
+
     # Create field, not initialized with cards yet.
     field = Field(field_logger, metrics_path, vocabulary_path=field_vocabulary_path)
     
     # Play games with different noise level.
-    for vw_noise_std in wv_noise_std_range: 
-        noised_embeddings_dict = add_noise(model=embeddings, mean=0, std=vw_noise_std) # seems to be super slow, TBD
+    for vw_noise_std in wv_noise_std_range:
+        # prepare dict for guesser
+        noised_embeddings_dict = add_noise(model=embeddings_guesser, mean=0, std=vw_noise_std) # seems to be super slow, TBD
         field.logger.info("------Noise std set to {0:.2f}.-------\n".format(vw_noise_std)) 
             
         # For each noise level, play multiple games on different fields.
@@ -155,7 +187,7 @@ def main():
             field.generate_cards()
             field.reset_scores()
 
-            play_one_game(field, embeddings, noised_embeddings_dict,
+            play_one_game(field, embeddings_spymaster, noised_embeddings_dict,
                           spymaster_vocabulary_path, similarities_table_path, 
                           field_logger, team_logger)
             
