@@ -48,7 +48,7 @@ def compute_crossentropy(gt_label, prediction):
     :param prediction: [0.01, 0.4, 0.02, 0.6, 0.01, ...]
     :return: cross_entropy (float)
     """
-    # sf_prediction = softmax(prediction)
+    sf_prediction = softmax(prediction)
     return sum([l * (-math.log2(max(0.001,p))) for(l, p) in zip(gt_label, prediction)])
   
     
