@@ -3,6 +3,7 @@ models/*.gz
 models/*.bin
 models/*.zip
 logs/*
+images/*
 .idea/
 thoughts.pdf
 freq_wordlist.csv
