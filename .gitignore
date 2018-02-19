@@ -1,11 +1,13 @@
 models/*.pkl
 models/*.gz
 models/*.bin
+models/*.zip
 logs/*
+images/
 .idea/
 thoughts.pdf
 freq_wordlist.csv
 freq_wordlist.xlsx
-codes/__pycache__/
+source/__pycache__/
 execution_at_euler.txt
 .DS_Store

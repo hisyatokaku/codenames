@@ -16,7 +16,7 @@ class Guesser(object):
         self.field = field
         self.wv = embeddings_dict
         self.logger = logger
-       
+
 
     def guess_from_clue(self, clue):
         """
@@ -24,9 +24,16 @@ class Guesser(object):
         :param clue: string, clue of the spumaster
         :return: full ranked list of (card, score) pairs.
         """
-    
-        sorted_card_score_pairs = [(card, cossim(self.wv[clue], self.wv[card.name]))\
-                                   for card in self.field if card.taken_by=="None"]
+        sorted_card_score_pairs = []
+        for card in self.field:
+            if card.taken_by == "None" and clue in self.wv:
+                card_score_pair = (card, cossim(self.wv[clue], self.wv[card.name]))
+            elif card.taken_by == "None" and clue not in self.wv:
+                self.logger.info("clue: {} is not included in guesser embedding. similarity is set to 0.0".format(clue))
+                card_score_pair = (card, 0.0)
+            else:
+                continue
+            sorted_card_score_pairs.append(card_score_pair)
         sorted_card_score_pairs = sorted(sorted_card_score_pairs, key=lambda x: x[1], reverse=True)
 
         self.logger.info("Guesser ranking for all not-taken cards:")
