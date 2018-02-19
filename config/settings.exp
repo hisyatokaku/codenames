@@ -1,6 +1,6 @@
 [multiple_games_different_embeddings]
-embeddings_path_spymaster: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
-embeddings_path_guesser: ../models/GoogleNews.bin.gz
+embeddings_path_spymaster: ../models/GoogleNews.bin.gz
+embeddings_path_guesser: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
 field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
 wv_noise_std_min: 0.0
