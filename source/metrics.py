@@ -49,7 +49,7 @@ def compute_crossentropy(gt_label, prediction):
     :return: cross_entropy (float)
     """
     sf_prediction = softmax(prediction)
-    return sum([l * (-math.log2(max(0.001,p))) for(l, p) in zip(gt_label, prediction)])
+    return sum([l * (-math.log2(sf_prediction)) for(l, p) in zip(gt_label, prediction)])
   
     
 def compute_dcg(gt_label, prediction, top_n):
@@ -64,7 +64,6 @@ def compute_dcg(gt_label, prediction, top_n):
     # calculate the rank of the element in prediction array. This should be rank used in the dcg formula.
     sorted_rank_index = list(np.array(prediction).argsort()[::-1].argsort()+1)
     return sorted_rank_index, sum([rel/math.log2(rank+1) for (rel, rank) in zip(gt_label, sorted_rank_index)])
-
 
 def compute_ndcg(gt_label, prediction, top_n):
     """
