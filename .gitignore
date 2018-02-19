@@ -6,7 +6,7 @@ logs/*
 thoughts.pdf
 freq_wordlist.csv
 freq_wordlist.xlsx
-source/__pycache__
+source/__pycache__/*
 notebooks/
 execution_at_euler.txt
 .DS_Store
