@@ -13,10 +13,11 @@ import sys
 class Clue(object):
     """ Class for a clue with its score and ranked (card, score) answer pairs."""
 
-    def __init__(self, clue, sorted_card_score_pairs, team):
+    def __init__(self, clue, sorted_card_score_pairs, delta, team):
         self.clue = clue
         self.sorted_card_score_pairs = sorted_card_score_pairs    
         self.team = team
+        self.delta = delta
         self.total_score, self.clue_number = self._calculate_score_with_threshold()
 
     def _calculate_score_with_threshold(self):
@@ -177,7 +178,7 @@ class Spymaster(object):
                 with open(similarities_table_path, 'wb') as w:
                     pickle.dump(self.similarities_table_path, w)
 
-    def give_clue_with_threshold(self, team, turn_count, top_to_print=5):
+    def give_clue_with_threshold(self, team, turn_count, delta, top_to_print=5):
         """
         Give a clue, maximizig the sum of similarities to the positive words set
         and minimizing the average similarity to all negative words of the field.
@@ -204,7 +205,7 @@ class Spymaster(object):
                 card_score_pairs.append((card, score))
 
             sorted_card_score_pairs = sorted(card_score_pairs, key=lambda x: x[1], reverse=True)
-            clue = Clue(clue, sorted_card_score_pairs, team)
+            clue = Clue(clue, sorted_card_score_pairs, delta, team)
             clue_candidates.append(clue)
             
         clue_candidates = sorted(clue_candidates, key=lambda x: x.total_score, reverse=True)

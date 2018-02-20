@@ -59,7 +59,7 @@ for key in setting_exp:
 
 
 def play_one_game(field, spymaster_embeddings, guesser_embeddings_dict,
-                  spymaster_vocabulary_path, similarities_table_path, 
+                  spymaster_vocabulary_path, similarities_table_path, delta,
                   field_logger, team_logger):
     
     spymaster = Spymaster(field=field.field,
@@ -84,7 +84,7 @@ def play_one_game(field, spymaster_embeddings, guesser_embeddings_dict,
         team_logger.info( "\n" + "-----{} turn-----".format(team))
 
         # Spymaster action.
-        clue, clue_number, spymaster_ranking = spymaster.give_clue_with_threshold(team, turn_count, top_to_print=1)
+        clue, clue_number, spymaster_ranking = spymaster.give_clue_with_threshold(team, turn_count, delta, top_to_print=1)
         field_logger.info("\nClue given: {}:{}".format(str(clue), str(clue_number)))
         field.print_cards(spymaster_ranking[:clue_number + 2])
  
@@ -128,6 +128,10 @@ def setup_averaging():
         games_averaging = 1
     return games_averaging
 
+def setup_threshold_delta(delta_min=0, delta_max=1, step_n=10):
+    delta_step = (delta_max - delta_min)/step_n
+    return np.arange(delta_min, delta_max+delta_step, delta_step)
+
 def setup_embeddings():
     """
     if both embeddings_path_spymaster and embeddings_path_guesser are found, load them separately,
@@ -168,6 +172,8 @@ def main():
     metrics_path = os.path.join(log_dir_path, "metrics.json")
     games_averaging = setup_averaging()
     wv_noise_std_range = setup_noise_params()
+    threshold_delta_range = setup_threshold_delta(0, 0.5, 20)
+
 
     # load embeddings.
     embeddings_spymaster, embeddings_guesser = setup_embeddings()
@@ -179,8 +185,24 @@ def main():
     for vw_noise_std in wv_noise_std_range:
         # prepare dict for guesser
         noised_embeddings_dict = add_noise(model=embeddings_guesser, mean=0, std=vw_noise_std) # seems to be super slow, TBD
-        field.logger.info("------Noise std set to {0:.2f}.-------\n".format(vw_noise_std)) 
-            
+        field.logger.info("------Noise std set to {0:.2f}.-------\n".format(vw_noise_std))
+
+        for threshold_delta in threshold_delta_range:
+            # For each noise level, play multiple games on different fields.
+            multiple_game_metrics = {"RED": defaultdict(list), "BLUE": defaultdict(list)}
+            for game_count in range(games_averaging):
+                field.generate_cards()
+                field.reset_scores()
+                play_one_game(field, embeddings, noised_embeddings_dict, spymaster_vocabulary_path,
+                                       similarities_table_path, threshold_delta, threshold_delta, field_logger, team_logger)
+                multiple_game_metrics = field.append_game_metrics(multiple_game_metrics)
+
+            # Dump metrics of the games along with the hparams.
+            multiple_game_metrics.update(({"hparams_delta": threshold_delta}))
+            multiple_game_metrics.update({"hparams_noise": vw_noise_std})
+            field.dump_external_metrics(multiple_game_metrics)
+
+        '''
         # For each noise level, play multiple games on different fields.
         multiple_game_metrics = {"RED": defaultdict(list), "BLUE": defaultdict(list)}
         for game_count in range(games_averaging):
@@ -196,6 +218,7 @@ def main():
         # Dump metrics of the games along with the hparams.
         multiple_game_metrics.update({"hparams_noise": vw_noise_std})
         field.dump_external_metrics(multiple_game_metrics)
+        '''
 
     
 if __name__ == "__main__":
