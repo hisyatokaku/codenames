@@ -13,9 +13,10 @@ import sys
 class Clue(object):
     """ Class for a clue with its score and ranked (card, score) answer pairs."""
 
-    def __init__(self, clue, sorted_card_score_pairs, team):
+    def __init__(self, clue, sorted_card_score_pairs, delta, team):
         self.clue = clue
-        self.sorted_card_score_pairs = sorted_card_score_pairs    
+        self.sorted_card_score_pairs = sorted_card_score_pairs
+        self.delta = delta
         self.team = team
         self.total_score, self.clue_number = self._calculate_score_with_threshold()
 
@@ -33,7 +34,8 @@ class Clue(object):
         
         clue_number = 0
         total_score = 0
-    
+
+        '''
         for card, score in self.sorted_card_score_pairs:
             # Collect positive set until the first negative word occurrence.
             if card.color in [self.team, "DOUBLE"]:
@@ -41,7 +43,30 @@ class Clue(object):
                 total_score += score
             else:
                 break
-                
+        '''
+        # if no negative card was found, initial value, None, should cause an error.
+        # this should not happen, however.
+
+        first_negative_score = -1.
+
+        for ix, (card, score) in enumerate(self.sorted_card_score_pairs):
+            # find maximum score of negative word
+            if card.color not in [self.team, "DOUBLE"]:
+                first_negative_score = score
+                break
+
+        for card, score in self.sorted_card_score_pairs:
+            # Collect positive set until the first negative word occurrence.
+            if score > (self.delta+first_negative_score):
+                clue_number += 1
+                total_score += score
+            else:
+                break
+
+        # try to make at least one clue
+        if clue_number == 0:
+            card, total_score = self.sorted_card_score_pairs[0]
+            clue_number = 1
         return total_score, clue_number
     
     def get_summary(self):
@@ -177,7 +202,7 @@ class Spymaster(object):
                 with open(similarities_table_path, 'wb') as w:
                     pickle.dump(self.similarities_table_path, w)
 
-    def give_clue_with_threshold(self, team, turn_count, top_to_print=5):
+    def give_clue_with_threshold(self, team, turn_count, delta, top_to_print=5):
         """
         Give a clue, maximizig the sum of similarities to the positive words set
         and minimizing the average similarity to all negative words of the field.
@@ -204,7 +229,7 @@ class Spymaster(object):
                 card_score_pairs.append((card, score))
 
             sorted_card_score_pairs = sorted(card_score_pairs, key=lambda x: x[1], reverse=True)
-            clue = Clue(clue, sorted_card_score_pairs, team)
+            clue = Clue(clue, sorted_card_score_pairs, delta, team)
             clue_candidates.append(clue)
             
         clue_candidates = sorted(clue_candidates, key=lambda x: x.total_score, reverse=True)

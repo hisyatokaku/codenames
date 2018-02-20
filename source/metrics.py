@@ -49,7 +49,7 @@ def compute_crossentropy(gt_label, prediction):
     :return: cross_entropy (float)
     """
     sf_prediction = softmax(prediction)
-    return sum([l * p for(l, p) in zip(gt_label, sf_prediction)])
+    return sum([l * math.log2(p) for(l, p) in zip(gt_label, sf_prediction)])
   
     
 def compute_dcg(gt_label, prediction, top_n):
