@@ -137,14 +137,14 @@ class Spymaster(object):
                 with open(self.vocabulary_path, 'r') as fin:
                     for line in fin:
                         word = line.strip()
-                        self.update_vocab(word)      
+                        self.update_vocab(word)
             else:
                 raise ValueError("Unknown file format for filter spymaster vocabulary.") 
         else:
             self.logger.info("Load spymaster vocabulary from gensim.models.KeyedVectors.")
             self.vocab = self.model.vocab
             self.vocab_size = len(self.vocab)
-                    
+
         self.logger.info("Spymaster vocabulary size is {}".format(self.vocab_size))
   
 

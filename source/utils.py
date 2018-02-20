@@ -6,6 +6,7 @@ import logging
 from scipy import spatial
 import numpy as np
 import gensim
+import csv
 
 def setup_filelogger(logger_name, file_name, level, add_console=True):
     logger = logging.getLogger(logger_name)
@@ -59,4 +60,31 @@ def add_noise(model, mean=0, std=0.01):
         noise = np.random.normal(mean, std**2, len(vector))
         new_dict[word] = vector + noise
     return new_dict
+
+def add_weighted_noise(model, mean=0, std=0.01, frequency_csv_path):
+    """
+    give weighted noise which depends on frequency of words.
+    :param model:
+    :param mean:
+    :param std:
+    :param frequency_data:
+    :return:
+    """
+    new_dict = {}
+    frequency_dict = {}
+    if frequency_csv_path and frequency_csv_path.endwith('csv'):
+        with open(frequency_csv_path, 'r') as fin:
+            reader = csv.reader(fin)
+            header = next(reader)
+            for row in header:
+                word = row[1].lower()
+                freq_value = int(row[3])
+                frequency_dict[word] = freq_value
+
+    for word in model.vocab.keys():
+        vector = model.wv[word]
+        noise = np.random.normal(mean, std**2, len(vector))
+        if word in frequency_dict:
+            noise += frequency_dict[word]
+        new_dict[word] = vector + noise
 

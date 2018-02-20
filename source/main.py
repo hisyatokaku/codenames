@@ -79,7 +79,7 @@ def play_one_game(field, spymaster_embeddings, guesser_embeddings_dict,
             team = "RED"
         else:
             team = "BLUE"
-                  
+
         field_logger.info("\n" + "-----{} turn-----".format(team))
         team_logger.info( "\n" + "-----{} turn-----".format(team))
 
@@ -193,8 +193,8 @@ def main():
             for game_count in range(games_averaging):
                 field.generate_cards()
                 field.reset_scores()
-                play_one_game(field, embeddings, noised_embeddings_dict, spymaster_vocabulary_path,
-                                       similarities_table_path, threshold_delta, threshold_delta, field_logger, team_logger)
+                play_one_game(field, embeddings_spymaster, noised_embeddings_dict, spymaster_vocabulary_path,
+                                       similarities_table_path, threshold_delta, field_logger, team_logger)
                 multiple_game_metrics = field.append_game_metrics(multiple_game_metrics)
 
             # Dump metrics of the games along with the hparams.
