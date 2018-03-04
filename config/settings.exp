@@ -26,10 +26,17 @@ wv_noise_std_max: 1.0
 wv_noise_std_step: 0.1
 games_averaging: 5
 
-[multiple_games_per_delta]
+[multiple_games_per_delta_alpha]
 embeddings_path: ../models/GoogleNews.bin.gz
 field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 1.0
+delta_step: 0.1
 wv_noise_std_min: 0.4
 wv_noise_std_max: 0.4
 wv_noise_std_step: 0.1

@@ -35,15 +35,6 @@ def load_embeddings(w2v_path, logger, limit=500000):
     logger.info("Embeddings loaded.")
     return embeddings
 
-def cossim(vec1, vec2):
-    """
-    calculate cossine similarity
-    :param vec1: np.array
-    :param vec2: np.array (must be same size with vec1)
-    :return: similarity (float)
-    """
-    return 1 - spatial.distance.cosine(vec1, vec2)
-
 def add_noise(model, mean=0, std=0.01):
     """
     Add gaussian noise to pretrained embeddings.
@@ -61,7 +52,7 @@ def add_noise(model, mean=0, std=0.01):
         new_dict[word] = vector + noise
     return new_dict
 
-def add_weighted_noise(model, mean=0, std=0.01, frequency_csv_path):
+def add_weighted_noise(model, mean, std, frequency_csv_path):
     """
     give weighted noise which depends on frequency of words.
     :param model:

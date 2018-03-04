@@ -1,6 +1,8 @@
 import random
 import gensim
-from utils import cossim, add_noise
+from utils import add_noise
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 import pickle
 
 class Guesser(object):
@@ -27,7 +29,10 @@ class Guesser(object):
         sorted_card_score_pairs = []
         for card in self.field:
             if card.taken_by == "None" and clue in self.wv:
-                card_score_pair = (card, cossim(self.wv[clue], self.wv[card.name]))
+                w_vec = self.wv[clue].reshape(-1, len(self.wv[clue]))
+                c_vec = self.wv[card.name].reshape(-1, len(self.wv[card.name]))
+                similarity = np.asscalar(cosine_similarity(w_vec, c_vec))
+                card_score_pair = (card, similarity)
             elif card.taken_by == "None" and clue not in self.wv:
                 self.logger.info("clue: {} is not included in guesser embedding. similarity is set to 0.0".format(clue))
                 card_score_pair = (card, 0.0)

@@ -1,6 +1,7 @@
 import gensim
 import itertools
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import os
 import csv
@@ -13,11 +14,15 @@ import sys
 class Clue(object):
     """ Class for a clue with its score and ranked (card, score) answer pairs."""
 
-    def __init__(self, clue, sorted_card_score_pairs, delta, team):
+    def __init__(self, clue, sorted_card_score_pairs, delta, penalize_negative, alpha, team, logger):
         self.clue = clue
         self.sorted_card_score_pairs = sorted_card_score_pairs    
         self.team = team
+        self.logger = logger
         self.delta = delta
+        self.penalize_negative = penalize_negative
+        self.alpha = alpha
+        self.cropped_threshold = None
         self.total_score, self.clue_number = self._calculate_score_with_threshold()
 
     def _calculate_score_with_threshold(self):
@@ -25,24 +30,55 @@ class Clue(object):
         Helper function.
 
         total_score = sum_{card in clue_answers} similarity(clue, card).
-        clue_answers set is defined as all the cards with similarity greater than 
+        clue_answers set is defined as all the cards with similarity greater than
         for any negative card (wrong team, assasin, normal).
       
         :return: total_score, clue_number
         """
-        # TODO: compute normalized negative score and add it to the total score.
-        
+
         clue_number = 0
+        positive_score, negative_score = 0, 0
         total_score = 0
-    
-        for card, score in self.sorted_card_score_pairs:
-            # Collect positive set until the first negative word occurrence.
-            if card.color in [self.team, "DOUBLE"]:
-                clue_number += 1
-                total_score += score
-            else:
+
+        # find largest negative score
+        largest_negative_score = -1.
+        for ix, (card, score) in enumerate(self.sorted_card_score_pairs):
+            # find maximum score of negative word
+            if card.color not in [self.team, "DOUBLE"]:
+                largest_negative_score = score
                 break
-                
+
+        # add scores higher than threshold + largest negative score to positive_score
+        for card, score in self.sorted_card_score_pairs:
+           if (score > (self.delta+largest_negative_score)
+               and card.color in [self.team, "DOUBLE"]):
+               clue_number += 1
+               positive_score += score
+           elif card.color not in [self.team, "DOUBLE"]:
+               negative_score += score
+           else:
+               continue
+
+        if not self.penalize_negative:
+            self.logger.info("negative score set to 0.")
+            negative_score = 0
+
+        # if threshold(delta) is large, there will be no clues.
+        # try to give at least one clue
+        # select the positive card with score larger than largest_negative_score.
+        if clue_number == 0:
+            self.logger.debug("clue number: 0.")
+            for card, score in self.sorted_card_score_pairs:
+                if card.color in [self.team, "DOUBLE"]:
+                    positive_score = score
+                    clue_number += 1
+                    self.cropped_threshold = score - largest_negative_score
+                else:
+                    positive_score = 0
+                break
+
+        total_score = (1-self.alpha) * positive_score - self.alpha * negative_score
+        self.logger.debug("word: {}, positive_score: {}, negative_score: {}, total_score: {}".format(self.clue, positive_score, negative_score, total_score))
         return total_score, clue_number
     
     def get_summary(self):
@@ -157,9 +193,10 @@ class Spymaster(object):
         similarities_table_path = self.similarities_table_path
 
         if similarities_table_path and os.path.exists(similarities_table_path):
+            raise ValueError("self.similarities_table_path is deprecated now. Do not give similarities_table value.")
             self.logger.info(similarities_table_path + " exists. Loading.")
             with open(similarities_table_path, 'rb') as r:
-                self.similarities_table_path = pickle.load(r)
+                self.similarities_table = pickle.load(r)
 
         else:
             self.logger.info("Creating similarities_table from scratch.")
@@ -172,16 +209,20 @@ class Spymaster(object):
                         self.logger.warning("OOV word or card :{}, setting similarity to 0.".format(word))
                         self.similarities_table[w_ix][c_ix] = 0.0
                     else:
-                        self.similarities_table[w_ix][c_ix] = self.model.similarity(word, card.name)
+                        w_vec = self.model[word].reshape(-1, len(self.model[word]))
+                        c_vec = self.model[card.name].reshape(-1, len(self.model[card.name]))
+                        similarity = np.asscalar(cosine_similarity(w_vec, c_vec))
+                        self.similarities_table[w_ix][c_ix] = similarity
+                        # self.similarities_table[w_ix][c_ix] = self.model.similarity(word, card.name)
             
-            if (similarities_table_path):    
+            if (similarities_table_path):
                 with open(similarities_table_path, 'wb') as w:
-                    pickle.dump(self.similarities_table_path, w)
+                    pickle.dump(self.similarities_table, w)
 
-    def give_clue_with_threshold(self, team, turn_count, delta, top_to_print=5):
+    def give_clue_with_threshold(self, team, turn_count, delta, penalize_negative, alpha, top_to_print=5):
         """
         Give a clue, maximizig the sum of similarities to the positive words set
-        and minimizing the average similarity to all negative words of the field.
+        and minimizing the average snimilarity to all negative words of the field.
         
         The positive set is determined by top-k words in the predicted ranking
         of answers for the given clue; k is the largest possible value, 
@@ -205,13 +246,23 @@ class Spymaster(object):
                 card_score_pairs.append((card, score))
 
             sorted_card_score_pairs = sorted(card_score_pairs, key=lambda x: x[1], reverse=True)
-            clue = Clue(clue, sorted_card_score_pairs, delta, team)
+            clue = Clue(clue, sorted_card_score_pairs, delta, penalize_negative, alpha, team, self.logger)
             clue_candidates.append(clue)
-            
+
+
         clue_candidates = sorted(clue_candidates, key=lambda x: x.total_score, reverse=True)
-        clue = clue_candidates[0]
+
+        # drop the clue from the candidates, whose clue_num is equal to 0 .
+        clue_candidates = list(filter(lambda x: x.clue_number > 0, clue_candidates))
+
+        # find the clue whose threshold is equal to hparam: alpha.
+        clue = list(filter(lambda x: x.cropped_threshold is None, clue_candidates))[0]
+
+        if clue is None:
+            clue = list(filter(lambda x: x.cropped_threshold is not None, clue_candidates))[0]
+            self.logger.info("none of the clue similarity has exceeded threshold. clue: {} has chosen,".format(clue.clue))
         
         for clue in clue_candidates[:top_to_print]:
             self.logger.info(clue.get_summary())
 
-        return clue.clue, clue.clue_number, clue.sorted_card_score_pairs
+        return clue
