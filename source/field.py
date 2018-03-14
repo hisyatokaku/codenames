@@ -202,6 +202,17 @@ class Field(object):
                              crossentropy=crossentropy, 
                              dcg=dcg, ndcg=ndcg)
 
+    def evaluate_spymaster_strategy(self, team, bool_is_hacky_clue):
+        """
+        count the number of time where hacky clue was used.
+        :param is_hacky_clue: bool
+        :return:
+        """
+        is_hacky_clue = 0
+        if bool_is_hacky_clue:
+            is_hacky_clue = 1
+        self._update_metrics(team=team, is_hacky_clue = is_hacky_clue)
+
     def evaluate_spymaster_threshold(self, clue_instance):
         """
         the function to record threshold which was used by spymaster,
