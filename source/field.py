@@ -176,7 +176,7 @@ class Field(object):
         
         # Binary vector, 1 for expected cards.
         labels = [0 for _ in range(len(self.field))]
-        for (card, _ ) in expected_ranking[:top_n]:
+        for (card, _) in expected_ranking[:top_n]:
             labels[card.index] = 1
             
         # Binary vector, 1 for guesser cards.
@@ -197,18 +197,35 @@ class Field(object):
         # Ranking measures are computed at k equal to field size! 
         dcg = compute_dcg(labels, probabilities, len(labels))
         ndcg = compute_ndcg(labels, probabilities, len(labels))
-        
+
         self._update_metrics(team=team, f1=f1, roc_auc=roc_auc, 
                              crossentropy=crossentropy, 
                              dcg=dcg, ndcg=ndcg)
-     
-        self.logger.debug('labels: ')
-        self.logger.debug(labels)
-        self.logger.debug('probabilities: ')
-        self.logger.debug(probabilities)
-        self.logger.debug("f1: {}, crossentropy: {}, dcg: {}, ndcg: {}".format(
-                f1, crossentropy, dcg, ndcg))
- 
+
+    def evaluate_spymaster_strategy(self, team, bool_is_hacky_clue):
+        """
+        count the number of time where hacky clue was used.
+        :param is_hacky_clue: bool
+        :return:
+        """
+        is_hacky_clue = 0
+        if bool_is_hacky_clue:
+            is_hacky_clue = 1
+        self._update_metrics(team=team, is_hacky_clue = is_hacky_clue)
+
+    def evaluate_spymaster_threshold(self, clue_instance):
+        """
+        the function to record threshold which was used by spymaster,
+        threshold = min(delta, top_positive_score - top_neative_score)
+        :param clue_instance: the instance of Clue class.
+        :return:
+        """
+        cropped_threshold = clue_instance.delta
+        team = clue_instance.team
+        if clue_instance.cropped_threshold:
+            cropped_threshold = clue_instance.cropped_threshold
+        self._update_metrics(team=team, threshold=np.asscalar(cropped_threshold))
+
     def _update_metrics(self, team, **kwargs):
         for key, val in kwargs.items():
             self.metrics[team][key].append(val)

@@ -9,7 +9,6 @@ def softmax(_list):
     """
     return list(np.exp(_list)/np.sum(np.exp(_list), axis=0))
 
-
 def compute_f1(gt_label, prediction, top_n):
     """
     calculate f1 score.

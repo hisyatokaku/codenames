@@ -1,3 +1,198 @@
+[multiple_games_glove_d_n_a_crop_delta_normalize_alpha_10]
+embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_glove_d_n_a_crop_delta_non_normalize_alpha_10]
+embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_10]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_non_normalize_alpha_10]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+
+
+[multiple_games_plot_glove_d_n_a]
+embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 1.0
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[multiple_games_plot_d_n_a]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 1.0
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[multiple_games_plot_d_n_a_normalize_alpha]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+normalize_negative_for_score: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 1.0
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[multiple_games_plot_glove_d_n_a_normalize_alpha]
+embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+normalize_negative_for_score: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 1.0
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+
+[multiple_games_normalize_negative_plot_a_n]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+normalize_negative_for_score: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.0
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[multiple_games_plot_a_n]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.0
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[multiple_games_plot_d_n]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 1.0
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
 [multiple_games_different_embeddings]
 embeddings_path_spymaster: ../models/GoogleNews.bin.gz
 embeddings_path_guesser: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
@@ -21,6 +216,23 @@ games_averaging: 5
 embeddings_path: ../models/GoogleNews.bin
 field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[multiple_games_per_delta_alpha]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.0
+delta_step: 0.1
 wv_noise_std_min: 0.0
 wv_noise_std_max: 1.0
 wv_noise_std_step: 0.1
