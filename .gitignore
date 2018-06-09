@@ -5,6 +5,7 @@ models/*.zip
 logs/*
 images/
 .idea/
+notebooks
 thoughts.pdf
 freq_wordlist.csv
 freq_wordlist.xlsx
