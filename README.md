@@ -1,6 +1,7 @@
 # Codenames
 
 Code for playing Codenames agent.
+*Codenames: https://en.wikipedia.org/wiki/Codenames_(board_game)
 
 ## Requirements
 Code is written in Python3 (anaconda3-4.3.1) and requires gensim (3.1.0)
