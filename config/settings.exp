@@ -1,3 +1,753 @@
+[glove_normalize_noise_sqrt_freq_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.1
+delta_step: 0
+wv_noise_std_min: 1
+wv_noise_std_max: 20
+wv_noise_std_step: 1
+games_averaging: 10
+
+[w2v_normalize_noise_sqrt_freq_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.1
+delta_step: 0
+wv_noise_std_min: 1
+wv_noise_std_max: 20
+wv_noise_std_step: 1
+games_averaging: 10
+
+[multiple_games_glove_d_n_a_crop_delta_normalize_alpha_noise_sqrt_ave_weight_std_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt_ave_weight
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_glove_d_n_a_crop_delta_non_normalize_alpha_noise_sqrt_ave_weight_std_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt_ave_weight
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_noise_sqrt_ave_weight_std_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt_ave_weight
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_non_normalize_alpha_noise_sqrt_ave_weight_std_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt_ave_weight
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_spy_glv_gss_w2v_vs_stupid_10]
+red_embeddings_spymaster_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+red_embeddings_guesser_path: ../models/GoogleNews.bin.gz
+blue_embeddings_spymaster_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_guesser_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+different_strategy: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_spy_w2v_gss_glv_vs_stupid_10]
+red_embeddings_spymaster_path: ../models/GoogleNews.bin.gz
+red_embeddings_guesser_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_spymaster_path: ../models/GoogleNews.bin.gz
+blue_embeddings_guesser_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+different_strategy: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_spy_w2v_gss_glv_10]
+red_embeddings_spymaster_path: ../models/GoogleNews.bin.gz
+red_embeddings_guesser_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_spymaster_path: ../models/GoogleNews.bin.gz
+blue_embeddings_guesser_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_spy_glv_gss_w2v_10]
+red_embeddings_spymaster_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+red_embeddings_guesser_path: ../models/GoogleNews.bin.gz
+blue_embeddings_spymaster_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_guesser_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+games_averaging: 10
+
+
+[qcheck_stupid_w2v_strategy_vs_optimal_glove_strategy]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 1
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.05
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[qcheck_stupid_w2v_strategy_vs_optimal_w2v_strategy]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 1
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.05
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+[optimal_w2v_strategy_vs_stupid_w2v_strategy]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 1
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[optimal_w2v_strategy_vs_optimal_glove_strategy]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+
+[stupid_w2v_strategy_vs_optimal_glove_strategy]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 1
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 5
+
+
+[stupid_glv_strategy_vs_optimal_glv_strategy]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 1
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[d_n_a_crop_delta_non_normalize_alpha_noise_sqrt_freq_uniform_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 0
+guesser_noise_weight: n_sqrt_uniform
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[d_n_a_crop_delta_normalize_alpha_noise_sqrt_freq_uniform_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: n_sqrt_uniform
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[glove_d_n_a_crop_delta_normalize_alpha_noise_sqrt_freq_uniform_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: n_sqrt_uniform
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[glove_d_n_a_crop_delta_non_normalize_alpha_noise_sqrt_freq_uniform_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 0
+guesser_noise_weight: n_sqrt_uniform
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+
+[multiple_games_d_n_a_crop_delta_non_normalize_alpha_spy_w2v_gss_glv_10]
+red_embeddings_spymaster_path: ../models/GoogleNews.bin.gz
+red_embeddings_guesser_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_spymaster_path: ../models/GoogleNews.bin.gz
+blue_embeddings_guesser_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_non_normalize_alpha_spy_glv_gss_w2v_10]
+red_embeddings_spymaster_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+red_embeddings_guesser_path: ../models/GoogleNews.bin.gz
+blue_embeddings_spymaster_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_guesser_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: random
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_w2v_vs_glove_d_n_a_crop_delta_normalize_alpha_noise_sqrt_std_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: std_n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_scaler_min: 1
+wv_noise_scaler_max: 20
+wv_noise_scaler_step: 1
+games_averaging: 10
+
+[multiple_games_glove_vs_w2v_d_n_a_crop_delta_normalize_alpha_noise_sqrt_std_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: std_n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_scaler_min: 1
+wv_noise_scaler_max: 20
+wv_noise_scaler_step: 1
+games_averaging: 10
+
+[multiple_games_glove_d_n_a_crop_delta_normalize_alpha_noise_sqrt_std_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: std_n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_scaler_min: 1
+wv_noise_scaler_max: 20
+wv_noise_scaler_step: 1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_noise_sqrt_std_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: std_n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.0
+alpha_step: 0.1
+delta_min: 0.1
+delta_max: 0.2
+delta_step: 0.02
+wv_noise_scaler_min: 1
+wv_noise_scaler_max: 20
+wv_noise_scaler_step: 1
+games_averaging: 10
+
+
+[multiple_games_glove_d_n_a_crop_delta_normalize_alpha_noise_std_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_glove_d_n_a_crop_delta_non_normalize_alpha_noise_std_10]
+red_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_normalize_alpha_noise_std_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[multiple_games_d_n_a_crop_delta_non_normalize_alpha_noise_std_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+add_penalize_negative_for_clue_score: 1
+keep_similarities_table: 1
+guesser_noise_weight: n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[d_n_a_crop_delta_non_normalize_alpha_noise_std_sqrt_freq_test]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: std_n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_scaler_min: 1
+wv_noise_scaler_max: 10
+wv_noise_scaler_step: 2
+games_averaging: 1
+
+[d_n_a_crop_delta_non_normalize_alpha_noise_sqrt_freq_10]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[d_n_a_crop_delta_non_normalize_alpha_noise_sqrt_std_freq_test]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 1
+guesser_noise_weight: std_n_sqrt
+frequency_path: ../models/1_1_all_fullalpha.txt
+alpha_min: 0.0
+alpha_max: 0.1
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.1
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 1
+
+
+[w2v_vs_glv]
+red_embeddings_path: ../models/GoogleNews.bin.gz
+blue_embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 0
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 0
+alpha_min: 0.0
+alpha_max: 1.0
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.02
+guesser_noise_weight: random
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 10
+
+[fix_strategy_vs_stupid_strategy]
+embeddings_path: ../models/GoogleNews.bin.gz
+field_vocabulary_path: ../cards/hacked_word_list.txt
+spymaster_vocabulary_path: ../models/extended_word_list.txt
+keep_similarities_table: 1
+different_strategy: 1
+add_penalize_negative_for_clue_score: 1
+normalize_negative_for_score: 0
+alpha_min: 0.0
+alpha_max: 0.3
+alpha_step: 0.1
+delta_min: 0.0
+delta_max: 0.3
+delta_step: 0.1
+wv_noise_std_min: 0.0
+wv_noise_std_max: 1.0
+wv_noise_std_step: 0.1
+games_averaging: 3
+
 [multiple_games_glove_d_n_a_crop_delta_normalize_alpha_10]
 embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
 field_vocabulary_path: ../cards/hacked_word_list.txt
@@ -70,7 +820,7 @@ games_averaging: 10
 
 
 
-[multiple_games_plot_glove_d_n_a]
+[multiple_games_plot_glove_d_n_a_10]
 embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
 field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
@@ -87,7 +837,7 @@ wv_noise_std_max: 1.0
 wv_noise_std_step: 0.1
 games_averaging: 5
 
-[multiple_games_plot_d_n_a]
+[multiple_games_plot_d_n_a_10]
 embeddings_path: ../models/GoogleNews.bin.gz
 field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
@@ -104,7 +854,7 @@ wv_noise_std_max: 1.0
 wv_noise_std_step: 0.1
 games_averaging: 5
 
-[multiple_games_plot_d_n_a_normalize_alpha]
+[multiple_games_plot_d_n_a_normalize_alpha_10]
 embeddings_path: ../models/GoogleNews.bin.gz
 field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
@@ -122,7 +872,7 @@ wv_noise_std_max: 1.0
 wv_noise_std_step: 0.1
 games_averaging: 5
 
-[multiple_games_plot_glove_d_n_a_normalize_alpha]
+[multiple_games_plot_glove_d_n_a_normalize_alpha_10]
 embeddings_path: ../models/pretrained/w2v_format.glove.840B.300d.bin.gz
 field_vocabulary_path: ../cards/hacked_word_list.txt
 spymaster_vocabulary_path: ../models/extended_word_list.txt
@@ -138,7 +888,7 @@ delta_step: 0.1
 wv_noise_std_min: 0.0
 wv_noise_std_max: 1.0
 wv_noise_std_step: 0.1
-games_averaging: 5
+games_averaging: 10
 
 
 [multiple_games_normalize_negative_plot_a_n]
