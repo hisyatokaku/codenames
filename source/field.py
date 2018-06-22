@@ -224,7 +224,8 @@ class Field(object):
         team = clue_instance.team
         if clue_instance.cropped_threshold:
             cropped_threshold = clue_instance.cropped_threshold
-        self._update_metrics(team=team, threshold=np.asscalar(cropped_threshold))
+        # self._update_metrics(team=team, threshold=np.asscalar(cropped_threshold))
+        self._update_metrics(team=team, threshold=cropped_threshold)
 
     def _update_metrics(self, team, **kwargs):
         for key, val in kwargs.items():

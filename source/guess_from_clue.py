@@ -3,7 +3,6 @@ import gensim
 from utils import add_noise
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-import pickle
 
 class Guesser(object):
     """

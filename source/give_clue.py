@@ -16,7 +16,7 @@ class Clue(object):
 
     def __init__(self, clue, sorted_card_score_pairs, delta, penalize_negative, normalize_negative, alpha, team, logger):
         self.clue = clue
-        self.sorted_card_score_pairs = sorted_card_score_pairs    
+        self.sorted_card_score_pairs = sorted_card_score_pairs
         self.team = team
         self.logger = logger
         self.delta = delta
@@ -63,7 +63,7 @@ class Clue(object):
                continue
 
         if not self.penalize_negative:
-            self.logger.info("negative score set to 0.")
+            # self.logger.info("negative score set to 0.")
             negative_score = 0
 
         # if threshold(delta) is large, there will be no clues.
@@ -119,13 +119,14 @@ class Spymaster(object):
     :param logger: logger for the spymaster.
     """
 
-    def __init__(self, field, embeddings, vocabulary_path, keep_similarities_table, similarities_table_path,
+    def __init__(self, field, team, embeddings, vocabulary_path, keep_similarities_table, similarities_table_path,
                  logger, game_count):
 
         self.game_count = game_count
+        self.team = team
         self.keep_similarities_table = keep_similarities_table
-        if self.keep_similarities_table:
-            self.similarities_table_path = similarities_table_path
+        # if self.keep_similarities_table:
+        self.similarities_table_path = similarities_table_path
         self.vocabulary_path = vocabulary_path
         self.field = field
         self.logger = logger     
@@ -231,6 +232,60 @@ class Spymaster(object):
                 with open(similarities_table_path, 'wb') as w:
                     self.logger.info("saveing table to {}...".format(similarities_table_path))
                     pickle.dump(self.similarities_table, w)
+
+    def give_one_clue(self, team, turn_count, delta=0, penalize_negative=0, normalize_negative=0, alpha=0, top_to_print=5):
+        """
+        implementation of stupid strategy where spymaster only gives the clue with largest gap with one
+        field card.
+        for params, see -> give_clue_with_threshold.
+        :param team:
+        :param turn_count:
+        :param top_to_print:
+        :return:
+        """
+
+        if team not in ["RED", "BLUE"]:
+            raise ValueError("Team string must be RED or BLUE.")
+
+        clue_candidates = []
+        is_hacky_clue = False
+        for clue in self.vocab:
+            card_score_pairs = []
+            clue_ix = self.vocab[clue].index
+            for card in filter(lambda x: x.taken_by == "None", self.field):
+                score = self.similarities_table[clue_ix][card.index]
+                card_score_pairs.append((card, score))
+
+            sorted_card_score_pairs = sorted(card_score_pairs, key=lambda x: x[1], reverse=True)
+
+            # pick only top 1
+            sorted_card_score_pairs = sorted_card_score_pairs[0:1]
+            clue = Clue(clue, sorted_card_score_pairs, delta, penalize_negative, normalize_negative, alpha, team,
+                        self.logger)
+            clue_candidates.append(clue)
+
+        clue_candidates = sorted(clue_candidates, key=lambda x: x.total_score, reverse=True)
+
+        # exclude the clue whose clue_num is equal to 0 .
+        clue_candidates = list(filter(lambda x: x.clue_number > 0, clue_candidates))
+
+        # find the clue whose threshold is equal to (more than) hparam: alpha.
+        uncropped_clue_candidates = list(filter(lambda x: x.cropped_threshold is None, clue_candidates))
+
+        # if there was no clue (it happens when threshold is too high), pick hacky clues.
+        if len(uncropped_clue_candidates) == 0:
+            clue = list(filter(lambda x: x.cropped_threshold is not None, clue_candidates))[0]
+            is_hacky_clue = True
+            self.logger.info("none of the clue similarity has exceeded threshold. clue: {} has chosen,".format(clue.clue))
+
+        else:
+            clue = uncropped_clue_candidates[0]
+
+        # for clue in clue_candidates[:top_to_print]:
+        #     self.logger.info(clue.get_summary())
+        self.logger.info(clue.get_summary())
+
+        return clue, is_hacky_clue
 
     def give_clue_with_threshold(self, team, turn_count, delta, penalize_negative, normalize_negative, alpha, top_to_print=5):
         """
